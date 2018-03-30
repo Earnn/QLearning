@@ -1,0 +1,688 @@
+{% extends 'base.html' %} {% load static %}{% load widget_tweaks %}
+
+{% block content %}
+  <style>
+
+  
+  #home { 
+      /*background-image: url({% static "images/183537-OWW4QR-392.jpg" %}) ;
+      background-position: center center;
+      background-repeat:  no-repeat;
+      background-attachment: fixed;
+      background-size:  cover;*/
+      /*background-color: #E0F8E6;*/
+      height: 100%;
+      width: 100%
+  
+}
+  </style>
+    <hr class="uk-box-shadow-medium ">
+  <div  id="home">
+
+    <div class="container ">
+<h1 class="uk-heading-line uk-text-center"><span>ประวัติความหิว</span></h1>
+    <form action="inf-complete" method="post" onsubmit="return validateMyForm(event);">
+
+  
+     {% csrf_token %} 
+
+ <br>
+           <h2 class="uk-text-center uk-margin">อาหารโปรดของคุณคืออะไร</h2>
+
+      <!-- {{form.size}} -->
+<div class="fav-group required">  
+    <div class="search-cate-desktop uk-grid-small uk-child-width-1-4@m uk-child-width-1-4@s uk-text-center" uk-grid>
+
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+           <label >  <img  for="bf" class="uk-margin-small-bottom" src="{% static "images/informations/japan.jpg" %}"/> 
+                <input class="uk-checkbox" name="fav" value="japan" type="checkbox"> อาหารญี่ปุ่น </label>
+
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/shabu.jpg" %}"/> 
+                 <input class="uk-checkbox" type="checkbox" value="shabu"  name="fav" > ชาบู</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/grill.jpg" %}"/> 
+                 <input class="uk-checkbox" name="fav" value="grill" type="checkbox"> ปิ้งย่าง</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/steak.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav" value="steak" type="checkbox"> สเต็ก</label>
+   
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/fastfood.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav" value="fastfood" type="checkbox"> พิซซ่า/fastfood</label>
+   
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/diet.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav" value="diet" type="checkbox"> อาหารคลีน</label>
+   
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/thai.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav" value="thai" type="checkbox"> อาหารไทย</label>
+   
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/cake.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav" value="cake" type="checkbox"> เบเกอร์รี่/เค้ก</label>
+   
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/dessert.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav" value="dessert" type="checkbox"> ของหวาน</label>
+   
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/juice.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav" value="juice" type="checkbox"> นมปั่น/น้ำผลไม้</label>
+   
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/coffee.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav" value="coffee" type="checkbox"> กาแฟ/ชา</label>
+   
+            <!-- </div> -->
+        </div>
+      </div>
+     <div class="search-cate-mobile uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+
+       <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+           <label >  <img  for="bf" class="uk-margin-small-bottom" src="{% static "images/informations/japan.jpg" %}"/> 
+                <input class="uk-checkbox" name="fav-mobile" value="japan" type="checkbox"> อาหารญี่ปุ่น </label>
+
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/shabu.jpg" %}"/> 
+                 <input class="uk-checkbox" type="checkbox" value="chabu"  name="fav-mobile" > ชาบู</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/grill.jpg" %}"/> 
+                 <input class="uk-checkbox" name="fav-mobile" value="chabu" type="checkbox"> ปิ้งย่าง</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/steak.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav-mobile" value="steak" type="checkbox"> สเต็ก</label>
+   
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/fastfood.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav-mobile" value="fastfood" type="checkbox"> พิซซ่า/fastfood</label>
+   
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/diet.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav-mobile" value="diet" type="checkbox"> อาหารคลีน</label>
+   
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/thai.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav-mobile" value="thai" type="checkbox"> อาหารไทย</label>
+   
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/cake.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav-mobile" value="cake" type="checkbox"> เบเกอร์รี่/เค้ก</label>
+   
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/dessert.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav-mobile" value="dessert" type="checkbox"> ของหวาน</label>
+   
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/juice.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav-mobile" value="juice" type="checkbox"> นมปั่น/น้ำผลไม้</label>
+   
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/coffee.jpg" %}"/> 
+             <input class="uk-checkbox " name="fav-mobile" value="coffee" type="checkbox"> กาแฟ/ชา</label>
+   
+            <!-- </div> -->
+        </div>
+    </div>
+ </div>  
+
+
+
+     <hr class="uk-divider-icon">
+        <br>
+           <h2 class="uk-text-center uk-margin">คุณรับประทานอาหารมื้อไหนบ้างคะ</h2>
+
+      <!-- {{form.size}} -->
+<div class="meal-group required">  
+    <div class="search-cate-desktop uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+           <label >  <img  for="bf" class="uk-margin-small-bottom" src="{% static "images/informations/bf.jpg" %}"/> 
+                <input class="uk-checkbox" name="meal" value="bf" type="checkbox" id="bf"> มื้อเช้า </label>
+
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/lunch.jpg" %}"/> 
+                 <input class="uk-checkbox" type="checkbox" value="lunch" name="meal" id="lunch" > มื้อเที่ยง</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/dinner.jpg" %}"/> 
+                 <input class="uk-checkbox" name="meal" value="dinner" type="checkbox"> มื้อเย็น</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/late.jpg" %}"/> 
+             <input class="uk-checkbox " name="meal" value="late" type="checkbox"> มื้อดึก</label>
+   
+            <!-- </div> -->
+        </div>
+        </div>
+     <div class="search-cate-mobile uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+           <label >  <img  for="bf" class="uk-margin-small-bottom" src="{% static "images/informations/bf.jpg" %}"/> 
+                <input class="uk-checkbox " name="meal-mobile" value="bf" type="checkbox" id="bf" > มื้อเช้า </label>
+
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/lunch.jpg" %}"/> 
+                 <input class="uk-checkbox" name="meal-mobile" value="lunch" type="checkbox"  id="lunch" > มื้อเที่ยง</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/dinner.jpg" %}"/> 
+                 <input class="uk-checkbox" name="meal-mobile" value="dinner" type="checkbox"> มื้อเย็น</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/late.jpg" %}"/> 
+             <input class="uk-checkbox " name="meal-mobile" value="late" type="checkbox"> มื้อดึก</label>
+   
+            <!-- </div> -->
+        </div>
+    </div>
+ </div>       
+<hr class="uk-divider-icon">
+    <br>
+                   <h2 class="uk-text-center uk-margin">เหตุผลในการเลือกร้านอาหาร</h2>
+      <!-- {{form.size}} -->
+<div class="reason-group required">  
+    <div class="search-cate-desktop uk-grid-small uk-child-width-1-3@m uk-child-width-1-3@s uk-text-center" uk-grid>
+
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+          <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/taste.jpg" %}"/> 
+                <input class="uk-checkbox " type="checkbox" name="reason" value="taste"> รสชาติ </label>
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>     <img  class="uk-margin-small-bottom" src="{% static "images/informations/price.jpg" %}"/> 
+               <input class="uk-checkbox" type="checkbox" name="reason" value="price"> ราคา</label>
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+              <label>    <img  class="uk-margin-small-bottom" src="{% static "images/informations/waiter.jpg" %}"/> 
+               <input class="uk-checkbox" type="checkbox" name="reason" value="service"> บริการ</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+            <label>    <img  class="uk-margin-small-bottom" src="{% static "images/informations/clean.jpg" %}"/> 
+                   <input class="uk-checkbox" type="checkbox" name="reason" value="clean"> ความสะอาด</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                 <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/at.jpg" %}"/> 
+            <input class="uk-checkbox " type="checkbox" name="reason" value="at"> บรรยากาศ</label>
+   
+            <!-- </div> -->
+        </div>
+           <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img class="uk-margin-small-bottom"  src="{% static "images/informations/location.jpg" %}"/> 
+                <input class="uk-checkbox " type="checkbox" name="reason" value="location"> สถานที่ตั้ง</label>
+   
+            <!-- </div> -->
+        </div>
+    </div>
+     <div class="search-cate-mobile uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+          <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/taste.jpg" %}"/> 
+                <input class="uk-checkbox " type="checkbox" name="reason-mobile" value="taste"> รสชาติ </label>
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>     <img  class="uk-margin-small-bottom" src="{% static "images/informations/price.jpg" %}"/> 
+               <input class="uk-checkbox" type="checkbox" name="reason-mobile" value="price"> ราคา</label>
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+              <label>    <img  class="uk-margin-small-bottom" src="{% static "images/informations/waiter.jpg" %}"/> 
+               <input class="uk-checkbox" type="checkbox" name="reason-mobile" value="service" > บริการ</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+            <label>    <img  class="uk-margin-small-bottom" src="{% static "images/informations/clean.jpg" %}"/> 
+                   <input class="uk-checkbox" type="checkbox" name="reason-mobile" value="clean"> ความสะอาด</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                 <label>   <img  class="uk-margin-small-bottom" src="{% static "images/informations/at.jpg" %}"/> 
+            <input class="uk-checkbox " type="checkbox" name="reason-mobile" value="at" > บรรยากาศ</label>
+   
+            <!-- </div> -->
+        </div>
+           <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>   <img class="uk-margin-small-bottom"  src="{% static "images/informations/location.jpg" %}"/> 
+                <input class="uk-checkbox " type="checkbox" name="reason-mobile" value="location"> สถานที่ตั้ง</label>
+   
+            <!-- </div> -->
+        </div>
+    </div>
+</div>
+<hr class="uk-divider-icon">
+    <br>
+                   <h2 class="uk-text-center uk-margin">คุณมีรูปร่างแบบไหนคะ</h2>
+      <!-- {{form.size}} -->
+<div class="size-group required">  
+       <div class="uk-form-controls">
+    <div class="search-cate-desktop uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+          <label><img  class="uk-margin-small-bottom" src="{% static "images/informations/thin.jpg" %}"/> 
+               <input class="uk-radio" type="radio" name="size" value="thin"> ผอม </label>
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>    <img  class="uk-margin-small-bottom" src="{% static "images/informations/fit.jpg" %}"/> 
+                <input class="uk-radio" type="radio" name="size" value="fit"> หุ่นดี/ทั่วไป</label>
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>    <img class="uk-margin-small-bottom" src="{% static "images/informations/chubby.jpg" %}"/> 
+                <input class="uk-radio" type="radio" name="size" value="chubby"> อวบ</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                 <label>   <img  class="uk-margin-small-bottom"  src="{% static "images/informations/fat.jpg" %}"/> 
+             <input class="uk-radio" type="radio" name="size" value="fat"> อ้วน</label>
+            <!-- </div> -->
+        </div>
+  </div>
+    </div>
+       <div class="search-cate-mobile uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+          <label><img  class="uk-margin-small-bottom" src="{% static "images/informations/thin.jpg" %}"/> 
+               <input class="uk-radio " type="radio" name="size-mobile" value="thin"> ผอม </label>
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>    <img  class="uk-margin-small-bottom" src="{% static "images/informations/fit.jpg" %}"/> 
+                <input class="uk-radio" type="radio" name="size-mobile" value="fit"> หุ่นดี/ทั่วไป</label>
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label>    <img class="uk-margin-small-bottom" src="{% static "images/informations/chubby.jpg" %}"/> 
+                <input class="uk-radio" type="radio" name="size-mobile" value="chubby"> อวบ</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                 <label>   <img  class="uk-margin-small-bottom"  src="{% static "images/informations/fat.jpg" %}"/> 
+             <input class="uk-radio" type="radio" name="size-mobile" value="fat"> อ้วน</label>
+            <!-- </div> -->
+        </div>
+  
+    </div>
+</div>
+    <hr class="uk-divider-icon">
+        <br>
+                   <h2 class="uk-text-center uk-margin">โซเชียลมีเดียที่ใช้บ่อย</h2>
+      <!-- {{form.size}} -->
+<div class="social-group required">  
+    <div class="search-cate-desktop uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label> 
+              <input class="uk-checkbox " type="checkbox" name="social" value="facebook">  <img style="height: 36px; width: 36px" class="uk-margin-small-bottom" src="{% static "images/informations/facebook.png" %}"/> Facebook </label>
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                 <label>  
+             <input class="uk-checkbox" type="checkbox"  name="social" value="twitter"> <img style="height: 36px; width: 36px" class="uk-margin-small-bottom" src="{% static "images/informations/twitter.png" %}"/>  Twitter</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+               <label>    
+             <input class="uk-checkbox" type="checkbox"  name="social" value="line"> <img style="height: 36px; width: 36px"  class="uk-margin-small-bottom" src="{% static "images/informations/line.png" %}"/>  Line</label>
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+               <label>   
+              <input class="uk-checkbox" type="checkbox"  name="social" value="instagram"> <img style="height: 36px; width: 36px" class="uk-margin-small-bottom" src="{% static "images/informations/instagram.png" %}"/>  Instagram</label>
+            <!-- </div> -->
+        </div>
+  
+    </div>
+
+      <div class="search-cate-mobile uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+             <label> 
+              <input class="uk-checkbox " type="checkbox"  name="social-mobile" value="facebook">  <img style="height: 36px; width: 36px" class="uk-margin-small-bottom" src="{% static "images/informations/facebook.png" %}"/> Facebook </label>
+
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+                 <label>  
+             <input class="uk-checkbox" type="checkbox"  name="social-mobile" value="twitter"> <img style="height: 36px; width: 36px" class="uk-margin-small-bottom" src="{% static "images/informations/twitter.png" %}"/>  Twitter</label>
+            <!-- </div> -->
+        </div>
+        <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+               <label>    
+             <input class="uk-checkbox" type="checkbox"  name="social-mobile" value="line"> <img style="height: 36px; width: 36px"  class="uk-margin-small-bottom" src="{% static "images/informations/line.png" %}"/>  Line</label>
+            <!-- </div> -->
+        </div>
+         <div>
+            <!-- <div class="uk-card uk-card-default uk-card-body"> -->
+               <label>   
+              <input class="uk-checkbox" type="checkbox"  name="social-mobile" value="instagram"> <img style="height: 36px; width: 36px" class="uk-margin-small-bottom" src="{% static "images/informations/instagram.png" %}"/>  Instagram</label>
+            <!-- </div> -->
+        </div>
+  
+    </div>
+</div>
+
+     <hr class="uk-divider-icon">
+         <!-- <br> -->
+        <h2 class="uk-text-center uk-margin ">ข้อมูลทั่วไป</h2>
+      <!-- {{form.size}} --><br>
+  <!-- <div class="inf-group required"> -->
+    <div class="uk-text-center uk-child-width-1-1@m " uk-grid>
+       <div class="uk-margin">
+          <div class=""><label>เพศ</label> </div>
+            <div class="uk-form-controls">
+          <div class="gender-group required"> 
+                <label><input class="uk-radio" type="radio" name="sex" value="male" > เพศชาย</label>
+                <label><input class="uk-radio" type="radio" name="sex" value="female"> เพศหญิง</label>
+          </div>
+            </div>
+      </div>
+
+        <div class="uk-margin">
+          <div class=""><label>วันเกิด</label> </div>
+          <label class="" for="form-stacked-text">วันเกิด</label>
+      
+            <div uk-form-custom="target: > * > span:first-child">
+                <select required name="day">
+                    <option value="01" >01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                </select>
+                <button class="uk-button uk-button-default" type="button" tabindex="-1">
+                    <span></span>
+                    <span uk-icon="icon: chevron-down"></span>
+                </button>
+            </div>
+    
+
+            <label class="" for="form-stacked-text">เดือน</label>
+              
+                    <div uk-form-custom="target: > * > span:first-child">
+                        <select required name="month">
+                            <option value="01">01</option>
+                            <option value="02">02</option>
+                            <option value="03">03</option>
+                            <option value="04">04</option>
+                            <option value="05">05</option>
+                            <option value="06">06</option>
+                            <option value="07">07</option>
+                            <option value="08">08</option>
+                            <option value="09">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                       
+                        </select>
+                        <button class="uk-button uk-button-default" type="button" tabindex="-1">
+                            <span></span>
+                            <span uk-icon="icon: chevron-down"></span>
+                        </button>
+            
+                  </div>
+
+                    <label class="" for="form-stacked-text">ปีเกิด</label>
+      
+            <div uk-form-custom="target: > * > span:first-child">
+                <select id="years" required name="year" >
+           
+               
+                </select>
+                <button class="uk-button uk-button-default" type="button" tabindex="-1">
+                    <span></span>
+                    <span uk-icon="icon: chevron-down"></span>
+                </button>
+            </div>
+    
+
+         </div>
+
+   
+  
+    <!-- </div> -->
+         <!-- <div class="uk-grid-small uk-child-width-expand@s uk-text-center" uk-grid> -->
+                <div>
+                  
+          <!-- <label class="" for="form-stacked-text">เงินเดือน</label> -->
+       <div class=""><label>เงินเดือน</label> </div>
+            <div uk-form-custom="target: > * > span:first-child">
+                <select required name="salary">
+                    <option value="น้อยกว่า 10,000"  selected >น้อยกว่า 10,000</option>
+                    <option value="10,000-19,999">10,000-19,999</option>
+                    <option value="20,000-29,999">20,000-29,999</option>
+                    <option value="30,000-39,999">30,000-39,999</option>
+                    <option value="40,000-49,999">40,000-49,999</option>
+                    <option value="50,000 ขึ้นไป">50,000 ขึ้นไป</option>
+           
+                </select>
+                <button class="uk-button uk-button-default" type="button" tabindex="-1">
+                    <span></span>
+                    <span uk-icon="icon: chevron-down"></span>
+                </button>
+            </div>
+                </div>
+             
+          
+            <!-- </div> -->
+  </div>
+<!-- </div> -->
+     <hr class="uk-divider-icon">
+  <button  class="uk-button uk-align-center uk-button-large" type="submit"  id="btnSubmit" value="Submit"><h2>บันทึก</h2></button>
+    </form>
+      </div>
+  
+
+
+  
+   <!-- <br><br><br><br><br><br><br><br><br><br><br><br> -->
+      
+  </div>
+</div><br><br><br><br>
+
+<script type="text/javascript">
+   $(function () {
+
+
+
+        for (i = new Date().getFullYear() ; i > 1900; i--) {
+            $('#years').append($('<option />').val(i).html(i));
+      // jQuery("select#years option[value=i]").attr("selected", "selected");
+            // $('select option[value="1"]').attr("selected",true);
+        }
+        // selected="selected"
+
+
+});
+  // $("#btnSubmit").click(function(e){
+  //     // print("do");
+  //     if( $('div.meal-group.required :checkbox:checked').length <= 0){
+  //       alert("กรุณาเลือกมื้ออาหารค่ะ");
+  //     }
+     
+      
+
+  //   });
+function validateMyForm(e){
+   if( $('div.fav-group.required :checkbox:checked').length <= 0){
+        alert("กรุณาเลือกอาหารจารโปรด");
+        e.preventDefault() ;
+        return false;
+  } 
+
+  if( $('div.meal-group.required :checkbox:checked').length <= 0){
+        alert("กรุณาเลือกมื้ออาหารค่ะ");
+        e.preventDefault() ;
+        return false;
+  } 
+
+  if( $('div.reason-group.required :checkbox:checked').length <= 0){
+        alert("กรุณาเลือกเหตุผลในการเลือกร้านอาหารค่ะ");
+        e.preventDefault() ;
+        return false;
+  }
+
+  if( $('div.size-group.required :radio:checked').length <= 0){
+        alert("กรุณาเลือกรูปร่างของคุณค่ะ");
+        e.preventDefault() ;
+        return false;
+  }
+  if( $('div.social-group.required :checkbox:checked').length <= 0){
+        alert("กรุณาเลือกโซเชียลมีเดียที่ใช้บ่อยค่ะ");
+        e.preventDefault() ;
+        return false;
+  }
+  if( $('div.gender-group.required :radio:checked').length <= 0){
+        alert("กรุณาเลือกเพศของคุณค่ะ");
+        e.preventDefault() ;
+        return false;
+  }
+
+
+  return true;
+}
+  
+
+</script>
+{% endblock %}

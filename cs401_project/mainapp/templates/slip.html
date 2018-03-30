@@ -1,0 +1,25 @@
+{% extends 'base.html' %}{% load static %} {% block content %}
+ <style>
+   .imgCrop{
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  position:  relative;
+  }
+ </style>
+    <!-- banner -->
+    
+    <hr class="uk-box-shadow-medium ">
+    <div class="container" id="home">
+  <div class="uk-section uk-section-default">
+        <div class="uk-container uk-text-center">
+              
+                <!-- <h1 class=" uk-text-center"> <i style="color:#2ECC71" class="fa fa-check-circle fa-3x" aria-hidden="true"></i></h1> -->
+                  <img class="imgCrop uk-margin-left" style="width: 400px;height: 400px"  src="../../{{image}}">
+               <br>
+               <br>
+                 <a href="{% url 'home'  %}">กลับหน้าแรก</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

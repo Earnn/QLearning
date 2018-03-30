@@ -1,0 +1,135 @@
+{% extends 'base.html' %} {% load static %}{% load widget_tweaks %}
+{% block content %}
+  <style>
+  .banner-new{
+  background: url('{% static "images/bgregister4.jpeg" %}') no-repeat 0px 0px;
+  background-size: cover;
+  /*background-attachment: fixed;*/
+  }
+  .container{
+  width: 80%;
+  }
+  body,html{
+  background-color: #EEEEEE;
+  }
+  .errorlist
+  {
+  color:#EF5350;
+  }
+  input[type=text],input[type=password],input[type=email]{
+  background-color: #FAFFBD;
+  }
+  .title{
+  color: black;
+  }
+  .uk-button-default:hover{
+  background-color: #FFBF00;
+  color: white;
+  }
+  .uk-button-default{
+  color: #FFBF00;
+  }
+  .imgCrop{
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  position:  relative;
+  }
+  input [type=text]{
+  width: 98%;
+  padding: 1%;
+  }
+  .active{
+  /*background-color: #6ACAD1;*/
+  color: #6ACAD1;
+  font-weight: bold;
+  }
+  .uk-list >li > a:hover{
+  color: #6ACAD1;
+  text-decoration: none;
+  }
+  li>a{
+  color:#9E9E9E;
+  }
+  hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #FFBF00;
+  margin: 1em 0;
+  padding: 0;
+  }
+  label{
+  font-size: 14px;
+  color:#9E9E9E;
+  }
+  .imgCrop{
+  width: 50px;
+  height:50px;
+  overflow: hidden;
+  position:  relative;
+  }
+  .inImg{
+  position: absolute;
+  
+  width: 50px;
+  height:50px;
+  object-fit: cover;
+  }
+  th > h4{
+    font-weight: bold;
+  color: #6ACAD1;
+  }
+  </style>
+  
+  <div class="container ">
+    <br>
+    <div class="uk-card uk-card-default" >
+      
+      <div class="uk-card-body uk-margin-remove" >
+        <h2 class="  " style="color: black">ออเดอร์ของฉัน</h2>
+        
+        <div uk-grid >
+          <div class="uk-width-1-3@m uk-text-center" >
+            <div class="uk-margin-top">
+              <!-- <p style="color: #BDBDBD" class="uk-text-left">ค้นหา</p> -->
+              <ul  class= " uk-list-divider uk-list  uk-text-left" style="width: 70%">
+                <li class="active"><a class="uk-link-reset " href=""><span>&#8226;</span> ออเดอร์ของฉัน</a></li>
+                <li   ><a  href=""><span>&#8226;</span> ข้อมูลส่วนตัว</a></li>
+                <li><a class="" href=""><span>&#8226;</span> ประวัติความหิว</a></li>
+                <li><a class="" href=""><span>&#8226;</span> ร้านอาหารสุดโปรด</a></li>
+                <li><a class="" href=""><span>&#8226;</span> ร้านอาหารที่เคยไป</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="uk-width-2-3@m "  uk-grid>
+            
+            
+            <table class="uk-table uk-table-divider ">
+              <thead>
+                <tr>
+                  <th><h4> สั่งซื้ออาหาร</h4></th>
+                   <th><h4> รายการอาหาร  </h4></th>
+                 <th><h4> ยอดชำระ  </h4></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for m in menu %}
+                  <tr>
+                    <td>  </td>
+                    <td><div class="imgCrop"><img src="../{{m.image}}" class="inImg" alt="" ></div></td>
+                    <td>200 บาท</td>
+                  </tr>
+                     {% endfor %}
+                  
+              </tbody>
+            </table>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+  </div>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base.html' %} {% load static %}{% load widget_tweaks %}
+{% block content %}
+  <style>
+  
+  .container{
+  width: 80%;
+  }
+  /* body,html{
+  background-color: #EEEEEE;
+  }
+  */
+  input[type=text],input[type=password],input[type=email]{
+  /*background-color: #FAFFBD;*/
+  }
+  .uk-button-default:hover{
+  background-color: #FFBF00;
+  color: white;
+  }
+  .uk-button-default{
+  color: #FFBF00;
+  }
+  .inImg{
+  position: absolute;
+  
+  width: 100%;
+  height: 90%;
+  object-fit: cover;
+  }
+  .imgCrop{
+  width: 100%;
+  height: 90%;
+  overflow: hidden;
+  position:  relative;
+  }
+  b{
+    color: red;
+  }
+  </style>
+  <hr class="uk-box-shadow-medium ">
+  <div class="container " id="home">
+    
+    <h2 class=" uk-margin-remove-bottom  uk-heading-bullet " style="color: black">เพิ่มร้านค้า
+    </h2>
+    <p>คุณสามารถเพิ่มร้านค้าที่คุณรู้จัก หรือร้านค้าที่อยากแนะนำเพื่อนๆได้ที่นี่</p>
+    <!-- <div class="panel-body uk-text-left"> -->
+    <div class="uk-margin-top" uk-grid>
+      <form id="" role="form" autocomplete="off" enctype='multipart/form-data' class="form" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+       
+        <div  class="uk-margin-bottom ">
+          <label  for=" ">ชื่อร้าน <b >*</b></label>
+          {{ addStoreForm.store_name |add_class:"uk-input "}}
+        </div>
+        <div  class="uk-margin-bottom ">
+          <label class=" "  for=" ">สถานที่ตั้ง  <b >*</b></label>
+          {{ addStoreForm.place |add_class:"uk-input "}}
+        </div>
+        <div  class="uk-margin-bottom ">
+          <label class=""  for=" ">รูปหน้าร้าน  <b >*</b></label>
+          <div class="" uk-margin>
+            <div uk-form-custom="target: true">
+              {{addStoreForm.store_image|add_class:"uk-input"}}
+              <input class="uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
+            </div>
+          </div>
+        </div>
+        <div  class="uk-margin-bottom ">
+          <label class=" "  for=" ">เบอร์โทรศัพท์ </label>
+          {{ addStoreForm.phone |add_class:"uk-input"}}
+        </div>
+            <div  class="uk-margin-bottom ">
+          <label class=" "  for=" ">ประเภทของร้านอาหาร  <b >*</b></label>
+          {{ addStoreForm.category |add_class:"uk-select"}}
+        </div>
+     <div  class="uk-margin-bottom ">
+          <label class=" "  for=" ">Tag คำอธิบายร้านอาหาร แต่ละ Tag ขั้นด้วย , (คอมม่า)  <b >*</b></label>
+          {{ addStoreForm.tags |add_class:"uk-input"|attr:"placeholder:ปิ้งย่าง,ชาบู,นมสด,ซูชิ,ข้าวต้ม,อาหารตามสั่ง"}}
+        </div>
+          <div  class="uk-margin-bottom ">
+          <label class=" "  for=" ">วันเปิดให้บริการ </label>
+          {{ addStoreForm.day_open |add_class:"uk-select"}}
+        </div>
+        <div  class="uk-margin-bottom ">
+          <label class=" "  for=" ">เวลาเปิด</label>
+          {{ addStoreForm.time_open |add_class:"uk-input"|attr:"placeholder:ตัวอย่าง 17:00 "}}
+        </div>
+        <div  class="uk-margin-bottom ">
+          <label class=" "  for=" ">เวลาปิด</label>
+          {{ addStoreForm.time_close |add_class:"uk-input"|attr:"placeholder:ตัวอย่าง 17:00 "}}
+        </div>
+        <div  class="uk-margin-bottom ">
+          <label class=" "  for=" ">บริการส่ง  <b >*</b></label>
+          {{ addStoreForm.delivery |add_class:"uk-select"}}
+        </div>
+        
+        <div class="form-group">
+          <!-- <button type="submit"></button> -->
+          <button name="order"  class="uk-margin-top uk-button uk-width-1-1@s " style="color: white;"><h2 class="uk-margin-small-top">สร้างร้านค้า</h2> </button>
+        </div>
+        
+        <input type="hidden" class="hide" name="token" id="token" value="">
+<!-- {% for i in addStoreForm.errors %}
+{{i}}
+{% endfor %}
+{% if addStoreForm.errors %}
+error!
+{% endif %} -->
+      </form>
+    </div>
+   
+    
+  </div>
+  <br>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}{% block content %}
+	
+	<style type="text/css">
+	.color{
+	color: #FFBF00;
+	font-size: 6em;
+	font-weight: bold;
+	}
+	</style>
+	<hr class="uk-box-shadow-medium ">
+	<!-- <div class="container" > -->
+	<div class="uk-section uk-section-default uk-margin-remove-top">
+		<div class="uk-container">
+			
+			<div class="uk-overflow-auto">
+				<table class="uk-table uk-table-divider">
+					<thead>
+						<tr>
+							
+							<th><h2>ร้าน.. เมนู</h2></th>
+			
+							<th><h2>ราคา</h2></th>
+							<th><h2>ลูกค้า</h2></th>
+							<th><h2>ไอดี</h2></th>
+							<th><h2>สถานะ</h2></th>
+							<th><h2>เวลาสั่ง</h2></th>
+							
+						</tr>
+					</thead>
+					<tbody>
+						{% for i in order_list %}
+
+						{% if i.isSuccess %}
+						<tr>
+								
+								<td>
+									{% for item in i.menu_amount %}
+										{{item.menu.store.name}} .. <b>{{item.amount}} </b>{{item.menu.name}} <b style="color: #58D68D ">({{item.menu.price}}</b>) | 
+									{% endfor %}
+								</td>
+							
+								<td>{{i.total}}</td>
+
+								<td>{{i.user_name}}</td>
+								<td>{{i.id}}</td>
+								<td>
+										{% if i.status == "รับออเดอร์" %}
+											<label><input id="0" class="uk-radio" type="radio" name={{i.id}} value="0" checked> O</label>
+											<label><input id="1" class="uk-radio" type="radio" name={{i.id}} value="1"> C</label>
+											<label><input id="2" class="uk-radio" type="radio" name={{i.id}} value="2"> D</label>
+										
+
+										{% elif i.status == "กำลังทำอาหาร" %}
+											<label><input id="0" class="uk-radio" type="radio" name={{i.id}} value="0" > O</label>
+											<label><input id="1" class="uk-radio" type="radio" name={{i.id}} value="1" checked> C</label>
+											<label><input id="2" class="uk-radio" type="radio" name={{i.id}} value="2"> D</label>
+
+										{% elif i.status == "กำลังส่ง" %}
+
+											<label><input id="0" class="uk-radio" type="radio" name={{i.id}} value="0" > O</label>
+											<label><input id="1" class="uk-radio" type="radio" name={{i.id}} value="1"> C</label>
+											<label><input id="2" class="uk-radio" type="radio" name={{i.id}} value="2" checked> D</label>
+											
+
+
+										{% endif %}
+
+
+								</td>
+								<td>{{i.created_at }}</td>
+							</tr>
+						{% else %}
+						<!-- order not success -->
+						<tr bgcolor="#ddd">
+								
+								<td>
+									{% for item in i.menu_amount %}
+										{{item.menu.store.name}} |
+									{% endfor %}
+								</td>
+								<td>
+									{% for item in i.menu_amount %}
+										
+										<b>{{item.amount}} </b>{{item.menu.name}} <b style="color: #58D68D ">({{item.menu.price}}</b>) | 
+										
+										
+									{% endfor %}
+								</td>
+								<td>{{i.total}}</td>
+
+								<td>{{i.user_name}}</td>
+								<td>{{i.id}}</td>
+								<td>
+										{% if i.status == "รับออเดอร์" %}
+											<label><input id="0" class="uk-radio" type="radio" name={{i.id}} value="0" checked> O</label>
+											<label><input id="1" class="uk-radio" type="radio" name={{i.id}} value="1"> C</label>
+											<label><input id="2" class="uk-radio" type="radio" name={{i.id}} value="2"> D</label>
+										
+
+										{% elif i.status == "กำลังทำอาหาร" %}
+											<label><input id="0" class="uk-radio" type="radio" name={{i.id}} value="0" > O</label>
+											<label><input id="1" class="uk-radio" type="radio" name={{i.id}} value="1" checked> C</label>
+											<label><input id="2" class="uk-radio" type="radio" name={{i.id}} value="2"> D</label>
+
+										{% elif i.status == "กำลังส่ง" %}
+
+											<label><input id="0" class="uk-radio" type="radio" name={{i.id}} value="0" > O</label>
+											<label><input id="1" class="uk-radio" type="radio" name={{i.id}} value="1"> C</label>
+											<label><input id="2" class="uk-radio" type="radio" name={{i.id}} value="2" checked> D</label>
+											
+
+
+										{% endif %}
+
+
+								</td>
+								<td>{{i.created_at}}</td>
+							</tr>
+						{% endif %}
+							
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			
+		</div>
+	</div>
+	<!-- </div> -->
+	<script>
+$(document).ready(function(){
+	
+	$("label input:radio").change(function () {
+		// alert($(this).val() +" " +$(this).attr('id'));
+		var status = $(this).val();
+		var order_id = $(this).attr('name');
+
+		$.ajax({
+			type: "POST",
+			url: "{% url 'change_status' %}",
+			data: {'status': status,'order_id':order_id, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+			dataType: "json",
+			success: function(response) {
+				console.log("success");
+
+			}
+		});
+	
+	});
+});
+</script>
+{% endblock %}

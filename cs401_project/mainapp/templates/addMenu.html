@@ -1,0 +1,88 @@
+{% extends 'base.html' %} {% load static %}{% load widget_tweaks %}
+{% block content %}
+  <style>
+  
+  .container{
+  width: 80%;
+  }
+  /* body,html{
+  background-color: #EEEEEE;
+  }
+  */
+  input[type=text],input[type=password],input[type=email]{
+  /*background-color: #FAFFBD;*/
+  }
+  .uk-button-default:hover{
+  background-color: #FFBF00;
+  color: white;
+  }
+  .uk-button-default{
+  color: #FFBF00;
+  }
+  .inImg{
+  position: absolute;
+  
+  width: 100%;
+  height: 90%;
+  object-fit: cover;
+  }
+  .imgCrop{
+  width: 100%;
+  height: 90%;
+  overflow: hidden;
+  position:  relative;
+  }
+   b{
+ color: red;
+  }
+  </style>
+  <hr class="uk-box-shadow-medium ">
+  <div class="container " id="home">
+    
+    <h2 class=" uk-margin-remove-bottom  " style="color: black">เพิ่มเมนูอาหารของร้านค้า <b style="color: #FFD200">{{store_name}} </b>
+    </h2>
+    <p>คุณสามารถเพิ่มเมนูอาหารของร้านค้าได้ที่นี่</p>
+    <!-- <div class="panel-body uk-text-left"> -->
+    <div class="uk-margin-top" uk-grid>
+      <form id="" role="form" autocomplete="off" enctype='multipart/form-data' class="form" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+       
+        <div  class="uk-margin-bottom ">
+          <label  for=" ">ชื่ออาหาร <b>*</b></label>
+          {{ menuForm.menu_name |add_class:"uk-input "}}
+        </div>
+        <div  class="uk-margin-bottom ">
+          <label class=" "  for=" ">ราคา <b>*</b></label>
+          {{ menuForm.menu_price |add_class:"uk-input "}}
+        </div>
+        <div  class="uk-margin-bottom ">
+          <label class=""  for=" ">รูปอาหาร <b>*</b></label>
+          <div class="" uk-margin>
+            <div uk-form-custom="target: true">
+              {{menuForm.menu_image|add_class:"uk-input"}}
+              <input class="uk-input uk-form-width-medium" type="text" placeholder="Select file" disabled>
+            </div>
+          </div>
+        </div>
+    
+        
+        <div class="form-group">
+          <!-- <button type="submit"></button> -->
+          <button name=""  class="uk-margin-top uk-button uk-width-1-1@s " style="color: white;"><h2 class="uk-margin-small-top">เพิ่มเมนูอาหาร</h2> </button>
+        </div>
+        
+        <input type="hidden" class="hide" name="token" id="token" value="">
+<!-- {% for i in addStoreForm.errors %}
+{{i}}
+{% endfor %}
+{% if addStoreForm.errors %}
+error!
+{% endif %} -->
+      </form>
+    </div>
+  
+  </div>
+  <br>
+</div>
+{% endblock %}

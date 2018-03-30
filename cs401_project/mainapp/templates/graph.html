@@ -1,0 +1,273 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+ 
+  <!-- Styles -->
+<style>
+#chartdiv {
+  width   : 70%;
+  height    : 300px;
+  font-size : 20px;
+
+}     
+#productChart {
+  width   : 70%;
+  height    : 300px;
+  font-size : 11px;
+} 
+#yearPerProductChart{
+    width   : 70%;
+  height    : 300px;
+  font-size : 11px;
+}    
+</style>
+
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="https://www.amcharts.com/lib/3/themes/none.js"></script>
+
+<!-- Chart code -->
+<script>
+var chart = AmCharts.makeChart("chartdiv", {
+    "theme": "light",
+    "type": "serial",
+     "marginRight": 70,
+     "fontFamily":"Kanit",
+     "allLabels": [{
+  "text": "กราฟแสดงจำนวนคนสั่งซื้อของในช่วงเวลานั้น",
+  "align": "center",
+  "bold": true,
+  "size": 20,
+  "y": 10
+}],"marginTop": 50,
+
+    "dataProvider": [{
+        "time": "6.00 น. - 9.00 น.",
+        "ผู้ชาย": 3.5,
+        "ผู้หญิง": 4.2
+    }, {
+         "time": "9.00 น. - 12.00 น.",
+        "ผู้ชาย": 1.7,
+        "ผู้หญิง": 3.1
+    }, {
+         "time": "12.00 น. - 15.00 น.",
+        "ผู้ชาย": 2.8,
+        "ผู้หญิง": 2.9
+    }, {
+        "time": "15.00 น. - 18.00 น.",
+        "ผู้ชาย": 2.6,
+        "ผู้หญิง": 2.3
+    },],
+    "valueAxes": [{
+        "unit": "%",
+        "position": "left",
+        "title": "จำนวนคนสั่งซื้อ %",
+        "titleFontSize": 20,
+
+
+    }],
+    "startDuration": 1,
+    "graphs": [{
+        "balloonText": "จำนวนผู้ชาย: <b>[[value]]</b>",
+        "fillAlphas": 0.9,
+        "lineAlpha": 0.2,
+        "title": "2004",
+        "type": "column",
+        "valueField": "ผู้ชาย",
+        "fillColors": "#2196F3",
+        "fixedColumnWidth": 120
+        //male
+    }, {
+        "balloonText": "จำนวนผู้หญิง: <b>[[value]]</b>",
+        "fillAlphas": 0.9,
+        "lineAlpha": 0.2,
+        "title": "2005",
+        "type": "column",
+        "clustered":false,
+        "columnWidth":0.5,
+        "valueField": "ผู้หญิง",
+        "fillColors": "#E91E63",
+        "fixedColumnWidth": 70
+        // famale 
+    }],
+    "plotAreaFillAlphas": 0.1,
+    "categoryField": "time",
+    "categoryAxis": {
+        "gridPosition": "start"
+    }
+    ,
+    "export": {
+      "enabled": true
+     }
+// category = x axis
+// value = y axis = year2004,2005
+});
+
+var chart = AmCharts.makeChart( "yearPerProductChart", {
+  "type": "serial",
+  "theme": "none",
+       "fontFamily":"Kanit",
+   "allLabels": [{
+  "text": "กราฟแสดงยอดขายในแต่ละปี",
+  "align": "center",
+  "bold": true,
+  "size": 20,
+  "y": 10}],
+  "marginTop": 50,
+"marginRight": 70,
+  "dataProvider": [ {
+    "year": "พ.ศ. 2555",
+    "จำนวน": 2025
+  }, {
+    "year": "พ.ศ. 2556",
+    "จำนวน": 1882
+  }, {
+    "year": "พ.ศ. 2557",
+    "จำนวน": 1809
+  }, {
+    "year": "พ.ศ. 2558",
+    "จำนวน": 1322
+  }, {
+    "year": "พ.ศ. 2559",
+    "จำนวน": 1500
+  }, {
+    "year": "พ.ศ. 2560",
+    "จำนวน": 2007
+  },],
+  "valueAxes": [ {
+    "gridColor": "#FFFFFF",
+    "gridAlpha": 0.2,
+    "dashLength": 0
+  } ],
+  "gridAboveGraphs": true,    "valueAxes": [{
+        "unit": "",
+        "position": "left",
+        "title": "จำนวนที่ขายได้",
+        "titleFontSize": 20,
+
+
+    }],
+  "startDuration": 1,
+  "graphs": [ {
+    "balloonText": "[[category]]: <b>[[value]]</b>",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "valueField": "จำนวน",
+    "fixedColumnWidth": 70
+  } ],
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "year",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "gridAlpha": 0,
+    "tickPosition": "start",
+    "tickLength": 20
+  },
+  "export": {
+    "enabled": true
+  }
+
+} );
+var chart = AmCharts.makeChart( "productChart", {
+  "type": "serial",
+  "theme": "none",
+       "fontFamily":"Kanit",
+     "allLabels": [{
+  "text": "กราฟแสดงเมนูอาหารที่ขายดีในเดือนกันยายน",
+  "align": "center",
+  "bold": true,
+  "size": 20,
+  "y": 10}],"marginTop": 50,
+"marginRight": 70,
+  "dataProvider": [ {
+    "menu": "ข้าวเหนียวหมูปิ้ง",
+    "จำนวน": 2025
+  }, {
+    "menu": "เสต้กปลาดอลลี่",
+    "จำนวน": 1882
+  }, {
+    "menu": "ลูกชิ้นปิ้ง",
+    "จำนวน": 1809
+  }, {
+    "menu": "ขนมจีบ",
+    "จำนวน": 1322
+  }, {
+    "menu": "สเต้กหมู",
+    "จำนวน": 1122
+  }, {
+    "menu": "แซนวิช",
+    "จำนวน": 1114
+  },],
+  "valueAxes": [ {
+    "gridColor": "#FFFFFF",
+    "gridAlpha": 0.2,
+    "dashLength": 0
+  } ],
+  "gridAboveGraphs": true,
+     "valueAxes": [{
+        "unit": "",
+        "position": "left",
+        "title": "จำนวนที่ขายได้",
+        "titleFontSize": 20,
+
+
+    }],
+  "startDuration": 1,
+  "graphs": [ {
+    "balloonText": "[[category]]: <b>[[value]]</b>",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "valueField": "จำนวน","fixedColumnWidth": 70
+  } ],
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "menu",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "gridAlpha": 0,
+    "tickPosition": "start",
+    "tickLength": 20
+  },
+  "export": {
+    "enabled": true
+  }
+
+} );
+</script>
+
+<div class="container uk-margin-remove-top" style="margin-top: -50px;">
+    <!-- <img class="circular-square" src="{% static "images/steak2.jpg" %}" /> -->
+    <div class="uk-section uk-section-default ">
+    
+
+       <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงรายละเอียด</h2>
+<div id="chartdiv"></div>
+<p class="thai_font"> จากกราฟแสดงให้เห็นถึงจำนวนคนสั่งซื้อของในช่วงเวลาภายใน 1 วัน สังเกตได้ว่าช่วงเวลาที่มีการซื้อของมากที่สุดคือช่วงเวลา 6 โมงเข้าถึง 9 โมงเช้า  รองลงมาคือช่วงเวลาเที่ยงถึงบ่ายสามโมง  บ่ายสามถึงหกโมงเย็น และ 9 โมงถึงเที่ยง ตามลำดับ
+</p>
+<p class="thai_font"> 6.00 น. - 9.00 น. จำนวนคนสั่งซื้อมีเพศหญิงมากกว่าเพศชาย</p>
+<p class="thai_font"> 9.00 น. - 12.00 น. จำนวนคนสั่งซื้อมีเพศหญิงมากกว่าเพศชาย</p>
+<p class="thai_font"> 12.00 น. - 15.00 น. จำนวนคนสั่งซื้อมีเพศหญิงมากกว่าเพศชาย</p>
+<p class="thai_font"> 15.00 น. - 18.00 น. จำนวนคนสั่งซื้อเพศชายมีมากกว่าพศหญิง</p>
+<br>
+<div class="thai_font" id="yearPerProductChart"></div> <p class="thai_font">จากกราฟแสดงให้เห็นถึงจำนวนสินค้าที่ขายได้ในแต่ละปีตั้งแต่ปี พศ. 2555 - พศ. 2560 สังเกตได้ว่าปีพศ. 2560 มียอดขายสูงที่สุด รองลงมาคือปี พศ. 2555 พศ. 2556 พศ. 2557 พศ. 2559 และ พศ. 2558 ตามลำดับ 
+</p><br>
+<div class="thai_font" id="productChart"></div><p class="thai_font">จากกราฟแสดงให้เห็นถึงจำนวนเมนูอาหารที่ขายได้ภายในเดือนกันยายน สังเกตได้ว่า เมนูข้าวเหนียวหมูปิ้ง มีจำนวนคนซื้อมากที่สุด รองลงมาคือเสต็กปลาดอลลี่ ลูกชิ้นปิ้ง ขนมจีบ เสต็กหมู และแซนวิช ตามลำดับ
+</p>
+
+</div></div>
+ {% endblock %}

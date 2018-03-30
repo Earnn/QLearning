@@ -1,0 +1,146 @@
+{% extends 'base.html' %} {% load static %}{% load widget_tweaks %}
+{% block content %}
+  <style>
+  
+  /*.container{
+  width: 60%;
+  }*/
+  /* body,html{
+  background-color: #EEEEEE;
+  }
+  */
+  input[type=text],input[type=password],input[type=email]{
+  background-color: #FAFFBD;
+  }
+  .uk-button-default:hover{
+  background-color: #FFBF00;
+  color: white;
+  }
+  .uk-button-default{
+  color: #FFBF00;
+  }
+  .inImg{
+  position: absolute;
+  
+  width: 100%;
+  height: 90%;
+  object-fit: cover;
+  }
+  .imgCrop{
+  width: 100%;
+  height: 90%;
+  overflow: hidden;
+  position:  relative;
+  }
+  p{
+    font-size:1.2em;
+  }
+
+   
+
+@media (min-width: 993px) and (max-width: 1200px) {
+        
+      #home{
+        width: 60%;
+      }
+        
+        }
+        /* Large devices (large desktops, 1200px and up) */
+        @media (min-width: 1201px) {
+         #home{
+        width: 60%;
+        }
+        
+        }
+  </style>
+     <hr class="uk-box-shadow-medium ">
+  <div id="home" class="container" >
+  
+      <br>
+<!--       <h2 class=" uk-margin-remove-bottom " style="color: black">เกี่ยวกับ<b style="color: #FFD200">กินอิ่ม </b></h2> -->
+      <h1 class=" uk-text-center" style="color: black"><span>เกี่ยวกับ<b style="color: #FFD200">กินอิ่ม </b></span></h1>
+      
+      <div uk-grid>
+        <div class="uk-width-1-1@m ">
+          <h2 class="uk-heading-bullet">ทำไมธุรกิจถึงต้องใช้ Machine Learning </h2>
+          <br>
+              <div class="uk-child-width-1-2@s uk-margin" uk-grid>
+                <div class="uk-flex-last@s uk-card-media-right uk-cover-container">
+                    <!-- <img src="../docs/images/light.jpg" alt="" uk-cover> -->
+                    <img src="{% static "images/data.jpg" %}" uk-cover />
+
+                    <canvas width="600" height="400"></canvas>
+                </div>
+                <!-- <div> -->
+                    <div class="uk-card-body ">
+                        <p > ข้อมูลมีความสำคัญอย่างมากในการพัฒนาธุรกิจ ทั้งข้อมูลการขาย ข้อมูลการให้บริการ และข้อมูลลูกค้า ข้อมูลเหล่านี้ช่วยให้เจ้าของธุรกิจสามารถนำมาใช้วางแผนกลยุทธ์ทางการตลาด และทราบถึงความต้องการของลูกค้า 
+            
+              </p>
+
+                    </div>
+                <!-- </div> -->
+            </div>
+            <br>
+               <blockquote cite="#" class="uk-column-span">
+                  <p>ร้านขายเสื้อในชีวิตจริงที่มีการขายแตกต่างกัน 2 ร้าน โดยร้านที่หนึ่ง พนักงานพยายามขายสินค้าให้กับลูกค้าทุกคน แต่ร้านที่สอง พนักงานพยายามจะเข้าถึงความต้องการของลูกค้าแต่ละคนและให้คำแนะนำเกี่ยวกับสินค้าได้อย่างเหมาะสม </p>
+                  <footer>Tsiptsis and Chorianopoulos <cite><a href="">Data Mining Techniques in
+                  CRM: Inside Customer Segmentation
+                  </a></cite></footer>
+              </blockquote>
+            <br>
+             <p> แน่นอนว่าร้านค้าที่สองสามารถทำให้ลูกค้ามีความประทับใจ และไว้วางใจการให้บริการของร้านค้า  ทำให้ลูกค้ารู้สึกอยากกลับมาใช้บริการซ้ำจนเกิดความสัมพันธ์ที่ยาวนานกับร้านค้า  </p>
+               <!--   <img class="uk-align-center " src="{% static "images/people.jpg" %}"  style="width: 80%;height: auto; " /> -->
+               <!-- <br> -->
+                 <h2 class="uk-heading-bullet">Machine Learning คืออะไร?</h2>
+                 
+                             <img class="uk-align-center " src="{% static "images/ml.jpg" %}"  style="width: 50%;height: auto; " />
+                 <p> Machine Learning เป็นศาสตร์แขนงหนึ่งที่ทำให้คอมพิวเตอร์มีความสามารถในการเรียนรู้ด้วยตนเอง ช่วยวิเคราะห์ข้อมูล ทำนายรูปแบบการซื้อโดยพิจารณาจากประวัติการซื้อที่ผ่านมา ช่วยคาดเดาการตัดสินใจของผู้ซื้อได้ และยังสามารถทำ Clustering แบ่งกลุ่มลูกค้าออกเป็นกลุ่มย่อยๆ เพื่อให้เจ้าของธุรกิจสามารถวางกลยุทธ์ทางการตลาดที่เหมาะสมกับลูกค้าแต่ละกลุ่มได้มากขึ้น</p>
+
+                  <br>
+              <h2 class="uk-heading-bullet">Machine Learning และเว็บกินอิ่มจะช่วยธุรกิจของคุณอย่างไรบ้าง ?</h2>
+             <br>
+                <p>1. Machine Learning ช่วยแบ่งกลุ่มลูกค้าของคุณ  วิเคราะห์ความเกี่ยวข้องของพฤติกรรมของลูกค้า เพื่อที่คุณสามารถจัดหรือเสนอโปรโมชั่นให้ถูกกลุ่มเป้าหมาย และวางกลยุทธ์ทางการตลาด</p>
+                 <img class="uk-align-center " src="{% static "images/clustering.jpg" %}"   style="width: 80%;height: auto; " />
+                <p>2. Machine Learning จะช่วยวิเคราะห์สิ่งที่ลูกค้าสนใจ และแนะนำสินค้าที่ลูกค้ากำลังมองหาผ่านทางเว็บไซต์กินอิ่ม</p>
+                     <img class="uk-align-center " src="{% static "images/rec2.jpg" %}"  style="width: 80%;height: auto; "  />
+                <p>3. สรุปสถิติสำคัญของร้านค้าของคุณในแต่ละเดือน</p>
+
+  <img class="uk-align-center " src="{% static "images/graph.png" %}"   />
+                
+               <p>4. คุณจะได้เห็นความสนใจของลูกค้าในตลาด และสามารถดึงลูกค้ากลุ่มนั้นให้มาใช้บริการร้านค้าของคุณ</p>
+                <img class="uk-align-center " src="{% static "images/rec.jpg" %}"   style="width: 80%;height: auto; " />
+          
+  <br> <br>
+      <a class="uk-link-text uk-text-center" href="contact"> <h2>โฆษณากับกินอิ่ม มาร่วมเป็นส่วนหนึ่งในการพัฒนาธุรกิจกิจของคุณ ติดต่อเรา</h2></a>
+   <br> <br>
+  <hr>
+
+  <br>
+  <cite>
+<p>Ref:</p> 
+  <ul class="uk-list uk-list-bullet">
+    <li><a href="https://www.babelcoder.com/blog/posts/machine-learning-introduction">[Machine Learning#1] Machine Learning คืออะไร? รู้จักประเภทต่างๆของ Machine Learning</a></li>
+    <li><a href="https://www.freepik.com/free-photo/young-woman-recommending-cakes_1280334.htm">Picture designed by Freepik #1 </a></li>
+    <li><a href='https://www.freepik.com/free-photo/asian-waiter-making-recommendation-to-young-couple_993538.htm'>Picture designed by Freepik #2 </a></li>
+    <li><a href="https://www.freepik.com/free-vector/human-knowledge_764640.htm">Picture designed by Freepik #3</a></li>
+</ul>
+
+
+
+
+
+  </cite>
+
+        </div>
+       <!--  <div class="uk-width-1-2@m ">
+          <div class="imgCrop" >
+          <img class="uk-align-center uk-margin-medium-top " src="../../static/images/brain.jpg" style="width:100%; height:90%"" alt="">
+          </div>
+          
+        </div> -->
+      </div>
+      
+  </div>
+  <br>
+</div>
+{% endblock %}

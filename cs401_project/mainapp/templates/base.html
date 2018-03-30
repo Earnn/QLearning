@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+   <head>
+        <meta charset="utf-8">
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}กินอิ่ม สั่งอาหารออนไลน์ มธ.  Delivery TU{% endblock %}</title>
+        <link href="{% static 'images/favicon.ico' %}" rel="shortcut icon" type="image/x-icon" />
+
+      <!--   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+       -->
+   <!--      <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+        <script type='text/javascript' src="{% static 'js/jquery.min.js' %}"></script>
+        
+      <!--   <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.27/js/uikit.min.js"></script>
+        <script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.27/js/uikit-icons.min.js"></script> -->
+        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <!-- carousial -->
+        <!-- <script src="http://code.jquery.com/jquery-1.8.2.min.js" type="text/javascript"></script> -->
+      
+    
+      <!--   <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'> -->
+        <script type='text/javascript' src="{% static 'js/PureSlider.min.js' %}"></script>
+        
+        <script type='text/javascript' src="{% static 'js/hammer.min.js' %}"></script>
+  
+        <script type='text/javascript' src="{% static 'js/js_uikit/uikit.js' %}"></script>
+        <script type='text/javascript' src="{% static 'js/js_uikit/uikit.min.js' %}"></script>
+        <script type='text/javascript' src="{% static 'js/js_uikit/uikit-icons.js' %}"></script>
+        <script type='text/javascript' src="{% static 'js/js_uikit/uikit-icons.min.js' %}"></script>
+
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <!-- <link href="{% static 'css/font-awesome4-2.min.css' %}" rel="stylesheet prefetch"> -->
+        <!-- <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet"> -->
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'css/css_uikit/uikit.css' %}" rel="stylesheet">
+        <link href="{% static 'css/css_uikit/uikit.min.css' %}" rel="stylesheet">
+        <link href="{% static 'css/css_home/style.css' %}" rel="stylesheet">
+        <link href="{% static 'css/css_home/responsive.css' %}" rel="stylesheet">
+     
+        <link href="{% static 'css/css_home/pure_slide.min.css' %}" rel="stylesheet">
+        
+        <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+
+        <!-- <link href='//fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='texts'> -->
+        <link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Neucha' rel='stylesheet' type='text/css'>
+        <link href="https://fonts.googleapis.com/css?family=Kanit:300" rel="stylesheet">
+        
+    </head>
+    <body>
+        <style>
+        
+        body{
+        font-size: 150%;
+        }
+        
+        
+        h1,h2,h3,h4,h5,p,a,li,a,span,button,label{
+        font-family: 'Kanit', sans-serif;
+        }
+
+        p,a,ul li a,li{
+        font-size: 1.0em;
+        }
+
+
+         .textBreadCrum{
+            font-size: 0.9em;
+        }
+
+         #text-tab{
+            font-size: 1.5em; 
+    }
+       
+        h1, h1 a { font-size: 2.0em; }
+        h2,h2 a { font-size: 1.5em; }
+        h3 ,h3 a { font-size: 1.17em; }
+        h4{ font-size: 1.12em; }
+        h4 a{
+            font-size: 1.30em;
+        }
+        h5 { font-size: 0.83em; }
+        h6 { font-size: 0.75em; }
+        
+        .logo {
+        height: auto;
+        width: 150px;
+        margin-top:-50px;
+        }
+         .price{
+    color: #ababab;
+    }
+    /* .menu_name{
+        font-variant-alternates: 
+    }*/
+    .login-icon{
+        width: 28px;
+        height: auto;
+        margin-top: 5px;
+    }
+        .imgCrop-search{
+        
+        width: 100%;
+        height: 130px;
+        overflow: hidden;
+        position:  relative;
+        }
+        .imgCrop-search-mobile{
+        
+        width: 100%;
+        height: 80px;
+        overflow: hidden;
+        position:  relative;
+        }
+       /* .inImg-search{
+        position: absolute;
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        }*/
+        .imgCrop{
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        position:  relative;
+        }
+
+
+        .imgCrop-mobile{
+            width: 100%;
+            height: 150px;
+            overflow: hidden;
+            position:  relative;
+        }
+
+        .inImg{
+        position: absolute;
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+        }
+        .inImg-mobile{
+            position: absolute;
+           width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        button{
+        background-color:#FFBF00;
+        color: white;
+        border-color: #FFBF00;
+        }
+        
+        .nav-desktop .container{
+        width: 90%;
+        margin-bottom: -10px;
+        }
+        
+        
+        .serach-input {
+        width: 100%;
+        margin-top:30px;
+        text-align: center;
+        }
+        .action {
+        margin-top:20px;
+        }
+      
+        .nav-mobile{
+        display: none;
+        visibility: hidden;
+        }
+        .nav-desktop {
+        display: block;
+        visibility: visible;
+        }
+        .container{
+        width: 80%;
+        }
+        #home{
+        width: 80%;
+        }
+        .ps-slider {
+        position: relative;
+        width: 100%;
+        background-color: #333;
+        height: 60vh;
+        overflow: hidden;
+        margin-top: -20px;
+        }
+        .ps-slider-nav ul li a {
+        display: block;
+        width: 15px;
+        height: 15px;
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: rgba(0, 0, 0, 0.6) 0 0 4px;
+        border-radius: 50%;
+        cursor: pointer;
+        text-decoration: none;
+        outline: 0;
+        transition: all .3s
+        }
+        
+        .search-cate-mobile {
+        -webkit-column-width: 100px; /* Chrome, Safari, Opera */
+        -moz-column-width: 100px; /* Firefox */
+        column-width: 100px;
+        }
+        .search-cate-mobile{
+        display: none;
+        visibility: hidden;
+        }
+        .uk-comment-avatar{
+            width: 80px; 
+            height: 80px;
+        }
+
+        .breadcrumb{
+       
+            background-color: white;
+            margin-top : -20px;
+
+           
+        }
+
+        .menu-mobile{
+            display: none;
+            visibility: hidden;
+
+        }
+
+        .menu-desktop{
+            display: block;
+            visibility: visible;
+        }
+        .profile-desktop {
+            display: block;
+            visibility: visible;
+        }
+
+        .profile-mobile {
+            display: none;
+            visibility: hidden;
+        }
+
+        .review-mobile{
+            display: none;
+            visibility: hidden;
+        }
+
+        .review-desktop{
+            display: block;
+            visibility: visible;
+        }
+
+
+
+        .after-search-desktop{
+            display: block;
+            visibility: visible;
+        }
+        
+        .after-search-mobile{
+            display: none;
+            visibility: hidden;
+        }
+ .image-mobile{
+        display: none;
+        visibility: hidden;
+
+            }
+
+    .image-desktop{
+            display: block;
+            visibility: visible;
+    }
+
+    #totop{
+       position: fixed;
+        bottom:40px;
+        right: 40px; 
+  z-index: 1;
+
+    }
+
+    .img-user{
+        width: 50px;
+        height: 50px; 
+        object-fit: cover;
+        border-radius: 50%;
+        margin-top: -15px;
+    }
+
+        /* Extra small devices (phones, less than 768px) */
+        @media (max-width: 479px) {
+    .img-user{
+        width: 40px;
+        height: 40px; 
+        object-fit: cover;
+        border-radius: 50%;
+        margin-top: -10px;
+    }
+    #totop{
+       position: fixed absolute;
+        bottom:20px;
+        right: 20px; 
+             z-index: 1;
+
+    }
+             .image-mobile{
+           display: block;
+                visibility: visible;
+
+                }
+
+        .image-desktop{
+              display: none;
+            visibility: hidden;
+               
+        }
+        .after-search-desktop{
+            display: none;
+            visibility: hidden;
+        }
+        .after-search-mobile{
+             display: block;
+        visibility: visible;
+        }
+        
+        .nav-desktop{
+        display: none;
+        visibility: hidden;
+        }
+        .nav-mobile{
+        display: block;
+        visibility: visible;
+        }
+        .search-cate-desktop{
+        display: none;
+        visibility: hidden;
+        }
+        .search-cate-mobile{
+        display: block;
+        visibility: visible;
+        }
+        .menu-mobile{    
+            display: block;
+            visibility: visible;
+        }
+
+        .menu-desktop{
+            display: none;
+            visibility: hidden;
+        }
+
+        .profile-desktop {
+             display: none;
+            visibility: hidden;
+           
+        }
+
+        .profile-mobile {
+            display: block;
+            visibility: visible;
+        }
+
+        .review-mobile{
+            display: block;
+            visibility: visible;
+        }
+
+        .review-desktop{
+             display: none;
+            visibility: hidden;
+        }
+        #home{
+        width: 98%;
+        }
+
+      
+        .nav-mobile .container{
+        width: 98%;
+        }
+        .logo {
+        height: 100%;
+        width: 100px;
+        margin-top:-20px;
+        }
+        .user{
+        margin-top:15px;
+        }
+        
+        .ps-slider {
+        position: relative;
+        width: 100%;
+        background-color: #333;
+        height: 10em;
+        overflow: hidden;
+        margin-top: -20px;
+        }
+        .ps-slider-nav ul li a {
+        display: block;
+        width: 0.75em;
+        height: 0.75em;
+        margin-bottom: -0.5em;
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: rgba(0, 0, 0, 0.6) 0 0 4px;
+        border-radius: 50%;
+        cursor: pointer;
+        text-decoration: none;
+        outline: 0;
+        transition: all .3s
+        }
+        .serach-input {
+        width: 100%;
+        margin-top:10px;
+        }
+        .top-margin{
+        margin-top:-28px;
+        }
+        .search-cate-mobile {
+        -webkit-column-width: 120px; /* Chrome, Safari, Opera */
+        -moz-column-width: 120px; /* Firefox */
+        column-width: 120px;
+        }
+
+
+        }
+        @media (min-width: 480px) and (max-width: 767px) {
+              #totop{
+       position: fixed;
+        bottom:20px;
+        right: 20px; 
+          z-index: 1;
+    
+
+    }
+
+             .image-mobile{
+           display: block;
+                visibility: visible;
+
+                }
+
+        .image-desktop{
+              display: none;
+            visibility: hidden;
+               
+        }
+            .after-search-desktop{
+             display: none;
+        visibility: hidden;
+        }
+        .after-search-mobile{
+             display: block;
+        visibility: visible;
+        }
+        .nav-desktop{
+        display: none;
+        visibility: hidden;
+        }
+        .nav-mobile{
+        display: block;
+        visibility: visible;
+        }
+        .menu-mobile{    
+            display: block;
+            visibility: visible;
+        }
+
+        .menu-desktop{
+            display: none;
+            visibility: hidden;
+        }
+        
+        .search-cate-desktop{
+        display: none;
+        visibility: hidden;
+        }
+        .search-cate-mobile{
+        display: block;
+        visibility: visible;
+        }
+
+         .profile-desktop {
+             display: none;
+            visibility: hidden;
+           
+        }
+
+        .profile-mobile {
+            display: block;
+            visibility: visible;
+        }
+          .review-mobile{
+            display: block;
+            visibility: visible;
+        }
+
+        .review-desktop{
+             display: none;
+            visibility: hidden;
+        }
+        .search-cate-mobile {
+        -webkit-column-width: 150px; /* Chrome, Safari, Opera */
+        -moz-column-width: 150px; /* Firefox */
+        column-width: 150px;
+        }
+        #home{
+        width: 98%;
+        }
+        .nav-mobile .container{
+        width: 98%;
+        }
+        .logo {
+        height: 100%;
+        width: 100px;
+        margin-top:-20px;
+        }
+        .user{
+        margin-top:15px;
+        }
+
+       
+        
+        .ps-slider {
+        position: relative;
+        width: 100%;
+        background-color: #333;
+        height: 20em;
+        overflow: hidden;
+        margin-top: -20px;
+        }
+        .ps-slider-nav ul li a {
+        display: block;
+        width: 0.75em;
+        height: 0.75em;
+        margin-bottom: -0.5em;
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: rgba(0, 0, 0, 0.6) 0 0 4px;
+        border-radius: 50%;
+        cursor: pointer;
+        text-decoration: none;
+        outline: 0;
+        transition: all .3s
+        }
+        .serach-input {
+        width: 100%;
+        margin-top:10px;
+        }
+        .top-margin{
+        margin-top:-28px;
+        }
+ 
+        .inImg{
+            position: absolute;
+            
+          width: 100%;
+            height: 130px;
+            object-fit: cover;
+            }
+        }
+        /* Small devices (tablets, 768px and up) */
+        @media (min-width: 768px) and (max-width: 992px) {
+           
+              #totop{
+       position: fixed absolute;
+        bottom:30px;
+        right: 30px; 
+          z-index: 1;
+
+    }
+        .nav-desktop{
+        display: block;
+        visibility: visible;
+        }
+        .nav-mobile{
+        display: none;
+        visibility: hidden;
+        
+        }
+
+
+
+        .menu-mobile{    
+            display: none;
+            visibility: hidden;
+        }
+
+        .menu-desktop{
+            display: block;
+            visibility: visible;
+            
+        }
+
+        #home{
+             width: 95%;
+        }
+        
+
+        .container{
+        width: 95%;
+        }
+        .container .uk-margin-remove-top{
+        width: 95%;
+        }
+        .logo {
+        height: 100%;
+        width: 100px;
+        margin-top:-60px;
+        }
+        
+        .search-cate-mobile {
+        -webkit-column-width: 150px; /* Chrome, Safari, Opera */
+        -moz-column-width: 150px; /* Firefox */
+        column-width: 150px;
+        }
+        .ps-slider {
+        position: relative;
+        width: 100%;
+        background-color: #333;
+        height: 45vh;
+        overflow: hidden;
+        margin-top: -35px;
+        }
+        .serach-input {
+        width: 50%;
+        margin-top:20px;
+        text-align: center;
+        margin-left: -110px;
+        }
+
+   
+        .action {
+        margin-top:-60px;
+        }
+        
+        .ps-slider-nav ul li a {
+        display: block;
+        width: 1.2em;
+        height: 1.2em;
+        margin-bottom: -0.3em;
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: rgba(0, 0, 0, 0.6) 0 0 4px;
+        border-radius: 50%;
+        cursor: pointer;
+        text-decoration: none;
+        outline: 0;
+        transition: all .3s
+        }
+        
+        }
+        /* Medium devices (desktops, 992px and up) */
+        @media (min-width: 993px) and (max-width: 1200px) {
+        
+        
+        
+        }
+        /* Large devices (large desktops, 1200px and up) */
+        @media (min-width: 1201px) {
+        
+        
+        }
+   .star-color{
+    color: #FFD600;
+    }
+        </style>
+         <a id="totop" href="#top" uk-scroll uk-totop></a>
+        {% if user.is_authenticated %}
+            
+            <div id="top">
+
+                  <div class="nav-desktop" >
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="social pull-left ">
+                                
+                                <a href="{% url 'home' %}"> <img class=" logo"   src="{% static "images/logo3.png" %}"/> </a>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="uk-margin  uk-text-center">
+                                <form action="{% url 'search_input' %}" method="POST"  class="uk-search uk-search-default serach-input" >
+                                    {% csrf_token %}
+                                    <button type="submit" href="" class="uk-search-icon-flip" uk-search-icon></button>
+                                    <input  name="search" class="uk-search-input" type="search" placeholder="ชื่อร้าน,ชาบู, ปิ้งย่าง" >
+                                </form>
+                                
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="user action pull-right">
+                                <ul>
+                                   
+                                 <li>
+                                    <a href="">สถานะออเดอร์</a>  
+                               
+                                 </li> 
+
+                                    <li><a href=""> <img class="img-user"  src="{{profile}}"/> 
+                                       </a>
+                                    
+                                </li>
+                             
+                              
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class="nav-mobile">
+         <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="social pull-left">
+                        
+                        <a href="{% url 'home' %}"> <img class="pull-left logo"  src="{% static "images/logo3.png" %}"/> </a>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="action pull-right user">
+                        <ul>
+                                  
+                                 <li><a href="">สถานะออเดอร์</a>  
+                               
+                                 </li> 
+
+                                    <li><a href=""> <img class="img-user"  src="{{profile}}"/> 
+                                       </a>
+                                    
+                                </li>
+                              
+                              
+                            </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="uk-text-center top-margin">
+                    <form action="{% url 'search_input' %}" method="POST" class="uk-search uk-search-default serach-input" >
+                        {% csrf_token %}
+                        <button type="submit" href="" class="uk-search-icon-flip" uk-search-icon></button>
+                        <input  name="search" class="uk-search-input" type="search" placeholder="ชื่อร้าน,ชาบู, ปิ้งย่าง" >
+                    </form>
+                    
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    </div>
+    
+{% else %}
+    
+    <div class="nav-desktop ">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="social pull-left">
+                        <a href="{% url 'home' %}"> <img class="pull-left logo"  " src="{% static "images/logo3.png" %}"/> </a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="uk-margin  uk-text-center">
+                        <form action="{% url 'search_input' %}" method="POST"  enctype="multipart/form-data" class="uk-search uk-search-default serach-input" >
+                            {% csrf_token %}
+                            <button type="submit" href="" class="uk-search-icon-flip" uk-search-icon></button>
+                            <input  name="search" class="uk-search-input" type="search" placeholder="ชื่อร้าน,ชาบู, ปิ้งย่าง" >
+                        </form>
+                        
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="user action pull-right user">
+                        <ul>
+                            <li><a href="#modal-sections" uk-toggle><i class="fa fa-user"></i> Login</a></li>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<div class="nav-mobile ">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="social pull-left">
+                    
+                    <a href="{% url 'home' %}"> <img class="pull-left logo"  src="{% static "images/logo3.png" %}"/> </a>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="action pull-right user">
+                    <ul >
+                        <li><a  href="#modal-sections" uk-toggle><i class="fa fa-user"></i> Login</a></li>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="uk-text-center top-margin">
+                <form action="{% url 'search_input' %}" method="POST" enctype="multipart/form-data" class="uk-search uk-search-default serach-input">
+                    {% csrf_token %}
+                    <button type="submit" href="" class="uk-search-icon-flip" uk-search-icon></button>
+                    <input  name="search" class="uk-search-input" type="search" placeholder="ชื่อร้าน,ชาบู, ปิ้งย่าง" >
+                </form>
+                
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div id="modal-sections"  uk-modal>
+<div class="uk-modal-dialog" style="width: 400px">
+    <button class="uk-modal-close-default" type="button" uk-close></button>
+    <div class="uk-modal-header uk-padding-small uk-padding-remove-top">
+        <h2 class="uk-modal-title " style="text-align: center">เข้าสู่ระบบด้วย</h2>
+    </div>
+    <div class="uk-modal-body">
+        <div class="uk-container">
+           <div class="uk-margin-small">
+                <a href="{% url 'social:begin' 'facebook' %}" class="uk-width-1-1 uk-button uk-button-default" href="#facebook"  style="background-color: #3B5998;color:white">
+                <img class="pull-left login-icon " src="{% static "images/facebook.png" %}"/>Facebook</a>
+            </div>
+            <div class="uk-margin-small">
+                <a href="{% url 'social:begin' 'google-oauth2' %}" class="uk-width-1-1 uk-button uk-button-default" style="background-color: #d9534f;color:white" >
+                <img class="pull-left login-icon " src="{% static "images/google.png" %}"/>Google</a>
+            </div>
+            <div class="uk-margin-small ">
+                <ul class="uk-subnav uk-subnav-divider uk-margin-left" >
+                    <li><a href="{% url 'login'   %}"  class="uk-button-text" ><h2>เข้าสู่ระบบ</h2></a></li>
+                    <li ><a href="{% url 'signup'  %}" class="uk-button-text" ><h2>สมัครสมาชิก</h2></a> </li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+        
+        
+    </div>
+   <!--  <div class="uk-modal-footer uk-text-right thai_font">
+        <button class="uk-button uk-button-default  uk-modal-close  uk-text" type="button"><h2 class="uk-margin-small-top">ยกเลิก</h2></button>
+        <button class="uk-button uk-button-primary  uk-text" type="button"><h2 class="uk-margin-small-top">ตกลง</h2></button>
+    </div> -->
+</div>
+</div>
+
+{% endif %}
+            </div>
+          
+{% block content %} {% endblock %}
+<!-- <div class="uk-position-bottom-right"> -->
+
+
+
+
+<div class="uk-section-default ">
+<div class="uk-section uk-section-secondary uk-light uk-padding "  >
+<div class="uk-container">
+    
+    <div class="uk-grid-match uk-child-width-1-3@m " uk-grid>
+        <div></div>
+        <div class="uk-text-center">
+            <span>
+                
+                <a href="https://www.facebook.com/ginimm/" class="uk-margin-small-right"><img class="logo-brand" style="width: 30px;height: auto; margin-right: " src="{% static "images/003-facebook.png" %}"  ></a>
+                <a href="https://line.me/R/ti/p/%40fbk7434n"><img class="logo-brand" style="width: 30px;height: auto;"  src="{% static "images/004-line.png" %}"  ></a>
+            </span>
+            <!-- <hr class="uk-margin-small"> -->
+            <!-- <hr class="uk-divider-icon uk-text-small"> -->
+            <h2 class="uk-heading-line uk-text-center uk-margin"><span>กินอิ่ม</span></h2>
+            
+                
+            <br>
+
+        </div>
+        <div></div>
+    </div>
+
+                    <ul class="uk-text-center uk-margin-remove-top">
+ <li class="uk-margin-small-right" style=" display:inline;"><a id="font-kanit"  href="{% url 'contact' %}">ติดต่อเรา</a></li>
+               
+                <li class="uk-margin-small-right uk-text-muted"  style=" display:inline;"></li>
+                 <!-- <li class="uk-margin-small-right" style=" display:inline;"><a href="{% url 'about_us' %}"  id="font-kanit">ทำไมธุรกิจต้องใช้ Machine Learning</a></li>
+            -->
+               
+            </ul>
+       
+             
+       
+    <p class="uk-text-center uk-margin-remove">คณะวิทยาศาสตร์ ภาควิชาการคอมพิวเตอร์ <span>มหาวิทยาลัยธรรมศาสตร์ ศูนย์รังสิต</span></p>
+</div>
+</div>
+</div>
+</body>
+</html>

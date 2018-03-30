@@ -1,0 +1,143 @@
+{% extends "base.html" %} {% block content %}{% load static %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet" media="all">
+    <!-- Meta-Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!-- <link rel="stylesheet" href="{% static 'alert/example/example.css' %}">
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="{% static 'alert/dist/sweetalert-dev.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'alert/dist/sweetalert.css' %}">
+    <script src="https://cdn.jsdelivr.net/sweetalert2/6.6.2/sweetalert2.js"></script>
+    <script src="https://cdn.jsdelivr.net/sweetalert2/6.6.2/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.6.2/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/sweetalert2/6.6.2/sweetalert2.css"> -->
+    <!--
+    <link rel="stylesheet" href="example/example.css">
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    This is what you need
+    <script src="dist/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="dist/sweetalert.css">  -->
+    <style>
+ 
+    body,
+    html {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    /*font-family: 'Roboto Condensed', sans-serif;*/
+    }
+    input[type="file"] {
+    display: none;
+    }
+    .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    }
+    h2 {
+    text-align: center;
+    border: 2px white solid;
+    font-size: 50px;
+    display: inline;
+    color: black;
+    }
+    #nameNav{
+    float: right;
+    font-size: 18px;
+    font-weight: 600;
+    font-family: 'Roboto Condensed', sans-serif;"
+    }
+    /*.bghead {
+    background-image: url('../../static/images/bg7.jpg');
+    background-repeat: no-repeat;
+    }*/
+    </style>
+    <!-- banner -->
+    <div class="banner-new jarallax">
+        <div class="agileinfo-dot">
+            <div class="header">
+                <div class="container">
+                    <div class="header-left">
+                        <div class="w3layouts-logo grid__item">
+                            <h1>
+                            <!--   <a class="link link--ilin" href="#"><span>Fresh</span><span>Food</span></a> -->
+                            </h1>
+                        </div>
+                    </div>
+                    <div class="top-nav">
+                        <nav class="navbar navbar-default">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                </button>
+                            </div>
+                            <!-- Collect the nav links, forms, and other content for toggling -->
+                            <div class="collapse navbar-collapse" style="float:right" id="bs-example-navbar-collapse-1">
+                                <ul class="nav navbar-nav">
+                                    <li><a class="active" href="index.html">Services</a></li>
+                                    <li><a href="#about" class="scroll">Login</a></li>
+                                    <li><a href="#about" class="scroll">{{username}}</a></li>
+                                </ul>
+                                <div class="clearfix"> </div>
+                            </div>
+                        </nav>
+                        <!--  <div class="agileinfo-social-grids">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                                <li><a href="#"><i class="fa fa-vk"></i></a></li>
+                            </ul>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <div class="agileits-banner-info">
+                <!--  <h3>welcome to</h3> -->
+                <!-- <h2 class="rw-sentence"> -->
+                <!-- <h1 class="thai_font-title" style="text-align: center; font-size: 48px; color: white;">ค้นหาร้านอาหารบริเวณธรรมศาสตร์ </h1> -->
+                
+                
+                <!--      <a href="#" data-toggle="modal" data-target="#myModal2">Book Your Table</a> -->
+            </div>
+            <!--  <br>
+            <br><br><br><br><br><br><br><br><br> -->
+        </div>
+    </div>
+    <!-- //banner -->
+    <div class="container ">
+        
+        <br> <div class="uk-container " style="margin-top: -20px">
+            
+            <!-- <div class="uk-section uk-section-default "> <div class="container "> -->
+            
+            <!-- </div> -->
+            
+            
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+    <br> {% endblock content %} {% block script %}
+    <script type="text/javascript">
+    function readURL(input) {
+    if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+    $('#blah').attr('src', e.target.result);
+    }
+    reader.readAsDataURL(input.files[0]);
+    }
+    }
+    $("#imgInp").change(function() {
+    readURL(this);
+    });
+    </script>
+{% endblock script %}

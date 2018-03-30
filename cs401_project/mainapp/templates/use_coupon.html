@@ -1,0 +1,26 @@
+{% extends 'base.html' %}{% load static %} {% block content %}
+
+    <!-- banner -->
+    
+    <!-- end banner -->
+    <!-- <br>     -->
+    <hr class="uk-box-shadow-medium ">
+    <div class="container" id="home">
+        <div class="uk-container uk-text-center">
+           
+            
+                <h1 class=" uk-text-center"> <i style="color:#2ECC71" class="fa fa-check-circle fa-3x" aria-hidden="true"></i></h1>
+                  <h2 class="thai_font uk-text-center"> ยินดีด้วย ! ใช้คูปองร้าน <span style="color:#ffbf00;font-weight: bold">{{coupon.name}}  </span></h2 >
+                        <h4 class=" uk-text-center uk-text-muted ">โปรดแสดงหน้านี้ให้ร้านค้า หรือแคปรูปเก็บไว้</h4>
+                 <h3 class="uk-text-center">{{coupon.msg}} </h3>
+                    <img src="../{{coupon.image.url}}" alt="" style="width: 30%;height: auto;">
+                     <h3 class=" uk-text-center">ใช้งานได้ถึง <span class="uk-text-danger">{{coupon.time}}</span> (1 ชม.)</h3>
+               
+               <br>
+                   <a href="{% url 'home'  %}">กลับหน้าแรก</a>
+          </div>
+   
+    </div>
+    <br>
+    <br>
+{% endblock %}

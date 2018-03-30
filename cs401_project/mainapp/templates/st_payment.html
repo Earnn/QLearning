@@ -1,0 +1,193 @@
+{% extends 'base.html' %}{% load static %} {% block content %}{% load widget_tweaks %}
+  <style
+  <style>
+  .title{
+  font-weight: bold;
+  }
+  .imgCrop{
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  position:  relative;
+  }
+  </style>
+  <!-- banner -->
+  
+  <!-- end banner -->
+  <!-- <br>     -->
+  <hr class="uk-box-shadow-medium ">
+  <div class="uk-background-muted" style="margin-top: -20px;">
+    <div class="container  " id="home">
+      <br>
+      <div class="uk-card uk-card-default">
+        <div class="uk-card-body uk-margin-remove">
+          <!-- <div class="uk-section uk-section-default"> -->
+          <h2 class="uk-heading-bullet">ยอดชำระ </h2>
+          <h3 class=" uk-margin-left">  ราคารวม {{total}} บาท</h3>
+          <h2 class="uk-heading-bullet">วิธีการชำระเงิน</h2>
+          <div class="uk-margin uk-width-1-3@m">
+            <select id="selectPayment"  class="uk-select">
+              
+              
+                <option value="PromptPay">PromptPay</option>
+                  <!-- <option value="จ่ายเงินปลายทาง">จ่ายเงินปลายทาง</option> -->
+             
+              <!--       <option>PromtPay</option>
+              <option>จ่ายเงินปลายทาง</option> -->
+            </select>
+          </div>
+          <form id="" role="form" autocomplete="off" enctype='multipart/form-data' class="form" method="post">
+            {% csrf_token %}
+            <div id="promptpayBlock">
+              <div class="uk-margin-left" >
+                <!-- <label for="">ขั้นตอนการชำระเงิน</label> -->
+                <h3 class="title">  ขั้นตอนการชำระเงิน</h3>
+                <h3 class="title">1. เลือกวิธีการโอนเงิน</h3>
+                <h3 class="uk-margin-left">1.1 สแกน qrcode </h3>
+                <img class="imgCrop uk-margin-left" style="width: 200px;height: 200px"  src="{% static "images/qrprompt.jpg" %}">
+                <p></p>
+                <h3 class="uk-margin-left">1.2 โอนผ่านบัญชีพร้อมเพย์ 0970788305</h3>
+                <h3 class="title">2. อัพโหลดใบเสร็จ</h3>
+                <div class="uk-margin">
+                  <div class="" uk-margin>
+                    <div id="myFile" uk-form-custom="target: true">
+                      {{slipForm.slip_image|add_class:"uk-input"}}
+                      <input class="uk-input uk-form-width-medium"  type="text" placeholder="Select file" disabled>
+                    </div>
+                  </div>
+                </div>
+                <!--    <label class="" ><input id="conditionCheck" class="uk-checkbox " style="margin-top: -2px" type="checkbox"> ยอมรับเงื่อนไขและข้อตกลงในการใช้บริการ </label> -->
+              </div>
+              <div class="">
+                
+               <div class="uk-alert" uk-alert>
+                <h3>เงื่อนไขและข้อตกลงในการใช้บริการ</h3>
+                 <div  class="uk-margin-left"> <label>1. กรณีที่ลูกค้าระบุตำแหน่งจัดส่งสินค้านอกเหนือจากขอบเขตที่ร้านค้ากำหนด ทางร้านค้าจะไม่จัดส่งอาหาร</label>
+<!--                   <p class="uk-margin-left"> </p>
+ -->                  
+<p></p>
+  <label>2. หลังจากกดชำระเงิน ลูกค้าไม่สามารถยกเลิกรายการอาหารได้</label>
+       <p></p>
+                  <label>3. กรณีที่ลูกค้าไม่มารับอาหารภายใน 10 นาที พนักงานส่งอาหารจะไปส่งออเดอร์อื่นทันที </label>
+                  <p >หากลูกค้าต้องการให้พนักงานกลับมาส่งอาหาร ให้ติดต่อเบอร์ที่ระบุในหน้า "ติดต่อเรา"
+                  หากมีค่าใช้จ่ายเพิ่มเติมจากการกลับมาสั่งอีกครั้ง ทางเราต้องขอเก็บเงินเพิ่มที่ปลายทาง</p>
+                                  
+                </div>
+                
+              
+              
+            </div>
+              <label class="" ><input id="conditionCheck_promptpay" class="uk-checkbox " style="margin-top: -2px" type="checkbox"> ยอมรับเงื่อนไขและข้อตกลงในการใช้บริการ </label>
+              
+            </div>
+            <button  class="uk-margin-top uk-button uk-button-order uk-align-center" name="byPromtPay" id="orderBtn_promptpay" type="submit" style="color: white; " ><h1 class="uk-margin-small-top" disabled>ยืนยันการสั่งซื้อ</h1></button>
+          </div>
+        </form>
+        <form id="" role="form"  enctype='multipart/form-data' class="form" method="post">
+          {% csrf_token %}
+          <div id="cashBlock" >
+            <div class="">
+              
+              <div class="uk-alert" uk-alert>
+                <h3>เงื่อนไขและข้อตกลงในการใช้บริการ</h3>
+                 <div  class="uk-margin-left"> <label>1. กรณีที่ลูกค้าระบุตำแหน่งจัดส่งสินค้านอกเหนือจากขอบเขตที่ร้านค้ากำหนด ทางร้านค้าจะไม่จัดส่งอาหาร</label>
+<!--                   <p class="uk-margin-left"> </p>
+ -->                  
+<p></p>
+ <label>2. หลังจากกดชำระเงิน ลูกค้าไม่สามารถยกเลิกรายการอาหารได้</label>
+       <p></p>
+                  <label>3. กรณีที่ลูกค้าไม่มารับอาหารภายใน 10 นาที พนักงานส่งอาหารจะไปส่งออเดอร์อื่นทันที </label>
+                 <p >หากลูกค้าต้องการให้พนักงานกลับมาส่งอาหาร ให้ติดต่อเบอร์ที่ระบุในหน้า "ติดต่อเรา"
+                  หากมีค่าใช้จ่ายเพิ่มเติมจากการกลับมาสั่งอีกครั้ง ทางเราต้องขอเก็บเงินเพิ่มที่ปลายทาง</p>
+                </div>
+                
+              
+              
+            </div>
+            <label class="" ><input id="conditionCheck" class="uk-checkbox " style="margin-top: -2px" type="checkbox"> ยอมรับเงื่อนไขและข้อตกลงในการใช้บริการ </label>
+            
+          </div>
+          <button  class="uk-margin-top uk-button uk-button-order uk-align-center" name="byCash" id="orderBtn" type="submit" style="color: white; " ><h1 class="uk-margin-small-top" disabled>ยืนยันการสั่งซื้อ</h1></button>
+        </div>
+        
+        
+      </form>
+      
+    </div>
+  </div>
+</div>
+<br>
+{% block javascript %}
+  <script>
+  $(document).ready(function(){
+  document.getElementById("orderBtn").disabled = true;
+  document.getElementById("orderBtn_promptpay").disabled = true;
+
+  // var cashBlock = document.getElementById("cashBlock");
+  // cashBlock.style.display = "none";
+
+  // var selected = $("#selectPayment").val();
+
+$("#conditionCheck").change(function() {
+    if(this.checked) {
+      document.getElementById("orderBtn").disabled = false;
+
+    }
+    else {
+  document.getElementById("orderBtn").disabled = true;
+  }
+});
+
+$("#conditionCheck_promptpay").change(function() {
+    if(this.checked) {
+      document.getElementById("orderBtn_promptpay").disabled = false;
+
+    }
+    else {
+  document.getElementById("orderBtn_promptpay").disabled = true;
+  }
+});
+  
+
+
+  var select_index = document.getElementById("selectPayment").selectedIndex;
+  var y = document.getElementById("selectPayment").options;
+  var x = document.getElementById("promptpayBlock");
+  
+  var payment = y[select_index].text
+  if (payment == "PromptPay" ) {
+  x.style.display = "block";
+  cashBlock.style.display = "none";
+  
+  }
+  else {
+  x.style.display = "none";
+  cashBlock.style.display = "block";
+
+  }
+
+  
+  
+  
+  $("#selectPayment").change(function(){
+  
+  if ( $(this).val() == "PromptPay" ) {
+  x.style.display = "block";
+  cashBlock.style.display = "none";
+  // var nodes = document.getElementById("promptpayBlock").getElementsByTagName('*');
+  // for(var i = 0; i < nodes.length; i++){
+  // nodes[i].disabled = true;
+  // }
+  // document.getElementById("myFile").disabled = true;
+  }
+  else {
+  x.style.display = "none";
+  cashBlock.style.display = "block";
+  // This will disable everything contained in the div
+  // document.getElementById("myFile").disabled = true;
+  }
+  
+  });  });
+  </script>
+{% endblock %}
+{% endblock %}

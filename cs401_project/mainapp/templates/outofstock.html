@@ -1,0 +1,505 @@
+{% extends 'base.html' %}{% load static %} {% load my_filter_range %}
+{% block content %}
+  <style type="text/css">
+  
+  
+  
+  button :hover{
+  background-color:#FFBF00;
+  color: white;
+  border-color: #FFBF00;
+  }
+  .input-group button:hover{
+  background-color:#FFBF00;
+  color: white;
+  border-color: #FFBF00;
+  }
+  button{
+  background-color:#FFBF00;
+  color: white;
+  border-color: #FFBF00;
+  }
+  #custom-search-input {
+  margin-left: 25%;
+  /*padding: 3px;*/
+  border: solid 1px #E4E4E4;
+  border-radius: 6px;
+  background-color: #fff;
+  width: 50%;
+  }
+  #custom-search-input input {
+  border: 0;
+  box-shadow: none;
+  height: 40%
+  }
+  #custom-search-input button {
+  margin: 2px 0 0 0;
+  background: none;
+  box-shadow: none;
+  border: 0;
+  color: #666666;
+  padding: 0 8px 0 10px;
+  border-left: solid 1px #ccc;
+  }
+  #custom-search-input button:hover {
+  border: 0;
+  box-shadow: none;
+  border-left: solid 1px #ccc;
+  }
+  #custom-search-input .glyphicon-search {
+  font-size: 23px;
+  }
+  .circular-square {
+  border-radius: 50%;
+  width: 20%;
+  height: 20%;
+  /*background-image: url('http://strawberry-fest.org/wp-content/uploads/2012/01/Coca-Cola-logo.jpg');*/
+  background-size: cover;
+  display: block;
+  box-shadow: 0 0 0 5px #f66;
+  }
+  
+  .show {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  /*left: 50%;*/
+  /*top: 50%;*/
+  }
+  
+  .aboutStore{
+  color: #FFBF00;
+  }
+  .comment{
+  /*color: #47b2c2;*/
+  color: black;font-weight: bold;
+  }
+  .uk-card-media-top{
+  margin-bottom: -25px;
+  }
+  a{
+  color: black;
+  }
+  #stars {
+  font-size: 140px;
+  color: #FF0000;
+  }
+  #stars-existing {
+  color: #FFED85;
+  }
+  div.stars {
+  width: 270px;
+  display: inline-block;
+  }
+  input.star {
+  display: none;
+  }
+  label.star {
+  float: right;
+  padding: 5px;
+  font-size: 30px;
+  color: #444;
+  font-weight: normal;
+  transition: all .2s;
+  }
+  input.star:checked ~ label.star:before {
+  content: '\f005';
+  color: #FD4;
+  transition: all .25s;
+  }
+  input.star-5:checked ~ label.star:before {
+  color: #FE7;
+  text-shadow: 0 0 20px #952;
+  }
+  input.star-1:checked ~ label.star:before {
+  color: #F62;
+  }
+  label.star:hover {
+  transform: rotate(-15deg) scale(1.3);
+  }
+  label.star:before {
+  content: '\f006';
+  font-family: FontAwesome;
+  }
+  .padding-top-25 {
+  padding-top: 25px;
+  }
+  
+  .margin-top-5 {
+  margin-top: 5px;
+  }
+  .fielderror, .datatype, .charcount {
+  display: none;
+  }
+  .star-color{
+  color: #FFD600;
+  }
+  .card-hover:hover{
+  border-style: solid;
+  border-color: #DFDFDF;
+  border-width: 1px;
+  }
+  #map {
+  width: 100%;
+  height: 250px;
+  background-color: grey;
+  }
+  .pop{
+  animation: pop 0.3s linear 1;
+  color: #FE2E64;
+  /*color: red;*/
+  }
+  @keyframes pop{
+  50%  {transform: scale(1.2);}
+  }
+  .TriSea-technologies-Switch > input[type="checkbox"] {
+  display: none;
+  }
+  .cmn-toggle
+  {
+  position: absolute;
+  margin-left: -9999px;
+  visibility: hidden;
+  }
+  .cmn-toggle + label
+  {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  }
+  input.cmn-toggle-round-flat + label
+  {
+  padding: 2px;
+  width: 75px;
+  height: 30px;
+  background-color: #dddddd;
+  -webkit-border-radius: 60px;
+  -moz-border-radius: 60px;
+  -ms-border-radius: 60px;
+  -o-border-radius: 60px;
+  border-radius: 60px;
+  -webkit-transition: background 0.4s;
+  -moz-transition: background 0.4s;
+  -o-transition: background 0.4s;
+  transition: background 0.4s;
+  }
+  input.cmn-toggle-round-flat + label:before, input.cmn-toggle-round-flat + label:after
+  {
+  display: block;
+  position: absolute;
+  content: "";
+  }
+  input.cmn-toggle-round-flat + label:before
+  {
+  top: 2px;
+  left: 2px;
+  bottom: 2px;
+  right: 2px;
+  background-color: #fff;
+  -webkit-border-radius: 60px;
+  -moz-border-radius: 60px;
+  -ms-border-radius: 60px;
+  -o-border-radius: 60px;
+  border-radius: 60px;
+  -webkit-transition: background 0.4s;
+  -moz-transition: background 0.4s;
+  -o-transition: background 0.4s;
+  transition: background 0.4s;
+  }
+  input.cmn-toggle-round-flat + label:after
+  {
+  
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  width: 22px;
+  background-color: #dddddd;
+  -webkit-border-radius: 52px;
+  -moz-border-radius: 52px;
+  -ms-border-radius: 52px;
+  -o-border-radius: 52px;
+  border-radius: 52px;
+  -webkit-transition: margin 0.4s, background 0.4s;
+  -moz-transition: margin 0.4s, background 0.4s;
+  -o-transition: margin 0.4s, background 0.4s;
+  transition: margin 0.4s, background 0.4s;
+  }
+  input.cmn-toggle-round-flat:checked + label
+  {
+  background-color: #70BF2B;
+  }
+  input.cmn-toggle-round-flat:checked + label:after
+  {
+  margin-left: 45px;
+  background-color:#70BF2B;
+  }
+  /* ---------------------------------------------------
+
+Project : CSS Checkbox Switch
+Author : Partha Kar (https://www.facebook.com/partha.creativemind)
+Version : 1.0
+Release Dtae : 15 November, 2017
+
+---------------------------------------------------- */
+
+
+.checkbox.checbox-switch {
+    padding-left: 0;
+
+}
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+.checkbox.checbox-switch label,
+.checkbox-inline.checbox-switch {
+    display: inline-block;
+    position: relative;
+    padding-left: 0;
+    width: 75px;
+    height: 20px;
+}
+.checkbox.checbox-switch label input,
+.checkbox-inline.checbox-switch input {
+    display: none;
+}
+.checkbox.checbox-switch label span,
+.checkbox-inline.checbox-switch span {
+    width: 55px;
+    border-radius: 40px;
+    height: 28px;
+    border: 1px solid #dbdbdb;
+    background-color: rgb(255, 255, 255);
+    border-color: rgb(223, 223, 223);
+    box-shadow: rgb(223, 223, 223) 0px 0px 0px 0px inset;
+    transition: border 0.4s ease 0s, box-shadow 0.4s ease 0s;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 20px;
+}
+.checkbox.checbox-switch label span:before,
+.checkbox-inline.checbox-switch span:before {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: rgb(255,255,255);
+    content: " ";
+    top: 0;
+    position: relative;
+    left: 0;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+.checkbox.checbox-switch label > input:checked + span:before,
+.checkbox-inline.checbox-switch > input:checked + span:before {
+    left: 29px;
+}
+/* Switch Success */
+.checkbox.checbox-switch.switch-success label > input:checked + span,
+.checkbox-inline.checbox-switch.switch-success > input:checked + span {
+    background-color: rgb(40, 167, 69);
+    border-color: rgb(40, 167, 69);
+    box-shadow: rgb(40, 167, 69) 0px 0px 0px 8px inset;
+    transition: border 0.4s ease 0s, box-shadow 0.4s ease 0s, background-color 1.2s ease 0s;
+}
+.checkbox.checbox-switch.switch-success label > input:checked:disabled + span,
+.checkbox-inline.checbox-switch.switch-success > input:checked:disabled + span {
+    background-color: rgb(153, 217, 168);
+    border-color: rgb(153, 217, 168);
+    box-shadow: rgb(153, 217, 168) 0px 0px 0px 8px inset;
+}
+
+/*input[type=checkbox] {
+  transform: scale(1.5);
+}*/
+  </style>
+  <hr class="uk-box-shadow-medium ">
+ 
+  
+<div class="container menu-desktop" id="home">
+
+<h1 class="uk-heading-bullet">แก้ไขเมนูอาหาร</h1>
+<br>
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="uk-child-width-1-4@m uk-child-width-1-4@s  uk-grid-match" uk-grid>
+  {% for menu in menues %}
+    <div >
+      <div class="uk-card-default uk-card uk-card-hover  " >
+        <div class="uk-card-media-top" uk-lightbox >
+          <a href="../{{menu.image.url}}">
+            <div class="imgCrop">
+              <img src=" ../{{menu.image.url}}" class="inImg" alt="{{menu.name}}" />
+            </div>
+          </a>
+        </div>
+        <div class="uk-card-body uk-padding-small"  >
+          <div uk-grid>
+            <div class="uk-width-1-2"> <p  >{{menu.name}}</p></div>
+            <div class="uk-width-1-2">
+                <div class="form-group">
+
+                                <div class="checkbox checbox-switch switch-success ">
+                                    <label >{% if menu.isSell %}
+                                        <input  id="{{menu.id}}" class="checkSell" type="checkbox" name="" checked="checked"/>
+                                         {% else %}
+                                     <input id="{{menu.id}}" class="checkSell" type="checkbox" name=""/>
+                                      
+                                             {% endif %}
+                                                  <span></span>
+                                    </label>
+                                </div>
+                            </div>
+            
+            </div>
+          </div>
+          
+          
+          
+        </div>
+        
+      </div>
+    </div>
+    
+  {% endfor %}
+  
+</div>
+
+
+
+
+</form>
+
+
+<br>
+</div>
+<div class="container menu-mobile" id="home">
+
+<h1 class="uk-heading-bullet">แก้ไขเมนูอาหาร</h1>
+
+<br>
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="uk-child-width-1-1@m  uk-grid-collapse" uk-grid>
+  {% for menu in mobile_menues %}
+    <div class="uk-card uk-card-default uk-card-body uk-padding-small">
+      <div class="uk-column-1-2" >
+        <div class="uk-width-1-1 " uk-lightbox>
+          <a href="../{{menu.image.url}}">
+            <div class="imgCrop-mobile">
+              <img src="../{{menu.image.url}}"  class="uk-inline inImg-mobile" alt="{{menu.name}}" />
+            </div>
+          </a>
+          
+        
+        </div>
+        <div  class="">
+          
+          <div uk-grid>
+            <div class="uk-width-1-1"> <p  >{{menu.name}}</p></div>
+            <div class="uk-width-1-1">
+        <!--        <div class="form-group">
+                <div class="switch ">
+                  {% if menu.isSell %}
+                  <input id="{{menu.id}}" class="cmn-toggle cmn-toggle-round-flat checkSell " type="checkbox" checked="checked">
+                  <label for="{{menu.id}}">
+                    
+                  </label>
+                    {% else %}
+                     <input id="{{menu.id}}" class="cmn-toggle cmn-toggle-round-flat cmnMobile" type="checkbox" >
+                  <label for="{{menu.id}}"></label>
+                    {% endif %}
+                </div>
+                 </div>  -->
+                <div class="form-group">
+
+                                <div class="checkbox checbox-switch switch-success ">
+                                    <label >{% if menu.isSell %}
+                                        <input  id="{{menu.id}}" class="checkSell" type="checkbox" name="" checked="checked"/>
+                                         {% else %}
+                                     <input id="{{menu.id}}" class="checkSell" type="checkbox" name=""/>
+                                      
+                                             {% endif %}
+                                                  <span></span>
+                                    </label>
+                                </div>
+                            </div>
+            
+               <!--  <div class="switch">
+                  <input id="{{menu.id}}" class="cmn-toggle cmn-toggle-round-flat cmnMobile" type="checkbox" >
+                  <label for="{{menu.id}}"></label>
+                </div> -->
+                      <!-- <div class="form-group"> -->
+                       
+                            <!-- </div> -->
+         
+            </div>
+          </div>
+
+          
+          <br>
+          <br>
+          
+          
+        </div>
+        
+      </div>
+    </div>
+  {% endfor %}
+  
+</div>
+
+</form>
+
+<br>
+</div>
+
+
+
+<script>
+$(document).ready(function(){
+$('.checkSell').change(function () {
+if ($(this).prop('checked') == true) {
+console.log("checked");
+var id = $(this).attr('id');
+var isChecked = true;
+console.log(id);
+}
+else {
+console.log("unchecked");
+var id = $(this).attr('id');
+console.log(id);
+var isChecked = false;
+}
+$.ajax({
+
+type: "POST",
+url: "{% url 'checkIsSell' %}",
+data: {'menu_id': id,'isChecked':isChecked, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+dataType: "json",
+success: function(response) {
+console.log("success");
+
+}
+});
+});
+
+// alert("earn");
+// $(".cmn-toggle").on("click", function() {
+
+// console.log(document.getElementById("{{menu.id}}").checked);
+
+
+});
+// });
+</script>
+
+{% endblock %}

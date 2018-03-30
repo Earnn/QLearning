@@ -1,0 +1,583 @@
+{% extends 'base.html' %}{% load static %} {% load my_filter_range %} {% block content %}
+<style type="text/css">
+button :hover {
+    background-color: #FFBF00;
+    color: white;
+    border-color: #FFBF00;
+}
+
+.input-group button:hover {
+    background-color: #FFBF00;
+    color: white;
+    border-color: #FFBF00;
+}
+
+button {
+    background-color: #FFBF00;
+    color: white;
+    border-color: #FFBF00;
+}
+
+#custom-search-input {
+    margin-left: 25%;
+    /*padding: 3px;*/
+    border: solid 1px #E4E4E4;
+    border-radius: 6px;
+    background-color: #fff;
+    width: 50%;
+}
+
+#custom-search-input input {
+    border: 0;
+    box-shadow: none;
+    height: 40%
+}
+
+#custom-search-input button {
+    margin: 2px 0 0 0;
+    background: none;
+    box-shadow: none;
+    border: 0;
+    color: #666666;
+    padding: 0 8px 0 10px;
+    border-left: solid 1px #ccc;
+}
+
+#custom-search-input button:hover {
+    border: 0;
+    box-shadow: none;
+    border-left: solid 1px #ccc;
+}
+
+#custom-search-input .glyphicon-search {
+    font-size: 23px;
+}
+
+.circular-square {
+    border-radius: 50%;
+    width: 20%;
+    height: 20%;
+    /*background-image: url('http://strawberry-fest.org/wp-content/uploads/2012/01/Coca-Cola-logo.jpg');*/
+    background-size: cover;
+    display: block;
+    box-shadow: 0 0 0 5px #f66;
+}
+
+.show {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    /*left: 50%;*/
+    /*top: 50%;*/
+}
+
+.aboutStore {
+    color: #FFBF00;
+}
+
+.comment {
+    /*color: #47b2c2;*/
+    color: black;
+    font-weight: bold;
+}
+
+.uk-card-media-top {
+    margin-bottom: -25px;
+}
+
+a {
+    color: black;
+}
+
+#stars {
+    font-size: 140px;
+    color: #FF0000;
+}
+
+#stars-existing {
+    color: #FFED85;
+}
+
+div.stars {
+    width: 270px;
+    display: inline-block;
+}
+
+input.star {
+    display: none;
+}
+
+label.star {
+    float: right;
+    padding: 5px;
+    font-size: 30px;
+    color: #444;
+    font-weight: normal;
+    transition: all .2s;
+}
+
+input.star:checked~label.star:before {
+    content: '\f005';
+    color: #FD4;
+    transition: all .25s;
+}
+
+input.star-5:checked~label.star:before {
+    color: #FE7;
+    text-shadow: 0 0 20px #952;
+}
+
+input.star-1:checked~label.star:before {
+    color: #F62;
+}
+
+label.star:hover {
+    transform: rotate(-15deg) scale(1.3);
+}
+
+label.star:before {
+    content: '\f006';
+    font-family: FontAwesome;
+}
+
+.padding-top-25 {
+    padding-top: 25px;
+}
+
+.margin-top-5 {
+    margin-top: 5px;
+}
+
+.fielderror,
+.datatype,
+.charcount {
+    display: none;
+}
+
+.star-color {
+    color: #FFD600;
+}
+
+.card-hover:hover {
+    border-style: solid;
+    border-color: #DFDFDF;
+    border-width: 1px;
+}
+
+#map {
+    width: 100%;
+    height: 250px;
+    background-color: grey;
+}
+
+.pop {
+    animation: pop 0.3s linear 1;
+    color: #FE2E64;
+    /*color: red;*/
+}
+
+.sellOnlyShop {
+    color: #FE2E64;
+}
+
+@keyframes pop {
+    50% {
+        transform: scale(1.2);
+    }
+}
+</style>
+<hr class="uk-box-shadow-medium ">
+<div class="container " id="home">
+    <div class="breadcrumb uk-margin-remove-bottom">
+        <ul class="uk-breadcrumb uk-width-auto uk-margin-remove-bottom">
+            <li><a href="{% url 'home' %}" class="textBreadCrum">Home</a></li>
+            <li><a href="{% url 'search_cate' cate=category %}" class="textBreadCrum">{{category}}</a></li>
+            <li><span href="" class="textBreadCrum">{{store.name}}</span></li>
+        </ul>
+    </div>
+</div>
+<div class="container " id="home">
+    <h1 class="uk-heading-divider  uk-heading-bullet uk-margin-remove-top">{{store.name}} <span >
+        {% if user.is_authenticated %}
+                                      {% if store_loved_color   %}
+                                  <a class="uk-link-reset " ><i id="{{store.name}}"  class="fa fa-heart uk-text-meta uk-text-large   like pop"  aria-hidden="true" name="{{store.id}}" >  <span class="thai_font "> {{ store.total_likes }}  อยากกิน </span></i></a> 
+
+                                        {% else %}
+                                        <a class="uk-link-reset uk-text-large" ><i id="{{store.id}}"  class="fa fa-heart uk-text-large uk-text-meta  like"  aria-hidden="true" name="{{store.id}}" >  <span class="thai_font  "> {{ store.total_likes }}  อยากกิน </span></i></a> 
+                                        {% endif %}
+                                        
+                {% else %}
+            <i   class="fa fa-heart uk-text-meta uk-text-meta  uk-text-large"  aria-hidden="true"  >  <span class="thai_font" > {{ store.total_likes }}  อยากกิน </span></i> 
+                                  
+            {% endif %}</span> </h1>
+    <div class=" uk-margin-top ">
+        <div class="uk-child-width-1-2@m uk-grid-collapse uk-child-width-1-2@s " uk-grid>
+            <div>
+                <div class=" ">
+                    <cite>
+                        <p style="color:#ABABAB">" {{store.quote}} "</p>
+                    </cite>
+                    <p><span class="uk-text-muted"> <i class="fa fa-calendar" aria-hidden="true"></i> เปิดให้บริการ :</span><span class="">{{store.day_open}}  </span> </p>
+                    <p><span class="uk-text-muted"> <i class="fa fa-clock-o" aria-hidden="true"></i> เวลาเปิด - ปิด :</span><span class="">{{store.time_open}}  - </span> <span class="">{{store.time_close}}  </span></p>
+                    {% if delivery %}
+                    <p><span class="uk-text-muted"> <i class="fa fa-user" aria-hidden="true"></i> Delivery :</span>
+                        <i class="fa fa-check uk-text-success" aria-hidden="true"> </i>
+                        <span class="">บริการส่งถึงที่ </span> {% if time_status == 0 %}
+                        <span class="uk-badge uk-text-large " style="background-color : #E74C3C;">close</span> {% else %}
+                        <span class="uk-badge uk-text-large" style="background-color : #2ECC71;">open</span> {% endif %}
+                    </p>
+                    {% else %}
+                    <p><span class="uk-text-muted"> <i class="fa fa-user" aria-hidden="true"></i> Delivery :</span>
+                        <i class="fa fa-times uk-text-danger " aria-hidden="true"> </i>
+                        <span class="">ไม่มีบริการ </span>
+                    </p>
+                    {% endif %}
+                    <p> <span class="uk-text-muted"> <i class="fa fa-map-marker" aria-hidden="true"></i> สถานที่ :</span> <span> {{store.place}} </span></p>
+                    <p> <span class="uk-text-muted"> <i class="fa fa-phone" aria-hidden="true"></i> ติดต่อเรา :</span> <span class=""> {{store.phone}}  </span> {% for sc in storecontact %} {% if sc.type == "line" %}
+                        <a href=" " class="uk-margin-remove-top"><img style="height: 36px; width: 36px"  class="uk-margin-small-bottom" src="{% static "images/informations/line.png" %}"/>  
+</a> {% endif %} {% if sc.type == "facebook" %}
+                        <a href="{{ sc.contact}} " class="uk-margin-remove-top"><img style="height: 36px; width: 36px" class="uk-margin-small-bottom" src="{% static "images/informations/facebook.png" %}"/>  
+</a> {% endif %} {% endfor %}
+                    </p>
+                    {% if store.qrcode %}
+                    <p class="imgCrop uk-margin-remove-bottom">
+                        <img src="xs{{store.qrcode.url}}" style="width: 150px;height: 150px;margin-bottom: -20px" alt="{{store.name}}" />
+                    </p>
+                    {% endif %}
+                    <p><a class="uk-button uk-button-default" href="{% url 'contact' %}">แจ้งเป็นเจ้าของร้านค้า</a></p>
+                </div>
+            </div>
+            <div>
+                <div id="map"></div>
+                <address>
+                    <!---->
+                    <!-- {{store.place}} -->
+                </address>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<!--  <div class="uk-section uk-section-muted   uk-padding " > -->
+<div class="container menu-desktop" id="home">
+    <ul class="uk-tab  uk-margin-remove-top">
+        <li class="uk-active "><a href="#" id="text-tab"> เมนู </a></li>
+        <li><a href="#review" id="text-tab">รีวิว</a></li>
+    </ul>
+    <br>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="uk-child-width-1-4@m uk-child-width-1-4@s  uk-grid-collapse uk-grid-match" uk-grid>
+            {% for menu in menues %}
+            <div>
+                <div class="uk-card-default uk-card uk-card-hover  ">
+                    <div class="uk-card-media-top" uk-lightbox>
+                        <a href="{{menu.image.url}}">
+                            <div class="imgCrop">
+                                <img src=" {{menu.image.url}}" class="inImg" alt="{{menu.name}}" />
+                            </div>
+                        </a>
+                    </div>
+                    <div class="uk-card-body uk-padding-small">
+                        {% if delivery %} {% if menu.isSell %}
+                        <p>{{menu.name}}</p>
+                        <p>ราคา {{menu.price}} ฿</p>
+                        {% else %}
+                        <!-- <div class=".uk-column-1-2@s">    </div> -->
+                        <!-- <div uk-grid>
+                                <div>  <p>{{menu.name}}  </p></div>
+                                <div>  <p class="sellOnlyShop">ขายที่ร้านเท่านั้น</p></div>
+                                </div> -->
+                        <p>{{menu.name}} </p>
+                        <p>ราคา {{menu.price}} ฿</p>
+                        <p class="sellOnlyShop">ไม่มีบริการจัดส่ง</p>
+                        {% endif %} {% else %}
+                        <p>{{menu.name}}</p>
+                        <p>ราคา {{menu.price}} ฿</p>
+                        {% endif %} {% if delivery and menu.isSell %}
+                        <div class="input-group number-spinner uk-text-center uk-margin-top order">
+                            <button type="button" class="uk-button uk-button-default uk-button-small " data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button>
+                            <input style="font-weight: bold ; width: 30%; height: 30px" type="text" class="uk-input uk-form-medium uk-text-center" name="{{menu.id}}" value="0">
+                            <!-- <span> -->
+                            <button type="button" class="uk-button uk-button-default  uk-button-small " data-dir="up" style="height: 30px"><span class="glyphicon glyphicon-plus"></span></button>
+                            <!-- </span> -->
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <div>
+                <div class="uk-card-default uk-card uk-card-hover uk-text-center  uk-text-middle">
+                    <div class="uk-card-body uk-padding-small ">
+                        <h2 class=""><i class="fa fa-plus-circle" aria-hidden="true"></i> เพิ่มเมนูอาหาร</h2>
+                        <a href="{% url 'add_menu' store.id %}" class=" uk-button uk-button-text  ">
+                            <h2>คลิกที่นี่</h2></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if delivery and user.is_authenticated %}
+        <div class="uk-text-center">
+            <button type="submit" name="order" class="uk-margin-top uk-button  " style="color: white;">
+                <h2 class="uk-margin-small-top"> สั่งอาหาร</h2> </button>
+        </div>
+        {% endif %}
+    </form>
+    {% if delivery and user.is_anonymous %}
+    <div class="uk-text-center">
+        <a href="#modal-sections" uk-toggle>
+            <button name="order" class="uk-margin-top uk-button " style="color: white;">
+                <h2 class="uk-margin-small-top">Log in เพื่อสั่งอาหาร</h2> </button>
+        </a>
+    </div>
+    {% endif %}
+    <br>
+</div>
+<div class="container menu-mobile" id="home">
+    <ul class="uk-tab  uk-margin-remove-top">
+        <li class="uk-active "><a href="#" id="text-tab"> เมนู </a></li>
+        <li><a href="#review" id="text-tab">รีวิว</a></li>
+    </ul>
+    <br>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="uk-child-width-1-1@m  uk-grid-collapse" uk-grid>
+            {% for menu in mobile_menues %}
+            <div class="uk-card uk-card-default uk-card-body uk-padding-small">
+                <div class="uk-column-1-2">
+                    <div class="uk-width-1-1 " uk-lightbox>
+                        <a href="{{menu.image.url}}">
+                            <div class="imgCrop-mobile">
+                                <img src="{{menu.image.url}}" class="uk-inline inImg-mobile" alt="{{menu.name}}" />
+                            </div>
+                        </a>
+                    </div>
+                    <div class="">
+                        {% if delivery %} {% if menu.isSell %}
+                        <p>{{menu.name}}</p>
+                        <p>ราคา {{menu.price}} ฿</p>
+                        {% else %}
+                        <!-- <div class=".uk-column-1-2@s">    </div> -->
+                        <!-- <div uk-grid>
+                                <div>  <p>{{menu.name}}  </p></div>
+                                <div>  <p class="sellOnlyShop">ขายที่ร้านเท่านั้น</p></div>
+                                </div> -->
+                        <p>{{menu.name}} </p>
+                        <p>ราคา {{menu.price}} ฿</p>
+                        <p class="sellOnlyShop">ไม่มีบริการจัดส่ง</p>
+                        {% endif %} {% else %}
+                        <p>{{menu.name}}</p>
+                        <p>ราคา {{menu.price}} ฿</p>
+                        {% endif %} {% if delivery and menu.isSell %}
+                        <div class="input-group number-spinner uk-text-center uk-margin-top ">
+                            <button type="button" class="uk-button uk-button-default uk-button-small  " data-dir="dwn"><span class="glyphicon glyphicon-minus"></span></button>
+                            <input style="font-weight: bold ; width: 30%; height: 30px" type="text" class="uk-input uk-form-medium uk-text-center" name="{{menu.id}}" value="0">
+                            <!-- <span> -->
+                            <button type="button" class="uk-button uk-button-default  uk-button-small " data-dir="up" style="height: 30px"><span class="glyphicon glyphicon-plus"></span></button>
+                            <!-- </span> -->
+                        </div>
+                        {% endif %}
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <div>
+                <div class="uk-card-default uk-card uk-card-hover uk-text-center  uk-text-middle">
+                    <div class="uk-card-body uk-padding-small uk-margin-large-top">
+                        <h2 class=""><i class="fa fa-plus-circle" aria-hidden="true"></i> เพิ่มเมนูอาหาร</h2>
+                        <a href="{% url 'add_menu' store.id %}" class=" uk-button uk-button-text  ">
+                            <h2>คลิกที่นี่</h2></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if delivery and user.is_authenticated %}
+        <div class="uk-text-center">
+            <button type="submit" name="order" class="uk-margin-top uk-button uk-width-1-1@s " style="color: white;">
+                <h2 class="uk-margin-small-top"> สั่งอาหาร</h2> </button>
+        </div>
+        {% endif %}
+    </form>
+    {% if delivery and user.is_anonymous %}
+    <div class="uk-text-center">
+        <a href="#modal-sections" uk-toggle>
+            <button name="order" class="uk-margin-top uk-button uk-width-1-1@s " style="color: white;">
+                <h2 class="uk-margin-small-top">Log in เพื่อสั่งอาหาร</h2> </button>
+        </a>
+    </div>
+    {% endif %}
+    <br>
+</div>
+<div id="modal-sections" uk-modal>
+    <div class="uk-modal-dialog" style="width: 400px">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header uk-padding-small uk-padding-remove-top">
+            <h2 class="uk-modal-title " style="text-align: center">เข้าสู่ระบบด้วย</h2>
+        </div>
+        <div class="uk-modal-body">
+            <div class="uk-container">
+                <div class="uk-margin-small">
+                    <a href="{% url 'social:begin' 'facebook' %}" class="uk-width-1-1 uk-button uk-button-default" href="#facebook" style="background-color: #3B5998;color:white">
+                <img class="pull-left login-icon " src="{% static "images/facebook.png" %}"/>Facebook</a>
+                </div>
+                <div class="uk-margin-small">
+                    <a href="{% url 'social:begin' 'google-oauth2' %}" class="uk-width-1-1 uk-button uk-button-default" style="background-color: #d9534f;color:white">
+                <img class="pull-left login-icon " src="{% static "images/google.png" %}"/>Google</a>
+                </div>
+                <div class="uk-margin-small ">
+                    <ul class="uk-subnav uk-subnav-divider uk-margin-left">
+                        <li><a href="{% url 'login'   %}" class="uk-button-text"><h2>เข้าสู่ระบบ</h2></a></li>
+                        <li><a href="{% url 'signup'  %}" class="uk-button-text"><h2>สมัครสมาชิก</h2></a> </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="uk-modal-footer uk-text-right thai_font">
+            <button class="uk-button uk-button-default  uk-modal-close  uk-text" type="button">
+                <h2 class="uk-margin-small-top">ยกเลิก</h2></button>
+            <button class="uk-button uk-button-primary  uk-text" type="button">
+                <h2 class="uk-margin-small-top">ตกลง</h2></button>
+        </div>
+    </div>
+</div>
+<div class="container" id="home">
+    <ul class="uk-tab uk-margin-top " uk-margin>
+        <li class="uk-active"><a href="#" id="text-tab">รีวิว</a></li>
+        <li><a href="#review" id="text-tab">เขียนรีวิว</a></li>
+    </ul>
+    <A name="review">
+        <!-- <hr> -->
+        <br> {% for review,rate,picture in out %}
+        <!-- <div class="<u>    </u>k-card uk-card-default uk-card-body uk-margin"> -->
+        <article class="uk-comment uk-comment-primary uk-margin-small-bottom">
+            <header class="uk-comment-header uk-grid-medium uk-flex-middle" uk-grid>
+                <div class="uk-width-auto">
+                    <div class="">
+                        <img class="uk-comment-avatar " src="{{picture}}" style="object-fit: cover;" alt="">
+                    </div>
+                </div>
+                <div class="uk-width-expand">
+                    <h4 class="uk-card-title uk-text-left " style="color: #BDBDBD;">
+                        <!-- <a  href="../store/{{store.name}}" class="store-name"></a> -->
+                        <!-- </form> -->
+                        <a href=" "></a>
+                             <div class="uk-margin-remove-top">  
+                                {% for value in rate.rating_color|times %}
+                                    <i class="fa fa-star star-color"> </i>
+                                {% endfor %}
+                                {% for value in rate.rating_no_color|times %}
+                                    <i class="fa fa-star"> </i>
+                                {% endfor %}
+                            {{rate.rating_color}}
+                       </div>
+                        </h4>
+                    <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#">{{review.user.username}} ไปร้าน <b>{{store.name}}</b></a></h4>
+                    <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+                        <li><a href="#">{{review.created_at | timesince }}</a></li>
+                        <!-- <p>{{review.rating}}</p> -->
+                    </ul>
+                </div>
+            </header>
+            <div class="uk-comment-body">
+                <p class="comment"> {{review.comment}}!</p>
+            </div>
+        </article>
+        <!-- </div> -->
+        {% endfor %}
+    </A>
+</div>
+<div class="container" id="home">
+    <ul class="uk-tab" uk-margin>
+        <h2 class="uk-heading-bullet">เขียนรีวิว</h2>
+    </ul>
+    <div class="uk-child-width-1-2@m  uk-text-left uk-margin-large-bottom" uk-grid>
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="uk-align-left uk-margin-remove-bottom">
+                    <input class="star star-5" id="star-5" value="5" type="radio" name="star" />
+                    <label class="star star-5" for="star-5"></label>
+                    <input class="star star-4" id="star-4" value="4" type="radio" name="star" />
+                    <label class="star star-4" for="star-4"></label>
+                    <input class="star star-3" id="star-3" value="3" type="radio" name="star" />
+                    <label class="star star-3" for="star-3"></label>
+                    <input class="star star-2" id="star-2" value="2" type="radio" name="star" />
+                    <label class="star star-2" for="star-2"></label>
+                    <input class="star star-1" id="star-1" value="1" type="radio" name="star" />
+                    <label class="star star-1" for="star-1"></label>
+                </div>
+                {{ reviewForm.comment }}
+                <br>
+                <br>
+                <button type="submit" name="review" class="uk-button uk-width-1-1@s uk-width-1-4@m" style="color: white">
+                    <h2 class="uk-margin-small-top">โพสต์</h2>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- </div> -->
+<script>
+function initMap() {}
+$(document).ready(function() {
+    $(() => {
+        initMap = function() {
+            var uluru = { lat: { { store.latitude } }, lng: { { store.longtitude } } };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 17,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+    })
+    $(document).on('click', '.number-spinner button', function() {
+        var btn = $(this),
+            oldValue = btn.closest('.number-spinner').find('input').val().trim(),
+            newVal = 0;
+        if (btn.attr('data-dir') == 'up') {
+            newVal = parseInt(oldValue) + 1;
+        } else {
+            if (oldValue > 0) {
+                newVal = parseInt(oldValue) - 1;
+            } else {
+                newVal = 0;
+            }
+        }
+        btn.closest('.number-spinner').find('input').val(newVal);
+    });
+});
+$(document).ready(function() {
+
+    // alert("earn");
+    $(".like").on("click", function() {
+
+        var pk = $(this).attr('name');
+        var love_btn = $(this);
+        var id = $(this).attr('id');
+
+        love_btn.toggleClass("pop");
+
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'like_button' %}",
+            data: { 'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            dataType: "json",
+            success: function(response) {
+                love_btn.html(" " + response.likes_count + " อยากกิน");
+
+            }
+        });
+    });
+});
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCk94-_1bxrwuGCPwY3PXcZeDXiP4JOUc8&callback=initMap">
+</script>
+{% endblock %}

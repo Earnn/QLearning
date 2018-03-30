@@ -1,0 +1,360 @@
+{% extends 'base.html' %}{% load static %} {% load my_filter_range %}
+{% block content %}
+    <style type="text/css">
+    #wrapper {
+    width: 600px;
+    height: 400px;
+    margin: -200px 0 0 -300px;
+    overflow: hidden;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    }
+    #carousel {
+    width: 600px;
+    height: 400px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    }
+    #carousel img {
+    display: block;
+    float: left;
+    }
+    #thumbnails {
+    width: 600px;
+    height: 120px;
+    overflow: hidden;
+    position: absolute;
+    top: 375px;
+    left: 0;
+    z-index: 2;
+    }
+    #thumbnails img {
+    display: block;
+    float: left;
+    margin: 10px;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 0 10px #000;
+    }
+    #thumbnails img:hover {
+    width: 110px;
+    height: 110px;
+    margin: 5px;
+    }
+    /*
+    .img-bg
+    {
+    position: relative;
+    top: 0;
+    left: 0;
+    }*/
+    .img-list-1
+    {
+    position: absolute;
+    top: 178px;
+    left: 5px;
+    width: 80px;
+    height: 50px;
+    }
+    .img-list-2
+    {
+    position: absolute;
+    top: 178px;
+    left: 90px;
+    width: 80px;
+    height: 50px;
+    }
+    .img-list-3
+    {
+    position: absolute;
+    top: 178px;
+    left: 176px;
+    width: 80px;
+    height: 50px;
+    }
+    .img-list-4
+    {
+    position: absolute;
+    top: 178px;
+    left: 266px;
+    width: 80px;
+    height: 50px;
+    }
+    .store-name:hover {
+    color: #FFBF00;
+    }
+    .pop{
+    animation: pop 0.3s linear 1;
+    color: #FE2E64;
+    /*color: red;*/
+    }
+    @keyframes pop{
+    50%  {transform: scale(1.2);}
+    }
+    .star-color{
+    color: #FFD600;
+    }
+    .star-no-color{
+    color:#DADADA;
+    }
+    .thai_font{
+    font-family: 'Kanit', sans-serif;
+    }
+    </style>
+    
+    <hr class="uk-box-shadow-medium ">
+    <div class="container after-search-desktop" id="home">
+        <div class="breadcrumb" >
+            <ul class="uk-breadcrumb uk-width-auto ">
+                <li><a href="{% url 'home' %}" class="textBreadCrum">Home</a></li>
+                <li><a href="{% url 'search_cate' cate=category %}" class="textBreadCrum">{{category}}</a></li>
+                
+            </ul>
+        </div>
+        <div class="uk-text-center uk-margin-top" uk-grid>
+            <div class="uk-width-4-5@m uk-width-1-1@s">
+                
+                
+                
+                {% if not stores %}
+                    <div uk-alert>
+                        <a class="uk-alert-close" uk-close></a>
+                        <h3>ไม่พบรายการที่ค้นหา</h3>
+                        <p>ลองค้นหาใหม่โดยพิมพ์บางคำของชื่อร้าน หรือประเภทอาหารที่คุณต้องการค้นหา เช่น ข้าวต้ม, ขาหมู</p>
+                    </div>
+                {% endif %}
+                <!-- <div class="uk-card uk-card-default uk-card-body" >  -->
+                <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-1@s uk-margin" uk-grid>
+                    {% for store in stores %}
+                        <div class="uk-card-body uk-padding-small uk-padding-remove-top">
+                            <div style="border-left: 3px solid #FFBF00;padding-left: 1em;">
+                                <!-- <form  method="get"> -->
+                                {% csrf_token %}
+                                <h5 class="uk-card-title uk-text-left uk-margin-bottom " style="font-size: 18px;color: #BDBDBD;">  <a  href="{% url 'shop' store.name store.id %}" class="store-name">
+                                {{store.name}}</a>
+                                <!-- </form> -->
+                                {% for value in store.rating_color|times %}
+                                    <i class="fa fa-star star-color"> </i>
+                                {% endfor %}
+                                {% for value in store.rating_no_color|times %}
+                                    <i class="fa fa-star star-no-color"> </i>
+                                {% endfor %}
+                                {{store.rating_color}}</h5>
+                            </div>
+                            <div class="uk-text-left">
+                                {% for tag in store.tags %}
+                                    <span class="uk-badge" style="background-color: #BFBFBF">{{tag}}</span>
+                                    <!--  <p class="uk-text-left uk-margin-left-small " style="margin-top:-10px; font-size: 14px; font-style: italic;  color:#848484;">{{tag}}</p> -->
+                                {% endfor %}
+                            </div>
+                            <div class="uk-grid-collapse uk-child-width-expand uk-text-center uk-margin " uk-grid uk-lightbox="animation: slide">
+                                
+                                {% for menu in store.menues %}
+                                    <!-- <a class="uk-inline" href="{% url 'shop' store.name store.id %}" >  -->
+                                    <div>
+                                       
+                                            <div class="imgCrop-search">
+                                                <img  class="imgCrop-search" src="{{menu}}" style=" object-fit: cover;" alt="" >
+                                            </div>
+                                       
+                                    </div>
+                                     <!-- </a> -->
+                                {% endfor %}
+                            </div>
+                            <div class="uk-text-left">
+                                <ul class="uk-subnav uk-subnav-divider " uk-margin>
+                                    {% if user.is_authenticated %}
+                                        {% if store.store_loved_color   %}
+                                            <li class=""> <a class="uk-link-reset" ><i id="{{store.name}}"  class="fa fa-heart uk-text-meta uk-text-large  pop like"  aria-hidden="true" name="{{store.id}}" >  <span > {{ store.love }}  อยากกิน </span></i></a> </li>
+                                        {% else %}
+                                            <li class=""> <a class="uk-link-reset" ><i id="{{store.name}}"  class="fa fa-heart uk-text-meta uk-text-large  like"  aria-hidden="true" name="{{store.id}}" >  <span > {{ store.love }}  อยากกิน </span></i></a> </li>
+                                        {% endif %}
+                                        <li > <a class="uk-link-reset " id="" ><i class="fa fa-comment uk-text-large   uk-text-meta" aria-hidden="true"><span >   {{store.no_reviews}} รีวิว </span></i></a></li>
+                                    {% else %}
+                                        <li class=""> <i   class="fa fa-heart uk-text-metauk-text-large  "  aria-hidden="true"  >  <span class="thai_font"> {{ store.love }}  อยากกิน </span></i> </li>
+                                        <li > <a class="uk-link-reset " id="" ><i class="fa fa-comment  uk-text-large  uk-text-meta" aria-hidden="true"><span >   {{store.no_reviews}} รีวิว </span></i></a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <form action="{% url 'add_store' %}">
+                <button type="submit" name="order"  class="uk-margin-top uk-button uk-width-1-1@s uk-width-1-3@m uk-align-center " style="color: white;background-color: #79AEC8"><h1 class="uk-margin-small-top"><i class="fa fa-plus-circle" aria-hidden="true"></i> เพิ่มร้านค้า</h1> </button></form>
+                {% if stores.has_other_pages %}
+                    <ul class="pagination">
+                        {% if stores.has_previous %}
+                            <li><a href="?page={{ stores.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in stores.paginator.page_range %}
+                            {% if stores.number == i %}
+                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if stores.has_next %}
+                            <li><a href="?page={{ stores.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+            <!-- </div> -->
+            <div class="uk-width-1-5@m ">
+                <div class="uk-card uk-card-default uk-card-body uk-padding-small">
+                    <p style="color: #BDBDBD" class="uk-text-left">ค้นหา</p>
+                    <ul class="uk-list uk-list-divider uk-text-left">
+                        <li ><a class="uk-link-reset" href="{% url 'search_cate' cate='สเต็ก' %}">สเต็ก</a></li>
+                        <li><a class="uk-link-reset" href="{% url 'search_cate' cate='ปิ้งย่าง' %}">ปิ้งย่าง</a></li>
+                        <li><a class="uk-link-reset" href="{% url 'search_cate' cate='ชาบู' %}">ชาบู</a></li>
+                        <li><a class="uk-link-reset" href="{% url 'search_cate' cate='อาหารไทย' %}">อาหารไทย</a></li>
+                        <li><a class="uk-link-reset" href="{% url 'search_cate' cate='อาหารญี่ปุ่น' %}">อาหารญี่ปุ่น</li>
+                        <li><a class="uk-link-reset" href="{% url 'search_cate' cate='อาหารเกาหลี' %}">อาหารเกาหลี</a></li>
+                        <li><a class="uk-link-reset" href="{% url 'search_cate' cate='ของหวาน' %}">ของหวาน</a></li>
+                        <li><a class="uk-link-reset" href="{% url 'search_cate' cate='เครื่องดื่ม' %}">เครื่องดื่ม</a></li>
+                        <li><a class="uk-link-reset" href="{% url 'search_cate' cate='delivery' %}">Delivery</a></li>
+                        <li><a class="uk-link-reset" href="{% url 'search_cate' cate='all' %}">ทั้งหมด</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+    <div class=" after-search-mobile" >
+        <div class="breadcrumb" >
+            <ul class="uk-breadcrumb uk-width-auto ">
+                <li><a href="{% url 'home' %}" class="textBreadCrum">Home</a></li>
+                <li><a href="{% url 'search_cate' cate=category %}" class="textBreadCrum">{{category}}</a></li>
+                
+            </ul>
+        </div>
+        <div class="uk-text-center uk-margin-top" uk-grid>
+            <div class="uk-width-4-5@m uk-width-1-1@s">
+                
+                
+                
+                {% if not stores %}
+                    <div uk-alert>
+                        <a class="uk-alert-close" uk-close></a>
+                        <h3>ไม่พบรายการที่ค้นหา</h3>
+                        <p>ลองค้นหาใหม่โดยพิมพ์บางคำของชื่อร้าน หรือประเภทอาหารที่คุณต้องการค้นหา เช่น ข้าวต้ม, ขาหมู</p>
+                    </div>
+                {% endif %}
+                <!-- <div class="uk-card uk-card-default uk-card-body" >  -->
+                <div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-1@s uk-margin" uk-grid>
+                    {% for store in stores %}
+                        <div class="uk-card-body uk-padding-small uk-padding-remove-top">
+                            <div style="border-left: 3px solid #FFBF00;padding-left: 1em;">
+                                <!-- <form  method="get"> -->
+                                {% csrf_token %}
+                                <h5 class="uk-card-title uk-text-left uk-margin-bottom " style="font-size: 18px;color: #BDBDBD;">  <a  href="{% url 'shop' store.name store.id %}" class="store-name">
+                                {{store.name}}</a>
+                                <!-- </form> -->
+                                {% for value in store.rating_color|times %}
+                                    <i class="fa fa-star star-color"> </i>
+                                {% endfor %}
+                                {% for value in store.rating_no_color|times %}
+                                    <i class="fa fa-star star-no-color"> </i>
+                                {% endfor %}
+                                {{store.rating_color}}</h5>
+                            </div>
+                            <div class="uk-text-left">
+                                {% for tag in store.tags %}
+                                    <span class="uk-badge" style="background-color: #BFBFBF">{{tag}}</span>
+                                    <!--  <p class="uk-text-left uk-margin-left-small " style="margin-top:-10px; font-size: 14px; font-style: italic;  color:#848484;">{{tag}}</p> -->
+                                {% endfor %}
+                            </div>
+                            <div class="uk-grid-collapse uk-child-width-expand uk-text-center uk-margin " uk-grid uk-lightbox="animation: slide">
+                                
+                                {% for menu in store.menues %}
+                                  <!--   <a class="uk-inline" href="{% url 'shop' store.name store.id %}" > -->
+                                    <div>
+                                        
+                                            <div class="imgCrop-search-mobile">
+                                                <img  class="imgCrop-search-mobile" src="{{menu}}" style=" object-fit: cover;" alt="" >
+                                            </div>
+                                       
+                                    </div>
+                                     <!-- </a> -->
+                                {% endfor %}
+                            </div>
+                            <div class="uk-text-left">
+                                <ul class="uk-subnav uk-subnav-divider " uk-margin>
+                                    {% if user.is_authenticated %}
+                                        {% if store.store_loved_color   %}
+                                            <li class=""> <a class="uk-link-reset" ><i id="{{store.name}}"  class="fa fa-heart uk-text-meta uk-text-large  pop like"  aria-hidden="true" name="{{store.id}}" >  <span> {{ store.love }}  อยากกิน </span></i></a> </li>
+                                        {% else %}
+                                            <li class=""> <a class="uk-link-reset" ><i id="{{store.name}}"  class="fa fa-heart uk-text-meta uk-text-large  like"  aria-hidden="true" name="{{store.id}}" >  <span > {{ store.love }}  อยากกิน </span></i></a> </li>
+                                        {% endif %}
+                                        <li > <a class="uk-link-reset " id="" ><i class="fa fa-comment   uk-text-large uk-text-meta" aria-hidden="true"><span >   {{store.no_reviews}} รีวิว </span></i></a></li>
+                                    {% else %}
+                                        <li class=""> <i   class="fa fa-heart uk-text-meta uk-text-large  "  aria-hidden="true"  >  <span class="thai_font"> {{ store.love }}  อยากกิน </span></i> </li>
+                                        <li > <a class="uk-link-reset " id="" ><i class="fa fa-comment uk-text-large   uk-text-meta" aria-hidden="true"><span style="   font-family: 'Kanit', sans-serif;">   {{store.no_reviews}} รีวิว </span></i></a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        
+                    {% endfor %}
+                </div>
+                <form action="{% url 'add_store' %}">
+                <button type="submit" name="order"  class="uk-margin-top uk-button uk-width-1-1@s uk-width-1-3@m uk-align-center " style="color: white;background-color: #79AEC8"><h1 class="uk-margin-small-top"><i class="fa fa-plus-circle" aria-hidden="true"></i> เพิ่มร้านค้า</h1> </button></form>
+                {% if stores.has_other_pages %}
+                    <ul class="pagination">
+                        {% if stores.has_previous %}
+                            <li><a href="?page={{ stores.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %} {% for i in stores.paginator.page_range %} {% if stores.number == i %}
+                        <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span>
+                    </li>
+                {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %} {% endfor %} {% if stores.has_next %}
+                <li><a href="?page={{ stores.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+</div>
+
+</div>
+</div>
+</div>
+<br>
+<script>
+$(document).ready(function(){
+
+// alert("earn");
+$(".like").on("click", function() {
+
+var pk = $(this).attr('name');
+var love_btn = $(this);
+var id = $(this).attr('id');
+
+love_btn.toggleClass("pop");
+
+
+$.ajax({
+type: "POST",
+url: "{% url 'like_button' %}",
+data: {'pk': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+dataType: "json",
+success: function(response) {
+love_btn.html(" "+response.likes_count+" อยากกิน");
+
+}
+});
+});
+});
+</script>
+{% endblock %}

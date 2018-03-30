@@ -1,0 +1,27 @@
+{% extends 'base.html' %}{% load static %} {% block content %}
+ 
+    <!-- banner -->
+    
+    <!-- end banner -->
+    <!-- <br>     -->
+    <!-- <hr class="uk-box-shadow-medium "> -->
+    <div class="container" id="home">
+  <div class="uk-section uk-section-default">
+        <div class="uk-container uk-text-center">
+              
+                <h1 class=" uk-text-center"> <i style="color:#2ECC71" class="fa fa-check-circle fa-3x" aria-hidden="true"></i></h1>
+                  <h2 class="thai_font  uk-text-center"> คุณได้สั่งซื้อเรียบร้อยแล้ว  </h2 >
+             
+                  <div class="container uk-margin-top" style="width: 60%"> 
+                     <!--          <div class="uk-card uk-card-hover uk-card-body uk-padding-small uk-padding-remove-bottom"> -->
+                      <p class="thai_font uk-text-muted uk-text-center">รอรับอาหารภายใน 30 นาที - 1 ชม.</p>
+                 <p class="thai_font uk-text-muted uk-text-center">สามารถเช็คสภานะการสั่งอาหารได้ที่หน้าโปรไฟล์ -> ออเดอร์ของฉัน</p>
+                  <p class="thai_font uk-text-muted uk-text-center">เมื่อสถานะเปลี่ยนเป็น "กำลังส่ง" เพื่อความสะดวกของลูกค้า </p>
+                  <p class=" uk-text-muted ">อีกประมาณ 10 - 15 นาทีกรุณาลงมารอรับอาหาร</p>
+                  </div>
+                 
+                 <a href="{% url 'home'  %}">กลับหน้าแรก</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

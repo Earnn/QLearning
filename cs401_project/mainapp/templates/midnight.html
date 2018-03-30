@@ -1,0 +1,1103 @@
+{% extends 'base.html' %}{% block content %}{% load static %}
+	
+	<style type="text/css">
+	.bg {
+		
+		background: url('{% static "images/midnight2.png" %}') no-repeat center center ;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	}
+	.bg-bottom{
+		background: url('{% static "images/black2.jpg" %}') no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	}
+
+	#title {
+		color: #000000;
+	}
+
+ .sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 150px;
+    right: 0;
+    /*padding: -20px;*/
+    /*float: right;*/
+    /*align-content: right;*/
+    }  .uk-offcanvas-bar {
+    background: #fff;
+    color :black;
+    } .uk-button-add-cart {
+    background-color: #d9534f;
+    color:white;
+    }
+    .uk-button-add-cart:hover{
+    color: white;
+    background-color: #ef2121;
+    }
+    .footer {
+    position: absolute;
+    /* left: 0;*/
+    bottom: 0;
+    /*padding: 10px;*/
+    width: 100%;
+    }
+    .add_to_cart {
+   background-color: #d9534f;
+    color: white;
+      font-size: 0.9em;
+        font-family: 'Kanit', sans-serif;
+
+    }
+    .sale{
+color: red;
+font-weight: bolder;
+    }
+   
+
+	</style>
+	<hr class="uk-box-shadow-medium uk-margin-remove-bottom" >
+	<div class="uk-section-default " >
+		<div class="uk-section uk-light bg  menu-desktop"  >
+			<!-- <div class="uk-container"> -->
+			<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+			
+		</div>
+		<div class="uk-section uk-light bg  menu-mobile"  >
+			<!-- <div class="uk-container"> -->
+			<br><br><br><br><br><br>
+			
+		</div>
+	</div>
+	<div class="uk-margin-remove" uk-alert>
+  <div class="container uk-text-center" id="home">
+     <a class="uk-alert-close " uk-close></a>
+   <!-- <a href="#charge_detail" >ดูรายละเอียดค่าส่ง</a>  -->
+      <p class="uk-margin-remove"><span class="uk-text-danger">รับขนมทานเล่น !</span> เมื่อกรอกโค้ด TR0002 เฉพาะคนที่กรอก<a href="{% url 'is_inf' %}">ประวัติความหิว</a>แล้วเท่านั้น! | <a href="#charge_detail" >ดูรายละเอียดค่าส่ง</a> </p>
+   <!-- สั่งได้ไม่เกิน 6 อย่าง ค่าส่ง 1-3 อย่าง 5 บาท (หอ B 10 บาท) | 4-6 อย่าง 10 บาท (หอ B 15 บาท)  -->
+  </div>
+</div>
+	    <div class="sidebar uk-align-right" style="
+    z-index: 9998!important;" >
+        <div class="uk-offcanvas-content">
+            {% if item_in_cart %}
+                
+                <a class="uk-link-reset uk-margin-right" uk-toggle="target: #offcanvas-flip"  >
+                    
+                    <i   class="fa fa-shopping-cart fa-2x" style="color: white">
+                    <span  class="uk-badge uk-text-large "  style=" margin-top: -30px;margin-left: -15px" id="basket">{{item_in_cart}}</span>
+                    </i>
+                    
+                </a>
+            {% else %}
+                
+                <a class="uk-link-reset uk-margin-right" uk-toggle="target: #offcanvas-flip"  >
+                    
+                    <i class="fa fa-shopping-cart fa-2x" style="color: #d9dbdd">
+                    <span  class="uk-badge uk-text-large "  style=" margin-top: -30px;margin-left: -15px" id="basket">0</span>
+                    </i>
+                    
+                </a>
+            {% endif %}
+            
+            <div id="offcanvas-flip" uk-offcanvas="flip: true; " >
+                <div class="uk-offcanvas-bar uk-box-shadow-xlarge"  >
+                    
+                    <button style="color: black" class="uk-offcanvas-close" type="button" uk-close></button>
+                    <h3 class="uk-margin-remove-top" style="color: black" >ตะกร้าของฉัน
+                    <i class="   fa fa-shopping-basket"></i> <a href="{% url 'ud_checkout' %}" style="color: grey;font-size: 14px">แก้ไข</a>
+                    </h3>
+                    
+                    
+                    <table style= "position: relative;overflow: hidden;height: 3.2em;" class="uk-table uk-table-divider uk-table-small " >
+                        {% if item_in_cart %}
+                    
+                            {% for o in output %}
+                                <tbody id="basket_item" >
+                                    
+                                    <tr id="tableRow"><td> <p>฿ {{o.price}}</p> </td>
+                                        <td >{{o.name}} </td>
+                                        <td>x {{o.amount}} </td>
+
+                                    </tr>
+                                </tbody>
+                                
+                            {% endfor %}
+                        {% else %}
+                      
+                           <!--  <div uk-alert>ยังไม่มีของในตะกร้า</div> -->
+                        
+                        <tbody id="basket_item" >
+                            
+                            
+                        </tbody>
+                        {% endif %}
+                    </table>
+                    
+                    
+                  
+                        
+                        <form  action="{% url 'ud_checkout' %}" method="post" enctype="multipart/form-data">
+                            
+                            {% csrf_token %}
+                            
+                            <button  class="uk-position-bottom uk-button  uk-width-1-1@s add_to_cart" >
+                            <h2 class="uk-margin-small-top">  ยืนยันการสั่งซื้อ </h2>
+                            </button>
+                        </form>
+                        
+                        
+               
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+		<div class="uk-section bg-bottom uk-light" >
+			<div class="container menu-desktop" id="home"  >
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>เครื่องดื่ม</span></h1>
+				   <div class="uk-child-width-1-3@m uk-child-width-1-3@s  uk-grid-match" uk-grid>
+            
+        <div>
+            <div class="uk-card uk-card-default uk-padding-small uk-padding-remove-bottom">
+                <div class="uk-card-media-top" uk-lightbox>
+                    <a href="{% static "images/esp.jpg" %}">
+
+                        <div class="uk-margin-left">
+                            <img src="{% static "images/nes_ess.jpg" %}" style="width: 200px;height: 200px;
+        position:  relative;" alt="">
+                        </div>
+                    </a>
+                </div>
+                <div class="uk-card-body uk-padding-small uk-text-center">
+                         <p>Nescafe Espresso </p>
+<h3 style="color: black">ราคา <s> 15 ฿</s> <span class="sale" > 13 ฿</span></h3>
+                    <!-- <h1 class="sale" style="color: red">ลดเหลือ </h1> -->                      {% if is_delivery and time_status == 1 and user.is_authenticated %}
+
+                              <button  name="366"  class="uk-button add_to_cart "  >
+                   เพิ่มเข้าตะกร้า
+    <i class="fa fa-plus "></i>
+                      
+                                
+                           
+                                
+                            </button>
+
+                            {% elif user.is_authenticated and is_delivery and time_status == 0 %}
+                          
+                 <button  name=""  class="uk-button  uk-button-default" style="color: black;font-size: 0.9em;border-color: #d9dbdd" disabled>
+                                สั่งซื้อได้เวลา 17.00 - 22.00 น.
+                  
+                 </button>
+                            {% elif user.is_anonymous %}
+                                        
+                  <button  name=""  class="uk-button add_to_cart alertUser " style="color: white;" >
+                                   เพิ่มเข้าตะกร้า
+                    <i class="fa fa-plus "></i>
+                 </button>
+                              
+                            {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+      
+          <div>
+            <div class="uk-card uk-card-default   uk-padding-small uk-padding-remove-bottom">
+                <div class="uk-card-media-top" uk-lightbox>
+                    <a href="{% static "images/latte2.jpg" %}">
+
+                        <div class="uk-margin-left">
+                            <img src="{% static "images/latte2.jpg" %}" style="width: 200px;height: 200px;"  alt="">
+                        </div>
+                    </a>
+                </div>
+                <div class="uk-card-body uk-padding-small uk-text-center">
+                         <p>Nescafe Latte </p>
+                   
+<h3 style="color: black">ราคา <s> 15 ฿</s> <span class="sale" > 13 ฿</span></h3>
+                    <!-- <h1 class="sale" style="color: red">ลดเหลือ </h1> -->
+                      {% if is_delivery and time_status == 1 and user.is_authenticated %}
+
+                              <button  name="367"  class="uk-button add_to_cart "  >
+                   เพิ่มเข้าตะกร้า
+    <i class="fa fa-plus "></i>
+                      
+                                
+                           
+                                
+                            </button>
+
+                            {% elif user.is_authenticated and is_delivery and time_status == 0 %}
+                          
+                    <button  name=""  class="uk-button  uk-button-default" style="color: black;font-size: 0.9em;border-color: #d9dbdd" disabled>
+                                  สั่งซื้อได้เวลา 17.00 - 22.00 น.
+                  
+                 </button>
+                            {% elif user.is_anonymous %}
+                                        
+                  <button  name=""  class="uk-button add_to_cart alertUser " style="color: white;" >
+                                   เพิ่มเข้าตะกร้า
+                    <i class="fa fa-plus "></i>
+                 </button>
+                              
+                            {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+  
+    </div>
+		</div> 	
+	  </div>
+  <div class="container menu-mobile" id="home">
+<h1 class="uk-heading-line uk-text-center uk-margin"><span>เครื่องดื่ม</h1>
+
+   <div class="uk-child-width-1-1@m  uk-grid-collapse" uk-grid>
+              <div class="uk-card   uk-card-body uk-padding-small">
+                <div class="uk-column-1-2">
+                    <div class="uk-width-1-1 " uk-lightbox>
+                         <a href="{% static "images/esp.jpg" %}">
+
+                        <div class="uk-margin-left">
+                            <img src="{% static "images/esp.jpg" %}" style="width: 100px;height: 100px;"  alt="">
+                        </div>
+                    </a>
+                    </div>
+                    <div class="uk-margin-remove-top">
+                   <p>Nescafe Espresso </p>
+                       <h3 style="color: black">ราคา <s> 15 ฿</s> <span class="sale" > 13 ฿</span></h3>
+                    <!-- <h1 class="sale" style="color: red">ลดเหลือ </h1> -->
+                      {% if is_delivery and time_status == 1 and user.is_authenticated %}
+
+                              <button  name="366"  class="uk-button uk-button-small add_to_cart "  >
+                
+                 เพิ่มเข้าตะกร้า
+    <i class="fa fa-plus "></i>
+                      
+                                
+                           
+                                
+                            </button>
+
+                            {% elif user.is_authenticated and is_delivery and time_status == 0 %}
+                          
+                  <button  name=""  class="uk-button uk-button-small  uk-button-default" style="color: black;" disabled>
+                               สั่งซื้อได้่เวลา 17.00 - 22.00 น.
+                
+                 </button>
+                            {% elif user.is_anonymous %}
+                                        
+                  <button  name=""  class="uk-button add_to_cart uk-button-small alertUser " style="color: white;" >
+                                   เพิ่มเข้าตะกร้า
+                    <i class="fa fa-plus "></i>
+                 </button>
+                              
+                            {% endif %}
+
+                        
+                  
+                
+                    </div>
+                </div>
+            </div> 
+           <br>
+            <div class="uk-card   uk-card-body uk-padding-small">
+                <div class="uk-column-1-2">
+                    <div class="uk-width-1-1 " uk-lightbox>
+                         <a href="{% static "images/latte2.jpg" %}">
+
+                        <div class="uk-margin-left">
+                            <img src="{% static "images/latte2.jpg" %}" style="width: 100px;height: 100px;"  alt="">
+                        </div>
+                    </a>
+                    </div>
+                    <div class="uk-margin-remove-top">
+                   <p>Nescafe Latte </p>
+                 <h3 style="color: black">ราคา <s> 15 ฿</s> <span class="sale" > 13 ฿</span></h3>
+                    <!-- <h1 class="sale" style="color: red">ลดเหลือ </h1> -->
+                      {% if is_delivery and time_status == 1 and user.is_authenticated %}
+
+                              <button  name="367"  class="uk-button uk-button-small add_to_cart "  >
+                   เพิ่มเข้าตะกร้า
+    <i class="fa fa-plus "></i>
+                      
+                                
+                           
+                                
+                            </button>
+
+                            {% elif user.is_authenticated and is_delivery and time_status == 0 %}
+                          
+                  <button  name=""  class="uk-button uk-button-small  uk-button-default" style="color: black;" disabled>
+                                  สั่งซื้อได้เวลา 17.00 - 22.00 น.
+                  
+                 </button>
+                            {% elif user.is_anonymous %}
+                                        
+                  <button  name=""  class="uk-button add_to_cart uk-button-small alertUser " style="color: white;" >
+                                   เพิ่มเข้าตะกร้า
+                    <i class="fa fa-plus "></i>
+                 </button>
+                              
+                            {% endif %}
+
+                        
+                  
+                
+                    </div>
+                </div>
+            </div> 
+           
+    </div>  
+</div> 
+	<div class="uk-section-default " >
+		<div class="uk-section bg-bottom uk-light" >
+			<div class="container menu-desktop" id="home"  >
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>อาหารตามสั่ง</span></h1>
+				<div class="uk-child-width-1-2@s " uk-grid>
+						<!-- <a href="/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง"> -->
+					<div>
+							
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง')" class=" uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+						
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/IMG_1872.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+										<a href="/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง"><h3 id="title">พินิจโต้รุ่ง</h3></a>
+									
+									<p>อาหารตามสั่ง ยำ ผัด แกง ต้มยำ สุกี้ </p>
+								</div>
+							</div>
+								
+						</div>
+					
+					</div>
+			<!-- 		</a> -->
+					<div>
+							
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ร้านอาหารตามสั่งอิ่มอร่อย')" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/carte1.jpg" %}" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ร้านอาหารตามสั่งอิ่มอร่อย" ><h3 id="title">ร้านอาหารตามสั่งอิ่มอร่อย</h3></a>
+							
+									<p>อาหารตามสั่ง ยำ ผัด แกง ต้มยำ สุกี้ </p>
+								</div>
+							</div>
+						</div>
+						
+
+					</div>
+					<div>
+						
+						<div  onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ร้าน 3 ป. ขาหมู อาหารตามสั่ง')" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/kamoo.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+										<a href="/โรงอาหารโต้รุ่ง/ร้าน 3 ป. ขาหมู อาหารตามสั่ง"><h3 id="title">ร้าน 3 ป. ขาหมู อาหารตามสั่ง</h3></a>
+									
+									<p>ข้าวขาหมู ข้าว ผัด ผัด ต้ม ยำ สุกี้</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/อาหารอิสลาม Halal Food')"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/halal.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+								<a href="/โรงอาหารโต้รุ่ง/อาหารอิสลาม Halal Food">
+									<h3 id="title">อาหารอิสลาม Halal Food</h3></a>
+									
+									<p>ร้านนี้ไม่มีหมู ข้าวกระเพรา ข้าวยำ ข้าวผัด อื่น ๆ สุกี้ ราดหน้า</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+				</div>
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>ก๋วยเตี๋ยว </span></h1>
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ชาย 4 บะหมี่เกี๊ยว')" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/bamee.JPG" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ชาย 4 บะหมี่เกี๊ยว"><h3 id="title">ชาย 4 บะหมี่เกี๊ยว</h3></a>
+
+									<p>บะหมี่หมูแดง เกี๊ยวหมูแดง เกาเหลา มาม่า อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div  >
+						
+					<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/แชมป์ฮั้งเพ้ง');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/champ.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/แชมป์ฮั้งเพ้ง"><h3 id="title">ลูกชิ้นเนื้อวัว แชมป์ฮั้งเพ้ง ลูกชิ้นหมู</h3></a>
+
+								
+									<p>ก๋วยเตี๋ยวหมูน้ำตก เย็นตาโฟ เกาเหลา อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+				</div>
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>ข้าวมันไก่ ข้าวหมูแดง </span></h1>
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div >
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ข้าวยำไก่ย่าง ข้าวมันไก่ 2 สี');"   class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/kaomungai.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+										<a href="/โรงอาหารโต้รุ่ง/ข้าวยำไก่ย่าง ข้าวมันไก่ 2 สี"><h3 id="title">ข้าวยำไก่ย่าง ข้าวมันไก่ 2 สี </h3></a>
+
+									<p>ข้าวไก่บาร์บีคิว ไก่พริกไทยดำ นิวออรีน ข้าวไก่แซ่บ ข้าวหน้าปลาทอด อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div  onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ข้าวหน้าเป็ด-ข้าวหมูแดง-ข้าวหมูกรอบ');" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/naped.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+											<a href="/โรงอาหารโต้รุ่ง/ข้าวหน้าเป็ด-ข้าวหมูแดง-ข้าวหมูกรอบ"><h3 id="title">ข้าวหน้าเป็ด ข้าวหมูแดง-ข้าวหมูกรอบ </h3></a>
+
+									<p>ข้าวหมูแดง ข้าวหน้าเป็ด ข้าวยำ ข้าวหมูย่าง อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+				</div>
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						<h1 class="uk-heading-line uk-text-center uk-margin"><span>ราดหน้า ผัดไทย</span></h1>
+					
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ผัดไท หอยทอด ราดหน้า');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/padthai.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ผัดไท หอยทอด ราดหน้า"><h3 id="title">ผัดไท หอยทอด ราดหน้า </h3></a>
+
+									
+									<p>ผัดไทกุ้งสด ราดหน้า ก๋วยจั๋บ อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					
+					</div>
+					<div>
+						<h1 class="uk-heading-line uk-text-center uk-margin"><span>ข้าวต้ม</span></h1>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ศิริรัตน์ โจ้ก ข้าวต้ม');"   class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/joke.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ศิริรัตน์ โจ้ก ข้าวต้ม"><h3 id="title">ศิริรัตน์ โจ้ก ข้าวต้ม </h3></a>
+
+								
+									<p>โจ๊ก ข้าวต้มเครื่อง ยำ ผัดผังบุ้ง อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						<h1 class="uk-heading-line uk-text-center uk-margin"><span>อาหารอีสาน</span></h1>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ตำยำย่าง อาหารอีสาน ลาบยโส');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/esan.JPG" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+										<a href="/โรงอาหารโต้รุ่ง/ตำยำย่าง อาหารอีสาน ลาบยโส">
+											<h3 id="title">ตำยำย่าง อาหารอีสาน ลาบยโส </h3></a>
+									
+									<p>ส้มตำ หมูย่าง ไก่ ปลาดุก ลาบ ต้มแซ่บ ยำ อื่น ๆ </p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<h1 class="uk-heading-line uk-text-center uk-margin"><span>ข้าวแกง</span></h1>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ข้าวแกงชุดอิ่มอร่อย');" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/kaogang.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ข้าวแกงชุดอิ่มอร่อย">
+											<h3 id="title">ข้าวแกงชุดอิ่มอร่อย </h3></a>
+									
+									<p>ข้าวแกงจับคู่ ต้มยำปลากระป๋อง + ไข่เจียว แกงส้ม + ไข่เดียว อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+				</div>
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>เครื่องดื่ม ผลไม้ </span></h1>
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/เครื่องดื่ม ยำผลไม้ ผลไม้');" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/drink.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/เครื่องดื่ม ยำผลไม้ ผลไม้">
+											<h3 id="title">  ผลไม้ </h3></a>
+									
+									<p> ผลไม้ต่างๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ปังเย็น');" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/pangyen.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ปังเย็น">
+											<h3 id="title">ปังเย็น </h3></a>
+									
+									<p>นมสด โกโก้ ชาเย็น ปังเย็น อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+				</div>
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>อื่น ๆ</span></h1>
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/น้องแนนหมูปิ้ง');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/mooping.JPG" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/น้องแนนหมูปิ้ง">
+											<h3 id="title">น้องแนนหมูปิ้ง </h3></a>
+							
+									<p>หมูปิ้ง ปีกไก่ ตับ อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ANWAR BURGER');" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/anwar.JPG" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+										<a href="/โรงอาหารโต้รุ่ง/ANWAR BURGER">
+											<h3 id="title">ANWAR BURGER </h3></a>
+							
+							
+									<p>เบอร์เกอร์ นักเก็ต เฟรนฟราย โรตี อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/สมใจ ลูกชิ้นทอด');" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/lookchin.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+										<a href="/โรงอาหารโต้รุ่ง/สมใจ ลูกชิ้นทอด">
+											<h3 id="title">สมใจ ลูกชิ้นทอด</h3></a>
+									<h3 id="title"></h3>
+									<p>ลูกชิ้น ไส้กรอก ไส้กรอกห่อเบค่อน อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				
+					
+					
+					
+				</div>
+				
+			</div>
+
+			<div class="container menu-mobile" id="home"  >
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>อาหารตามสั่ง</h1>
+				<div class="uk-child-width-1-2@s " uk-grid>
+					<div >
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง');" class=" uk-card uk-card-default uk-grid-collapse search-cate-mobile " uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/IMG_1872.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+										<a href="/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง"><h4 id="title">พินิจโต้รุ่ง</h4></a>
+							
+									<p>อาหารตามสั่ง อื่น ๆ </p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ร้านอาหารตามสั่งอิ่มอร่อย');" class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/carte1.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ร้านอาหารตามสั่งอิ่มอร่อย"><h4 id="title">ร้านอาหารตามสั่งอิ่มอร่อย</h4></a>
+								
+								
+									<p>อาหารตามสั่ง อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div  onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ร้าน 3 ป. ขาหมู อาหารตามสั่ง');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/kamoo.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ร้าน 3 ป. ขาหมู อาหารตามสั่ง"><h4 id="title">ร้าน 3 ป. ขาหมู อาหารตามสั่ง</h4></a>
+
+									<p>ขาหมู อาหารตามสั่ง</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div  onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/อาหารอิสลาม Halal Food');"   class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+									<img src="{% static "images/halal.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/อาหารอิสลาม Halal Food"><h4 id="title">อาหารอิสลาม Halal Food</h4></a>
+									<h4 id="title"> </h4>
+									<p>ร้านนี้ไม่มีหมู</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+				</div>
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>ก๋วยเตี๋ยว </span></h1>
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						
+						<div  onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ชาย 4 บะหมี่เกี๊ยว');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+							<img src="{% static "images/bamee.JPG" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+						
+									<a href="/โรงอาหารโต้รุ่ง/ชาย 4 บะหมี่เกี๊ยว"><h4 id="title">ชาย 4 บะหมี่เกี๊ยว</h4></a>
+
+									<p>บะหมี่หมูแดง อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div   >
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/แชมป์ฮั้งเพ้ง');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/champ.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+							
+										<a href="/โรงอาหารโต้รุ่ง/แชมป์ฮั้งเพ้ง "><h4 id="title">แชมป์ฮั้งเพ้ง</h4></a>
+
+									<p>หมูน้ำตก อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+				</div>
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>ข้าวมันไก่ ข้าวหมูแดง </span></h1>
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ข้าวยำไก่ย่าง ข้าวมันไก่ 2 สี');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container ">
+								<img  src="{% static "images/kaomungai.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									
+									<a href="/โรงอาหารโต้รุ่ง/ข้าวยำไก่ย่าง ข้าวมันไก่ 2 สี"><h4 id="title">ข้าวมันไก่ 2 สี</h4></a>
+									<p>ข้าวยำไก่ BBQ อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ข้าวหน้าเป็ด-ข้าวหมูแดง-ข้าวหมูกรอบ');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/naped.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ข้าวหน้าเป็ด-ข้าวหมูแดง-ข้าวหมูกรอบ"><h4 id="title">ข้าวหน้าเป็ด ข้าวหมูแดง-ข้าวหมูกรอบ</h4></a>
+								
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+				</div>
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						<h1 class="uk-heading-line uk-text-center uk-margin"><span>ราดหน้า ผัดไทย</span></h1>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ผัดไท หอยทอด ลาดหน้า');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/padthai.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+							
+
+									<a href="/โรงอาหารโต้รุ่ง/ผัดไท หอยทอด ราดหน้า"><h4 id="title">ผัดไท หอยทอด ลาดหน้า</h4></a>
+									<p> ก๋วยจั๋บ อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<h1 class="uk-heading-line uk-text-center uk-margin"><span>ข้าวต้ม</span></h1>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ศิริรัตน์ โจ้ก ข้าวต้ม');"   class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+									<img src="{% static "images/joke.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+										<a href="/โรงอาหารโต้รุ่ง/ศิริรัตน์ โจ้ก ข้าวต้ม"><h4 id="title">โจ๊ก ข้าวต้ม</h4></a>
+									<p>ยำ ผัดผักบุ้ง อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						<h1 class="uk-heading-line uk-text-center uk-margin"><span>อาหารอีสาน</span></h1>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ตำยำย่าง อาหารอีสาน ลาบยโส');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+							<img src="{% static "images/esan.JPG" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/ตำยำย่าง อาหารอีสาน ลาบยโส"><h4 id="title">ตำยำย่าง อาหารอีสาน ลาบยโส</h4></a>
+							
+									<p> ไก่ย่าง ต้มแซ่บ อื่น ๆ </p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<h1 class="uk-heading-line uk-text-center uk-margin"><span>ข้าวแกง</span></h1>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ข้าวแกงชุดอิ่มอร่อย');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+							<img src="{% static "images/kaogang.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+							
+	<a href="/โรงอาหารโต้รุ่ง/ข้าวแกงชุดอิ่มอร่อย"><h4 id="title">ข้าวแกงชุดอิ่มอร่อย</h4></a>
+									<p>ข้าวแกงจับคู่</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+				</div>
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>เครื่องดื่ม ผลไม้ </span></h1>
+				<div class="uk-child-width-1-2@s" uk-grid>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/เครื่องดื่ม ยำผลไม้ ผลไม');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/drink.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+
+	<a href="/โรงอาหารโต้รุ่ง/เครื่องดื่ม ยำผลไม้ ผลไม้">	<h4 id="title"> ผลไม้</h4></a>
+								
+									<p> ผลไม้ </p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ปังเย็น');"   class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/S__6144009.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+							
+										<a href="/โรงอาหารโต้รุ่ง/ปังเย็น"><h4 id="title">ปังเย็น</h4></a>
+									<p>นมสด น้ำปั่น อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+				</div>
+				<h1 class="uk-heading-line uk-text-center uk-margin"><span>อื่น ๆ</span></h1>
+				<div class="uk-child-width-1-2@s" uk-grid>
+				<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/น้องแนนหมูปิ้ง');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/mooping.JPG" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+								
+									<a href="/โรงอาหารโต้รุ่ง/น้องแนนหมูปิ้ง"><h4 id="title">น้องแนนหมูปิ้ง</h4></a>
+									<p>ปีกไก่ ตับ อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						
+						<div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/ANWAR BURGER');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img src="{% static "images/anwar.JPG" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									
+									<a href="/โรงอาหารโต้รุ่ง/ANWAR BURGER"><h4 id="title">ANWAR BURGER</h4></a>
+									<p>เบอร์เกอร์ โรตี อื่น ๆ</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div>
+						
+						<div  onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/สมใจ ลูกชิ้นทอด');"  class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s search-cate-mobile" uk-grid>
+							<div class="uk-card-media-left uk-cover-container">
+								<img href="/โรงอาหารโต้รุ่ง/ลูกชิ้น" src="{% static "images/lookchin.jpg" %}" alt="" uk-cover>
+								<canvas width="600" height="400"></canvas>
+							</div>
+							<div>
+								<div class="uk-card-body uk-padding-small">
+									<a href="/โรงอาหารโต้รุ่ง/สมใจ ลูกชิ้นทอด"><h4 id="title">สมใจ ลูกชิ้นทอด</h4></a>
+									<h4 id="title"></h4>
+									<p> ลูกชิ้นทอด </p>
+								
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					
+					
+					
+				</div>
+				
+			</div>
+			
+				<br>		    
+    <A name="charge_detail" >
+   <div class="uk-margin-remove" uk-alert>
+ 	 <div class="container " id="home">
+     	<a class="uk-alert-close " uk-close></a>
+   		<p >สั่งได้ไม่เกิน 6 อย่าง </p>
+  <div class="" uk-grid>
+    <div class="uk-width-1-1@s uk-width-1-4@m">
+        	<p>ค่าส่ง 1-3 อย่าง </p>
+        	<ul>
+   		<li>
+   			หอ B 20 บาท
+   	</li>
+<li> หอ E C 10 บาท</li>
+<li>หอ F M 7 บาท </li>
+   </ul>
+    </div>
+    <div class="uk-width-1-1@s uk-width-1-3@m">
+      <p>ค่าส่ง 4-6 อย่าง</p>
+       <ul>
+   		<li>
+   			หอ B 25 บาท
+   	</li>
+<li> หอ E C 15 บาท</li>
+<li>หอ F M 12 บาท </li>
+   </ul>
+    </div>
+    <div class="uk-width-1-1@s uk-width-1-3@m">
+        
+    </div>
+</div>
+  <p></p>
+  	<p >หมายเหตุ ร้านหมูปิ้งกับร้านลูกชิ้นนับเป็น 1 อย่าง </p>
+     
+  </div>
+</div>
+
+			
+		</div>
+		
+	</div>
+			
+			
+		</div>
+		
+	</div>
+</div>
+<script type="text/javascript">
+	 $(".alertUser").on("click", function() {
+
+
+        alert("กรุณาสมัครสมาชิกก่อนนะคะ");
+    });
+	$(".add_to_cart").on("click", function() {
+        var menu_id = $(this).attr('name');
+        // alert("menu_id"+menu_id);
+        // var love_btn = $(this);
+        // var id = $(this).attr('id');
+        // love_btn.toggleClass("pop");
+        $.ajax({
+            type: "GET",
+            url: "{% url 'add_to_cart' %}",
+            data: { 'menu_id': menu_id, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            dataType: "json",
+            success: function(response) {
+                // alert("a"+response.output_list);
+                // $("#basket_item").text($(response.table));
+                $("#basket").text(response.item_in_cart);
+                $('#basket_item').html(response.table);
+                // $('#tableRow').display('none');
+                $('#tableRow').hide();
+            }
+        });
+    });
+    function myhref(web){
+      window.location.href = web;}
+</script>
+{% endblock %}

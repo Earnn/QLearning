@@ -1,0 +1,21 @@
+{% extends 'base.html' %}{% load static %} {% block content %}
+ 
+    <!-- banner -->
+    
+    <!-- end banner -->
+    <!-- <br>     -->
+    <hr class="uk-box-shadow-medium ">
+    <div class="container" id="home">
+  <div class="uk-section uk-section-default">
+        <div class="uk-container uk-text-center">
+              
+                <h1 class=" uk-text-center"> <i style="color:#2ECC71" class="fa fa-check-circle fa-3x" aria-hidden="true"></i></h1>
+                  <h2 class="thai_font uk-text-center"> คุณได้กรอกประวัติความหิวเรียบร้อยแล้ว  </h2 >
+                 <h3 class="thai_font uk-text-center">ยินดีด้วย! คุณได้รับคูปองจากร้านค้า สามารถตรวจสอบได้ที่หน้าโปรไฟล์</h3>
+                 <a href="{% url 'inf'  %}">แก้ไขประวัติความหิว</a> |
+                 <a href="{% url 'home'  %}">กลับหน้าแรก</a>
+               
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,440 @@
+{% extends 'base.html' %}{% load static %} {% block content %}
+    <style>
+    .banner-new {
+    background: url('{% static "images/fork.jpg" %}') no-repeat 0px 0px;
+    background-size: cover;
+    /*background-attachment: fixed;*/
+    
+    }
+    /*  .center {
+    text-align: center;
+    }
+    .merge-bottom-input {
+    width: 67px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    }
+    .merge-top-left-button {
+    border-top-left-radius: 0;
+    }
+    .merge-top-right-button {
+    border-top-right-radius: 0;
+    }*/
+    .imgCrop-desktop{
+    width: 150px;
+    height:100px;
+    overflow: hidden;
+    position:  relative;
+    }
+    .inImg-desktop{
+    position: absolute;
+    
+    width: 150px;
+    height:100px;
+    object-fit: cover;
+    }
+    .imgCrop-mobile{
+    width: 100px;
+    height:90px;
+    overflow: hidden;
+    position:  relative;
+    }
+    .inImg-mobile{
+    position: absolute;
+    
+    width: 130px;
+    height:90px;
+    object-fit: cover;
+    }
+    input[type=text],.uk-textarea{
+    background-color: #EEEEEE;
+    }
+    .uk-button-order :hover{
+    color: white;
+    background-color: #FFCA28;
+    }
+    #btn-inline,#p-inline{
+    display: inline-block;
+    vertical-align: middle;
+    margin: 10px 0;
+    }
+    </style>
+    <!-- banner -->
+    
+    <!-- end banner -->
+    <!-- <br>     -->
+    <hr class="uk-box-shadow-medium ">
+    <div class="uk-background-muted" style="margin-top: -20px;">
+        <div class="container" id="home">
+            <br>
+            <div class="uk-card uk-card-default">
+                <div class="uk-card-body uk-margin-remove">
+                    <h2 class="uk-heading-bullet">ตรวจสอบรายการ</h2>
+                    <hr>
+                    <table id="add_table" class="uk-table uk-table-divider uk-margin-remove-bottom  ">
+                        
+                        <tbody>
+                            {% for order in output %}
+                                
+                                <tr>
+                                    <td class="uk-width-small"  >
+                                        <div class="image-desktop">
+                                            <div class="imgCrop-desktop"><img src="../{{order.url_pic}}" class="inImg-desktop" alt="" ></div>
+                                        </div>
+                                        <div class="image-mobile">
+                                            <div class="imgCrop-mobile"><img src="../{{order.url_pic}}" class="inImg-mobile" alt="" ></div>
+                                        </div>
+                                        
+                                        
+                                    </td>
+                                    <td class="uk-width-small"> <h4>{{order.amount}} x {{order.name}}</h4></td>
+                                    <td class="uk-width-small">  <h4> {{order.price}} บาท</h4></td>
+                                </tr>
+                            {% endfor %}
+                            {% if delivery_charge == 0 %}
+                                   <tr style="font-weight: bold;color: black">
+                                    <td class="uk-width-small ">  </td>
+                                    <td class="uk-width-small "> <h3 >ค่าจัดส่ง</h3> </td>
+                                    <td class="uk-width-small">  <h3> 0 บาท</h3></td>
+                                    
+                                </tr>
+                                <tr style="font-weight: bold;color: black">
+                                    <td class="uk-width-small ">  </td>
+                                    <td class="uk-width-small "> <h3 >รวม</h3> </td>
+                                    <td class="uk-width-small">  <h3> {{total}} บาท</h3></td>
+                                    
+                                </tr>
+                            {% else %}
+                                <tr style="font-weight: bold;color: black">
+                                    <td class="uk-width-small ">  </td>
+                                    <td class="uk-width-small "> <h3 >ค่าจัดส่ง</h3> </td>
+                                    <td class="uk-width-small">  <h3> {{delivery_charge}} บาท</h3></td>
+                                    
+                                </tr>
+                                <tr style="font-weight: bold;color: black">
+                                    <td class="uk-width-small ">  </td>
+                                    <td class="uk-width-small "> <h3 >รวม</h3> </td>
+                                    <td class="uk-width-small">  <h3> {{total}} บาท</h3></td>
+                                    
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="nav-desktop">   
+
+                    <div class="uk-child-width-1-2@s uk-text-center" uk-grid>
+                        
+                        <div></div>
+                        <div>
+                            <label id="p-inline" class="">โค้ดส่วนลด </label>
+                            <div id="btn-inline" class="uk-form-controls uk-width-1-2">
+                                <input class="uk-input" id="input_code" type="text" placeholder="กรอกโค้ดที่นี่">
+                            </div>
+                            <button id="code" class="uk-button uk-button-default" type="button"><h2 class="uk-margin-small-top">ใช้</h2></button>
+                        </div>
+
+                        <div></div>
+                        <!-- <div class="uk-margin-remove-top">  <p id="textDesktop"></p></div> -->
+                    </div>
+                </div>
+               
+                    <div class="nav-mobile">   
+
+                    <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+                        
+                        
+                        <div>
+                            <label id="p-inline" class="">โค้ดส่วนลด </label>
+                            <div id="btn-inline" class="uk-form-controls">
+                                <input class="uk-input" id="input_code_mobile" type="text" placeholder="กรอกโค้ดที่นี่">
+                            </div>
+                            <button id="codeMobile" class="uk-button uk-button-default" type="button"><h2 class="uk-margin-small-top">ใช้</h2></button>
+
+
+<!-- <p id="textMobile"></p> -->
+                        </div>
+                    </div>
+                </div>
+                    <br>
+                    <!-- <form  action="/delivery/"> -->
+                    <!--         {% csrf_token %} -->
+                    <h2 class="uk-heading-bullet">เบอร์โทรศัพท์ที่สามารถติดต่อได้ <b style="color: red">*</b></h2>
+                    <div class="uk-margin">
+                        <input id="myPhoneNumber" class="uk-input" type="text" value="{{delivery_phone}}" required>
+                    </div>
+                    <!--    <div id="phoneAlertBlock" class="uk-alert-danger" uk-alert>
+                        <p>กรุณาระบุเบอร์โทรศัพท์เพื่อใช้ติดต่อ</p>
+                    </div> -->
+                    <h2 class="uk-heading-bullet">ที่อยู่จัดส่ง <b style="color: red">*</b></h2>
+                    <label for="">ขอบเขตที่ร้านค้าสามารถจัดส่งได้ {{store.delivery_boundary}} </label>
+                    
+                    <div class="uk-margin">
+                        <!-- {{delivery_address}} -->
+                        <textarea id="myTextarea" class="uk-textarea" rows="5" required>{{delivery_address}}</textarea>
+                    </div>
+                    <!--  <div id="addressAlertBlock" class="uk-alert-danger" uk-alert>
+                        <p>กรุณาระบุที่อยู่เพื่อจัดส่งอาหาร</p>
+                    </div> -->
+                    
+                    
+                    
+                    <button  class="uk-margin-top uk-button uk-button-order uk-align-center" type="submit"  id="orderBtn" style="color: white; " ><h1 class="uk-margin-small-top">ชำระเงิน</h1></button>
+                    <!-- </form> -->
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+    {% block javascript %}
+<script type="text/javascript">
+        $(document).ready(function(){
+        
+        var total = {{total}}
+      
+        var code_cou ="";
+        // document.getElementById("myTextarea").value ={{delivery_address}};
+        // var addressAlertBlock = document.getElementById("addressAlertBlock");
+        // var phoneAlertBlock = document.getElementById("phoneAlertBlock");
+        // addressAlertBlock.style.display = "none";
+        // phoneAlertBlock.style.display = "none";
+        // function myFunction() {
+        $("#orderBtn").click(function() {
+        //phone
+        var phone_number =  document.getElementById("myPhoneNumber").value;
+        var address =  $("#myTextarea").val();
+        console.log("myPhoneNumber", phone_number);
+        console.log("address", address);
+        // if (document.getElementById("myPhoneNumber").value == ""  && document.getElementById("myTextarea").value == "" ){
+        // phoneAlertBlock.style.display = "block";
+        // addressAlertBlock.style.display = "block";
+        // e.preventDefault();
+        // document.getElementById("phone_number").required = true;
+        // document.getElementById("myPhoneNumbet").required = true;
+        // }
+        // else if (document.getElementById("myPhoneNumber").value == ""  && document.getElementById("myTextarea").value == "" ){
+        // phoneAlertBlock.style.display = "block";
+        // e.preventDefault();
+        // document.getElementById("phone_number").required = true;
+        // }
+        // if (!phone_number){
+        // phone_number=  document.getElementById("phone_number").placeholder;
+        // }
+        // user fill phone
+        // console.log("address ",address);
+        if (phone_number  == "" || phone_number  == "None" ){
+        alert("กรุณาระบุเบอร์โทรศัพท์เพื่อใช้ติดต่อ");
+        return false;
+        }
+        
+        if (address=="" || address  == "None"){
+        // addressAlertBlock.style.display = "block";
+        // document.getElementById("phone_number").required;
+        alert("กรุณาระบุที่อยู่เพื่อจัดส่งอาหาร");
+        return false;
+        // $("#phone_number").attr('required', '');
+        // event.stopPropagation();
+        }
+        
+        // else {
+        // document.getElementById("phone_number").required;
+        
+        
+        
+        //address
+        
+        // if (!address){
+        // address=  document.getElementById("myTextarea").placeholder;
+        // }
+        // user fill phone
+        // if (address  == "None" || address=="" ){
+        // addressAlertBlock.style.display = "block";
+        // $("#address").attr('required', '');
+        // // e.preventDefault();
+        // }
+        // else {
+        // addressAlertBlock.style.display = "none";
+        // // document.getElementById("address").required;
+        // }
+        
+        
+        
+        var data = JSON.stringify({{data|safe}});
+        var data2= JSON.stringify(address);
+        var d_phone_number= JSON.stringify(phone_number);
+        // var total_price= JSON.stringify({{total|safe}});
+        var total_price = JSON.stringify(total);
+        var charge= JSON.stringify({{delivery_charge|safe}})
+        // var payment = JSON.stringify(d_payment);
+        console.log(data);
+        $.ajax({
+        url: '/delivery/',
+        type: 'GET',
+        data: {'data':data,
+        'address':data2,
+        'total_price':total_price,
+        'phone_number':d_phone_number,
+        'delivery_charge':charge,
+        'code_cou':code_cou,
+
+        
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+        },
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(data) {
+        var a = "{% url 'success' order_id=112233 %}".replace("success", data.next_page);
+        var b = a.replace("112233", data.order_id);
+        window.location.href = b;
+        
+        },
+        error: function(data) {
+        alert(data);
+        alert("การสั่งซื้อผิดพลาด กรุณาลองใหม่ภายหลัง");
+        }
+        });
+        });
+        //end orderbtn
+        // };
+        //end form submit
+        $("#code").click(function() {
+        
+        
+            var code =  document.getElementById("input_code").value;
+            code_cou = code
+            console.log(code);
+            // var data = JSON.stringify({{output|safe}});
+            // var d_address= JSON.stringify(address);
+            // var d_phone_number =  document.getElementById("myPhoneNumbet").value;
+            
+            // console.log(payment);
+            $.ajax({
+            url: '/code/',
+            type: 'GET',
+            data: {'code':code,csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            },
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function(data) {
+
+            alert("ใช้โค้ดสำเร็จ ถ้าต้องการยกเลิกการใช้คูปองให้สั่งใหม่");
+            // alert(data.code);
+            // $('#textDesktop').text('ใช้โค้ดสำเร็จ');
+    // $('#textMobile').text('ใช้โค้ดสำเร็จ');
+            // alert(data.value);
+            if (data.code == 0) {
+                var text = '<tr><td class="uk-width-small"></td><td class="uk-width-small"><h4 class="uk-text-muted">';
+                text += data.msg;
+                text += '</h4></td><td class="uk-width-small"><h3 class="uk-text-muted"> -';
+                text += data.value;
+                text += '</h3></td></tr>';
+                total = {{total}} - data.value;
+          
+
+                var text_total ='<tr><td class="uk-width-small"></td><td class="uk-width-small"><h4 class="uk-text-success uk-text-bold">';
+                text_total += 'รวม</h4></td><td class="uk-width-small"><h3 class="uk-text-success uk-text-bold">';
+                text_total += total;
+                text_total += ' บาท</h3></td></tr>';
+            }
+            else if (data.code == 1 ){
+                var text = '<tr><td class="uk-width-small"></td><td class="uk-width-small"><h4 class="uk-text-muted">';
+                text += data.msg;
+                text += '</h4></td><td class="uk-width-small"><h3 class="uk-text-muted">';
+                text += data.value;
+
+                text += '</h3></td></tr>';
+                total = {{total}};
+         
+                var text_total ='<tr><td class="uk-width-small"></td><td class="uk-width-small"><h4 class="uk-text-success uk-text-bold">';
+                text_total += 'รวม</h4></td><td class="uk-width-small"><h3 class="uk-text-success uk-text-bold">';
+                text_total += total;
+                text_total += ' บาท</h3></td></tr>';
+            }
+            $('#add_table tr:last').remove();
+            $("#add_table").last().append(text);
+            $("#add_table").last().append(text_total);
+            $('#code').prop('disabled', true);
+            },
+            error: function(data) {
+                alert("โค้ดไม่ถูกต้อง");
+                $('#input_code').val("");
+
+            // $('#textDesktop').text('โค้ดไม่ถูกต้อง');
+            // $('#textMobile').text('โค้ดไม่ถูกต้อง');
+            }
+    });
+});
+
+
+   $("#codeMobile").click(function() {
+        
+        
+        var code =  document.getElementById("input_code_mobile").value;
+        code_cou = code
+        console.log(code);
+        // var data = JSON.stringify({{output|safe}});
+        // var d_address= JSON.stringify(address);
+        // var d_phone_number =  document.getElementById("myPhoneNumbet").value;
+        
+        // console.log(payment);
+        $.ajax({
+        url: '/code/',
+        type: 'GET',
+        data: {'code':code,csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+        },
+        dataType: "json",
+        contentType: 'application/json; charset=utf-8',
+        success: function(data) {
+
+        alert("ใช้โค้ดสำเร็จ ถ้าต้องการยกเลิกการใช้คูปองให้สั่งใหม่");
+
+// $('#textMobile').text('ใช้โค้ดสำเร็จ');
+        // alert(data.value);
+        if (data.code == 0) {
+            var text = '<tr><td class="uk-width-small"></td><td class="uk-width-small"><h4 class="uk-text-muted">';
+            text += data.msg;
+            text += '</h4></td><td class="uk-width-small"><h3 class="uk-text-muted"> -';
+            text += data.value;
+            text += '</h3></td></tr>';
+            total = {{total}} - data.value;
+         
+            var text_total ='<tr><td class="uk-width-small"></td><td class="uk-width-small"><h4 class="uk-text-success uk-text-bold">';
+            text_total += 'รวม</h4></td><td class="uk-width-small"><h3 class="uk-text-success uk-text-bold">';
+            text_total += total;
+            text_total += ' บาท</h3></td></tr>';
+        }
+        else if (data.code == 1 ){
+            var text = '<tr><td class="uk-width-small"></td><td class="uk-width-small"><h4 class="uk-text-muted">';
+            text += data.msg;
+            text += '</h4></td><td class="uk-width-small"><h3 class="uk-text-muted">';
+            text += data.value;
+            text += '</h3></td></tr>';
+            total = {{total}};
+         
+            var text_total ='<tr><td class="uk-width-small"></td><td class="uk-width-small"><h4 class="uk-text-success uk-text-bold">';
+            text_total += 'รวม</h4></td><td class="uk-width-small"><h3 class="uk-text-success uk-text-bold">';
+            text_total += total;
+            text_total += ' บาท</h3></td></tr>';
+        }
+        $('#add_table tr:last').remove();
+        $("#add_table").last().append(text);
+        $("#add_table").last().append(text_total);
+        // document.getElementById("codeMobile").hide
+               $('#codeMobile').hide();
+        },
+        error: function(data) {
+            alert("โค้ดไม่ถูกต้อง");
+            $('#input_code_mobile').val("");
+
+
+        // $('#textMobile').text('โค้ดไม่ถูกต้อง');
+        }
+    });
+});
+
+//end code click
+});
+</script>
+{% endblock %}
+{% endblock %}
