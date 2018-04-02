@@ -125,6 +125,8 @@ def next_action(request,state,action):
     print("max val",max_value)
 
     Q[current_state, action] = R[current_state, action] + gamma * max_value
+    print('max_value', R[current_state, action] + gamma * max_value)
+
     Q_update = QTable.objects.filter(user=request.user).update(Q_array=Q.tolist())
 
     return JsonResponse(Q_update,safe=False)
@@ -141,6 +143,49 @@ def next_action(request,state,action):
     # next_action = int(np.random.choice(available_actions_range,1))
     # return max_index
 
+def tohroong(request):
+    gamma = 0.8
+    state = 1
+    print(request.user)
+    gender = ""
+    
+    try:
+        info = Informations.objects.get(user=request.user)
+        gender = info.sex
+    except Exception as e:
+        gender="unknown"
+    
+    if gender == "female":
+        # state 0 1 2
+        print("random 6-8",np.random.randint(0,3))
+        pass
+    elif gender == "male":
+        # state 3 4 5
+        print("random 6-8",np.random.randint(3,6))
+        pass
+    elif gender == "unknown":
+        # state 6 7 8 
+        state = 0 # tohroong 's page is state = 0 
+        # num_actions =0
+        # actions = 0 
+        # valid_moves = R[state] >= 0
+        q_table = QTableLocal.objects.get(user=request.user)
+        R = np.array(q_table.R_array)
+        current_state_row = R[state,]
+        print("R[state,]",R[state,])
+        av_act = np.where(current_state_row >= 0)[0]
+        action = int(np.random.choice(av_act,size=1))
+
+        next_state = action
+        print("next_state",next_state)
+
+
+
+        # print("random 6-8",np.random.randint(6,9))
+    # state,num_actions,actions = createActions(request,state)
+    return render(request, 'tohroong.html',{'actions':actions,
+        'state':state,
+        'num_actions':num_actions})
 
 
 def q_learning(request):
@@ -316,14 +361,71 @@ def createActions(request,state):
     random_probability = np.random.rand()
     actions = []
     valid_actions = np.arange(3)
-    q_table = QTable.objects.get(user=request.user)
+    q_table = QTable.objects.get(name="global")
+    # q_table_local =     QTableLocal.objects.update_or_create(user=request.user,
+    #             defaults={'R_array':[
+    #     [0., 0, 100.],
+    #     [100., 0., 0.],
+    #     [0.,100., 0.],
+        
+    #     [0., 0, 100.],
+    #     [100., 0., 0.],
+    #     [0.,100., 0.],
+
+    #     [0., 0, 100.],
+    #     [100., 0., 0.],
+    #     [0.,100., 0.],
+    # ],'Q_array':[
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+        
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+    # ]})
     # R = np.array(q_table.R_array) 
+    # qupdate = QTable.objects.filter(name="global").update(R_array =[
+    #     [0., 0, 100.],
+    #     [100., 0., 0.],
+    #     [0.,100., 0.],
+        
+    #     [0., 0, 100.],
+    #     [100., 0., 0.],
+    #     [0.,100., 0.],
+
+    #     [0., 0, 100.],
+    #     [100., 0., 0.],
+    #     [0.,100., 0.],
+    # ],Q_array = [
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+        
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+        
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+    #     [0., 0., 0.],
+        
+    # ] ) 
     Q = np.array(q_table.Q_array)
-    current_state = np.random.randint(0, int(Q.shape[0]))
-    print("current_state",current_state)
-    available_act = available_actions(request,current_state)
-    print("available_act",available_act)
-    action = sample_next_action(available_act)
+    print("Q",Q.shape)
+    # print("Q ta",Q)
+    # print("q_table.Q_array",q_table.Q_array)
+
+    
+    # current_state = np.random.randint(0, int(Q.shape[0]))
+    # print("current_state",current_state)
+    # available_act = available_actions(request,current_state)
+    # print("available_act",available_act)
+    # action = sample_next_action(available_act)
     # score = update(current_state,action,gamma)
 
 
@@ -348,9 +450,9 @@ def createActions(request,state):
             # print
             
             logs = User_session.objects.filter(user=fai,action="เพิ่มเข้าตะกร้า")
-            print("logs",logs)
+            # print("logs",logs)
             print("len(all_ordered)",len(all_ordered))
-            print("len(logs)",len(logs))
+            # print("len(logs)",len(logs))
             if len(all_ordered) == 0 and len(logs) == 0:
                 pass
             elif len(all_ordered) == 0 and len(logs) >= 1:
@@ -396,19 +498,24 @@ def createActions(request,state):
                 sorted_dict = sorted(o_dict, key=o_dict.get, reverse=True)
                 print("most_ordered",most_ordered)
                 print("sorted_dict",sorted_dict)
+                print("in_cart_list",in_cart_list)
+                print("in_cart_list",len(in_cart_list))
+
                 count = 0
                 for i in sorted_dict:
-                    print("i",i)
+                    
                     # most_add_to_cart = i
                     if count == 2:
                         break
                     else:
+                        print("i",i)
                         if i not in in_cart_list:
                             actions.append(i)
                             count +=1
-     
-
-                print("else")
+                        else:
+                            print("incart")
+                print("actions",actions)
+                print("else",count)
                 add_list = []
                 for i in logs:
                     add_list.append(i.value)

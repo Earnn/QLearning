@@ -8,19 +8,77 @@ from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 class QTable(models.Model):
+
+
+	name = models.CharField(max_length=10,null=True, blank=True)
+	# user = models.ForeignKey(User, on_delete=models.SET_NULL,blank=True,null=True)
+	Q_array = ArrayField(ArrayField(models.FloatField()
+		),default=[
+		[0., 0., 0.],
+        [0., 0., 0.],
+        [0., 0., 0.],
+        
+        [0., 0., 0.],
+        [0., 0., 0.],
+        [0., 0., 0.],
+
+        [0., 0., 0.],
+        [0., 0., 0.],
+        [0., 0., 0.],
+	],blank=True,null=True)
+	R_array = ArrayField(ArrayField(models.FloatField()
+		),default=
+	[
+		[0., 0, 100.],
+        [100., 0., 0.],
+        [0.,100., 0.],
+        
+        [0., 0, 100.],
+        [100., 0., 0.],
+        [0.,100., 0.],
+
+        [0., 0, 100.],
+        [100., 0., 0.],
+        [0.,100., 0.],
+	]
+	,blank=True,null=True)
+
+class QTableLocal(models.Model):
+
+
+	name = models.CharField(max_length=10,null=True, blank=True)
 	user = models.ForeignKey(User, on_delete=models.SET_NULL,blank=True,null=True)
 	Q_array = ArrayField(ArrayField(models.FloatField()
 		),default=[
 		[0., 0., 0.],
-		[0., 0., 0.],
-		[0., 0., 0.],
+        [0., 0., 0.],
+        [0., 0., 0.],
+        
+        [0., 0., 0.],
+        [0., 0., 0.],
+        [0., 0., 0.],
+        
+        [0., 0., 0.],
+        [0., 0., 0.],
+        [0., 0., 0.],
 	],blank=True,null=True)
 	R_array = ArrayField(ArrayField(models.FloatField()
-		),default=[
-		[0., 0., 0.],
-		[0., 0., 0.],
-		[0., 0., 0.],
-	],blank=True,null=True)
+		),default=
+	[
+		[0., 0, 100.],
+        [100., 0., 0.],
+        [0.,100., 0.],
+        
+        [0., 0, 100.],
+        [100., 0., 0.],
+        [0.,100., 0.],
+
+        [0., 0, 100.],
+        [100., 0., 0.],
+        [0.,100., 0.],
+	]
+	,blank=True,null=True)
+
 
 class Store(models.Model):
 	user = models.ForeignKey(User, on_delete=models.SET_NULL,blank=True,null=True)
