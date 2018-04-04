@@ -205,11 +205,17 @@
              <h4>most add to cart: {{most_add_to_cart}}</h4>
 
              <!-- {{actions}} -->
-
+             <h4>ตะกร้าของฉัน</h4>
+               {% for menu in in_cart_list %}
+                        <p class="uk-align-left uk-margin-remove">{{menu.name}}</p>
+                        <br>
+   {% endfor %}
        {{num_actions}}
 
+
+
    <h2 class="uk-text-center">เมนูที่ท่านอาจสนใจ</h2>
-    <form  action="{% url 'next_action' state num_actions %}" method="post" >
+
              <div class="uk-grid-collapse uk-child-width-1-2@s " uk-grid>
  
              {% for menu in actions %}
@@ -247,8 +253,8 @@
                     
                     
                 </div>
-       </form>
-                
+       <!-- </form> -->
+                <!--  -->
     </div>
     <script>
     // function initMap() {}
@@ -259,7 +265,34 @@
         alert("กรุณาสมัครสมาชิกก่อนนะคะ");
      });
 
+     function updateReward() {
 
+        state = "{{state}}";
+        action = "{{num_actions}}";
+        next_state = "{{next_state}}";
+        // alert("state"+state);
+        // alert("action"+action);
+        // alert("next_state"+next_state);
+        $.ajax({
+        type: "GET",
+        url: "{% url 'get_feedback_from_user' %}",
+        data: {'state': state,
+        'next_state': next_state,
+        'action': action,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: "json",
+        success: function(response) {
+        alert("success");
+        // $("#basket").text(response.item_in_cart);
+        // $('#basket_item').html(response.table);
+        // $('#tableRow').hide();
+        // updateReward();
+
+
+        }
+        });
+         
+     }
     // alert("earn");
     $(".add_to_cart").on("click", function() {
     var menu_id = $(this).attr('name');
@@ -279,6 +312,10 @@
     $('#basket_item').html(response.table);
     // $('#tableRow').display('none');
     $('#tableRow').hide();
+
+    updateReward();
+
+
     }
     });
     });

@@ -9,8 +9,8 @@ urlpatterns = [
     # Q Learning
     url(r'^ql/$', views.q_learning, name='q_learning'),
     url(r'^tr/$', views.tohroong, name='tohroong'),
-    url(r'^next_action/(?P<state>\d+)/(?P<action>\d+)/$', views.next_action, name='next_action'),
-    
+    url(r'^get-feedback-from-user/$', views.get_feedback_from_user, name='get_feedback_from_user'),
+
 
     
     # tohroong
