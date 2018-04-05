@@ -34,6 +34,10 @@ import operator
 import random
 import operator
 import numpy as np
+from django.db.models import Q
+import functools
+
+
 
 # import sys
 # import importlib
@@ -494,6 +498,262 @@ def tohroong(request):
             # dish & dessert
             if in_cart_list:
                 print("in_cart_list")
+                counter = 0
+                category_dict = {}
+                for menu in in_cart_list:
+                    if "โรตี"  in menu.name or "ขนมปัง" in menu.name:
+                        if "ของหวาน" in category_dict:
+                            v = category_dict["ของหวาน"] 
+                            new_val = int(v)+1
+                            category_dict["ของหวาน"] = new_val
+                        else:
+                            category_dict["ของหวาน"]  = 1
+
+                    elif "ลูกชิ้น" in menu.name or "ไส้กรอก" in menu.name or "เฟรนซ์ฟราย" in menu.name or "มันบด" in menu.name or "มันอบ" in menu.name: 
+                        if "ของทานเล่น" in category_dict:
+                            v = category_dict["ของทานเล่น"] 
+                            new_val = int(v)+1
+                            category_dict["ของทานเล่น"] = new_val
+                        else:
+                            category_dict["ของทานเล่น"]  = 1
+
+
+                    elif "Soda" in menu.name or "ปั่น" in menu.name or "นมสด" in menu.name or "น้ำเต้าหู้" in menu.name or "แก้ว" in menu.name: 
+                        if "เครื่องดื่ม" in category_dict:
+                            v = category_dict["เครื่องดื่ม"] 
+                            new_val = int(v)+1
+                            category_dict["เครื่องดื่ม"] = new_val
+                        else:
+                            category_dict["เครื่องดื่ม"]  = 1      
+
+                    else:
+                        store=Store.objects.get(id=menu.store.id)
+                        if store.category in category_dict:
+                            v = category_dict[store.category] 
+                            new_val = int(v)+1
+                            category_dict[store.category] = new_val
+                        else:
+                            category_dict[store.category]  = 1
+
+                print("category_dict",category_dict)
+                max_cate = max(category_dict.items(), key=operator.itemgetter(1))[0]
+                print("max_cate",max_cate)
+                if max_cate == "อาหารไทย":
+                    # if "เครื่องดื่ม" not in category_dict:
+                    if category_dict["เครื่องดื่ม"] < category_dict["ของหวาน"] and category_dict["เครื่องดื่ม"] < category_dict["ของทานเล่น"]:
+                        # have some drink
+                    
+                        print("not drink")
+                        keys = ['ปั่น',"แก้ว","นมสด","น่ำเต้าหู้","Soda"]
+                        drink_list = []
+                        # query = functools.reduce(operator.and_, (Q(name__contains = item) for item in ['ปั่น',]))
+                        # result = Menu.objects.filter(query)
+                        # drink = Menu.objects.annotate(search=SearchVector( 'name')).filter(name__in=["ปั่น",'แก้ว'])
+                        # drink = Menu.objects.filter(Q(name__iendswith='ปั่น') | Q(name__icontains='แก้ว'))
+                        # print("drink",drink)
+                        for k in keys:
+                            drink = Menu.objects.filter(name__contains=k)
+                            if drink:
+                                for d in drink:
+                                    if d not in in_cart_list:
+                                        drink_list.append(d)
+                    
+                        drink2 = Menu.objects.filter(store__id=15)# pangyen
+                        for d in drink2:
+                            if d not in in_cart_list:
+                                drink_list.append(d)
+                        
+                        # add drink
+                        count = len(drink_list)
+                        temp = -1
+                        for i in range(2):
+                            print("i")
+                            ran_drink_list = random.randint(0, count-1)
+                            while temp == ran_drink_list:
+                                ran_drink_list = random.randint(0, count-1)
+
+                            actions.append(drink_list[ran_drink_list])
+                            temp = ran_drink_list
+
+                        if category_dict["ของหวาน"] == category_dict["ของทานเล่น"]:
+                            count = len(drink_list)
+                            # temp = -1
+                            for i in range(2):
+                                print("i")
+                                ran_drink_list = random.randint(0, count-1)
+                                temp = drink_list[ran_drink_list]
+                                while temp in in_cart_list or temp in actions:
+                                    ran_drink_list = random.randint(0, count-1)
+                                    temp = drink_list[ran_drink_list]
+                                actions.append(temp)
+                                # temp = ran_drink_list
+                            print("actions",actions)
+
+
+                        elif category_dict["ของหวาน"] < category_dict["ของทานเล่น"]:
+                            dessert_list = []
+                            keys = ['โรตี',"ขนมปัง",]
+                            for k in keys:
+                                dessert = Menu.objects.filter(name__contains=k)
+                                if dessert:
+                                    for d in dessert:
+                                        if d not in in_cart_list:
+                                            dessert_list.append(d)
+                            dessert2 = Menu.objects.filter(store__id=14)
+                            for d in dessert2:
+                                if d not in in_cart_list:
+                                    dessert_list.append(d)
+
+                            
+                            # add dessert 
+                            count = len(dessert_list)
+                            temp = -1
+                            for i in range(2):
+                                print("i")
+                                ran_dessert_list = random.randint(0, count-1)
+                                while temp == ran_dessert_list:
+                                    ran_dessert_list = random.randint(0, count-1)
+
+                                actions.append(dessert_list[ran_dessert_list])
+                                temp = ran_dessert_list
+
+                        elif category_dict["ของหวาน"] > category_dict["ของทานเล่น"]:
+                            snack_list = []
+                            snack = Menu.objects.filter(store__id=17) # somjai lookchin
+                            # keys = ['โรตี',"ขนมปัง",]
+                            for s in snack:
+                                if s not in in_cart_list:
+                                    snack_list.append(s)
+                            frenchfries = Menu.objects.get(id=156)
+                            nuggets = Menu.objects.get(id=155)
+                            snack_list.append(frenchfries)
+                            snack_list.append(nuggets)
+                            # add snack 
+                            count = len(snack_list)
+                            temp = -1
+                            for i in range(2):
+                                print("i")
+                                ran_snack_list = random.randint(0, count-1)
+                                while temp == ran_snack_list:
+                                    ran_snack_list = random.randint(0, count-1)
+
+                                actions.append(snack_list[ran_snack_list])
+                                temp = ran_snack_list
+
+
+                        print("drink")
+
+                        # a = sorted(drink_list, key=lambda x: random.random())
+                        # print("a",a[:4])
+                        # dessert_store = Store.objects.filter(tags= )
+                    elif category_dict["เครื่องดื่ม"] >= category_dict["ของหวาน"] or category_dict["เครื่องดื่ม"] >= category_dict["ของทานเล่น"]:
+                        # have some drink
+                        print("เครื่องดื่ม > ขนม")
+                        dessert_list = []
+                        keys = ['โรตี',"ขนมปัง",]
+                        for k in keys:
+                            dessert = Menu.objects.filter(name__contains=k)
+                            if dessert:
+                                for d in dessert:
+                                    if d not in in_cart_list:
+                                        dessert_list.append(d)
+                        keys = ["น้ำเปล่า","แก้ว","ปั่น"]
+                        # temp = []
+                      
+                        dessert2 = Menu.objects.filter(store__id=14)
+                            # .exclude(name__contains=k)
+                            # temp.append(dessert2)
+                        for d in dessert2:
+                            if d not in in_cart_list:
+                                if "น้ำเปล่า" not in d.name and "แก้ว" not in d.name and "ปั่น" not in d.name:
+                                    dessert_list.append(d)
+
+                        snack_list = []
+                        snack = Menu.objects.filter(store__id=17) # somjai lookchin
+                        for s in snack:
+                            if s not in in_cart_list:
+                                snack_list.append(s)
+                        frenchfries = Menu.objects.get(id=156)
+                        nuggets = Menu.objects.get(id=155)
+                        snack_list.append(frenchfries)
+                        snack_list.append(nuggets)
+
+                        if category_dict["ของหวาน"] ==category_dict["ของทานเล่น"]:
+
+                        # if "ของหวาน" not in category and "ของทานเล่น" in category_dict:
+                           
+                            
+                            # add dessert 
+                            count = len(dessert_list)
+                            temp = -1
+                            for i in range(2):
+                                print("i")
+                                ran_dessert_list = random.randint(0, count-1)
+                                while temp == ran_dessert_list:
+                                    ran_dessert_list = random.randint(0, count-1)
+
+                                actions.append(dessert_list[ran_dessert_list])
+                                temp = ran_dessert_list
+
+                        # elif "ของทานเล่น" not in category and "ของหวาน" in category_dict:
+                            
+                            # add snack 
+                            count = len(snack_list)
+                            temp = -1
+                            for i in range(2):
+                                print("i")
+                                ran_snack_list = random.randint(0, count-1)
+                                while temp == ran_snack_list:
+                                    ran_snack_list = random.randint(0, count-1)
+
+                                actions.append(snack_list[ran_snack_list])
+                                temp = ran_snack_list
+
+                        elif category_dict["ของหวาน"] < category_dict["ของทานเล่น"]:
+                            print("ของหวาน < ทานเล่น")
+                            # add dessert 
+                            count = len(dessert_list)
+                            for i in range(3):
+                                print("i")
+                                ran_dessert_list = random.randint(0, count-1)
+                                temp = dessert_list[ran_dessert_list]
+                                while temp in in_cart_list or temp in actions:
+                                    ran_dessert_list = random.randint(0, count-1)
+                                    temp = dessert_list[ran_dessert_list]
+                                actions.append(temp)
+
+                        # elif "ของทานเล่น" not in category and "ของหวาน" in category_dict:
+                            
+                            # add snack 
+                            count = len(snack_list)
+                            ran_snack_list = random.randint(0, count-1)
+                            actions.append(snack_list[ran_snack_list])
+                          
+                        elif category_dict["ของหวาน"] > category_dict["ของทานเล่น"]:
+                            
+                            # add dessert 
+                            count = len(dessert_list)
+                            ran_dessert_list = random.randint(0, count-1)
+                            actions.append(dessert_list[ran_dessert_list])
+           
+                            # add snack 
+                            count = len(snack_list)
+                            for i in range(3):
+                                print("i")
+                                ran_snack_list = random.randint(0, count-1)
+                                temp = snack_list[ran_snack_list]
+                                while temp in in_cart_list or temp in actions:
+                                    ran_snack_list = random.randint(0, count-1)
+                                    temp = snack_list[ran_snack_list]
+                                actions.append(temp)
+                else:
+                    # drink & dessert & snack is most
+                    dish_store = Store.objects.filter(category="อาหารไทย")
+                print("actions",actions)
+                for i in actions:
+                    print("store", i.store)
+                        
+
             else: # not have item in cart
                 pass
 
@@ -3236,15 +3496,16 @@ def home(request):
         print(item.coupon)
         if item.coupon is None :
             if item.review is None :
+                print("item",item)
 
-                information = Informations.objects.get(id=item.information.id)
-                item_list = {'username':'','profile_picture': None,'message' :'','store':''
-                ,'type':'information','create_at' : None}
-                item_list['profile_picture'] = Profile.objects.get(user=item.user).picture.url
-                item_list['message'] = 'กรอกประวัติความหิว'
-                p = Profile.objects.get(user=item.user)
-                item_list['username'] = p.name
-                item_list['create_at'] = item.information.created_at
+                # information = Informations.objects.get(id=item.information.id)
+                # item_list = {'username':'','profile_picture': None,'message' :'','store':''
+                # ,'type':'information','create_at' : None}
+                # item_list['profile_picture'] = Profile.objects.get(user=item.user).picture.url
+                # item_list['message'] = 'กรอกประวัติความหิว'
+                # p = Profile.objects.get(user=item.user)
+                # item_list['username'] = p.name
+                # item_list['create_at'] = item.information.created_at
             else:
                 item_list = {'rating_color': 0 ,'rating_no_color': 0 ,'profile_picture':None,
                     'type':'review','store':'','username':'','create_at' : None,'comment' : '',"store_id":0}
