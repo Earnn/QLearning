@@ -293,7 +293,7 @@ def tohroong(request):
                     count = len(in_cart_list)
                     ran_num = random.randint(0, count-1)
                     menu = in_cart_list[ran_num]
-                    menu_list = Menu.objects.filter(store=menu.store).exclude(name=in_cart_list)
+                    menu_list = Menu.objects.filter(store=menu.store).exclude(name__in=in_cart_list)
                     count = len(menu_list)
                     ran_in_store = random.randint(0, count-1)
                     actions.append(menu_list[ran_in_store])
@@ -396,7 +396,7 @@ def tohroong(request):
                         count = len(in_cart_list)
                         ran_num = random.randint(0, count-1)
                         menu = in_cart_list[ran_num]
-                        menu_list = Menu.objects.filter(store=menu.store).exclude(name=in_cart_list)
+                        menu_list = Menu.objects.filter(store=menu.store).exclude(name__in=in_cart_list)
                         count = len(menu_list)
                         ran_in_store = random.randint(0, count-1)
                         actions.append(menu_list[ran_in_store])
@@ -417,7 +417,7 @@ def tohroong(request):
                     count = len(in_cart_list)
                     ran_num = random.randint(0, count-1)
                     menu = in_cart_list[ran_num]
-                    menu_list = Menu.objects.filter(store=menu.store).exclude(name=in_cart_list)
+                    menu_list = Menu.objects.filter(store=menu.store).exclude(name__in=in_cart_list)
                     count = len(menu_list)
                     ran_in_store = random.randint(0, count-1)
                     actions.append(menu_list[ran_in_store])
@@ -728,7 +728,8 @@ def tohroong(request):
                             count = len(snack_list)
                             ran_snack_list = random.randint(0, count-1)
                             actions.append(snack_list[ran_snack_list])
-                          
+
+                           
                         elif category_dict["ของหวาน"] > category_dict["ของทานเล่น"]:
                             
                             # add dessert 
@@ -747,8 +748,27 @@ def tohroong(request):
                                     temp = snack_list[ran_snack_list]
                                 actions.append(temp)
                 else:
+                    keys = ["ข้าว","สุกี้","ไก่","ผัด","มักกะโรนี","สปาเก็ตตี้"]
+                    dish_list = []
+                    for k in keys:
+                        dish = Menu.objects.filter(name__icontains=k).exclude(name__in=dish_list)
+                        for d in dish:
+                            if d not in in_cart_list:
+                                dish_list.append(d)
+                    count = len(dish_list)
+                    for i in range(4):
+                        print("i")
+                        ran_dish_list = random.randint(0, count-1)
+                        temp = dish_list[ran_dish_list]
+                        while temp in in_cart_list or temp in actions:
+                            ran_dish_list = random.randint(0, count-1)
+                            temp = dish_list[ran_dish_list]
+                        actions.append(temp)
                     # drink & dessert & snack is most
-                    dish_store = Store.objects.filter(category="อาหารไทย")
+                    # dish_store = Store.objects.filter(category="อาหารไทย")
+                    
+
+
                 print("actions",actions)
                 for i in actions:
                     print("store", i.store)
