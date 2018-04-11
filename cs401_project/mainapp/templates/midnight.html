@@ -1,6 +1,7 @@
 {% extends 'base.html' %}{% block content %}{% load static %}
 	
 	<style type="text/css">
+
 	.bg {
 		
 		background: url('{% static "images/midnight2.png" %}') no-repeat center center ;
@@ -366,56 +367,135 @@ font-weight: bolder;
            
     </div>  
 </div>
-<!-- <div class="uk-section bg-bottom uk-light" >
-      <div class="container menu-desktop" id="home"  >
-        
+        <div class="uk-section   bg-bottom uk-light uk-padding-small uk-padding-remove-bottom " >
 
+      <div class="container menu-desktop " id="home"  >
+        <h1 class="uk-heading-line uk-text-center uk-margin"><span>เมนูที่ท่านอาจสนใจ</span></h1>
+        <!-- <div class="uk-card uk-card-hover uk-card-body uk-padding-small  uk-padding-remove-bottom uk-margin-bottom"> -->
+
+          <div class="uk-grid-collapse uk-child-width-1-1@s " uk-grid>
+            <!-- <a href="/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง"> -->
+          <div class="uk-card-default uk-padding-small  uk-padding-remove-bottom uk-margin-bottom">
+              
+            <div  class="  uk-grid-collapse uk-child-width-1-2@s  uk-grid-collapse" uk-grid>
+            
+              <div class="uk-width-1-5 uk-cover-container uk-padding-small  ">
+           <!--      <img src="{% static "images/IMG_1872.jpg" %}" alt="" uk-cover>
+                <canvas width="600" height="400"></canvas> -->
+
+                 <img src="{% static "images/recFood.jpg" %}" style="width: 220px;height:120px " class=" " alt="">
+              </div>
+             <!--  <div> -->
+                <div class="uk-padding-small  uk-grid-collapse uk-child-width-1-2@s uk-width-expand " uk-grid>
+               {% for o in output %}
+               <div class="uk-card uk-card-hover uk-card-body uk-padding-small uk-padding-remove-bottom">
+                            
+                            <p class="uk-align-left uk-margin-remove">{{o.menu.name}}</p>
+                            <p class="uk-align-right uk-margin-remove">ราคา {{o.menu.price}} ฿ 
+                         
+  {% if is_delivery and time_status == 1 and user.is_authenticated %}
+
+                            <button  name="{{o.menu.id}}"  class="uk-button  uk-button-small add_to_cart " style="color: white;" >
+                                <span class="glyphicon glyphicon-plus uk-text-large"></span>
+                            </button>
+
+                            {% elif user.is_authenticated and is_delivery and time_status == 0 %}
+                              <button  name=""  class="uk-button uk-button-small  uk-button-default" style="color: black;border-color: #d9dbdd" disabled>
+                            <span>ร้านปิด</span>
+                  
+                 </button>
+
+                            {% elif user.is_anonymous %}
+                            
+                                <button  name="{{menu.id}}"  class="uk-button  uk-button-small uk-button-default alertUser">
+                                <span class="glyphicon glyphicon-plus uk-text-large"></span>
+                            </button>
+                            {% endif %}
+                           
+
+
+
+                            </p>
+                            
+              </div>
+                   {% endfor %}
+                </div>
+              <!-- </div> -->
+                
+            </div>
+          
+          </div>
+  </div>          
+<!--        <div class="uk-grid-collapse uk-child-width-1-1@s " uk-grid>
+ 
+            
+                    
+                      
+                        
+            <div class="uk-card uk-card-hover uk-card-body uk-padding-small  uk-padding-remove-bottom uk-margin-bottom">
+                            <div class="uk-grid-small uk-margin-bottom uk-flex-middle" uk-grid>
+            <div class="uk-width-auto">
+                <img src="{% static "images/recFood.jpg" %}" style="width: 200px;height:100% " class=" uk-margin-right uk-margin-top" alt="">
+            </div>
+             {% for menu in actions %}
+            <div class="uk-width-expand">
+                <h3 class="uk-card-title uk-margin-remove-bottom">{{menu.name}} </h3> 
+                <p class="uk-margin-remove-top">ราคา {{menu.price}} ฿ </p>
+            </div>
+            {% csrf_token %}
+                    
+                    <button  name="{{menu.id}}"  class="uk-button  uk-button-small add_to_cart " style="color: white;" >
+                                <span class="glyphicon glyphicon-plus uk-text-large" style="font-weight: bold"></span>
+                            </button>
+                {% endfor %}
+                    
+        </div>
+ 
+                        </div>
+
+
+                        
+
+   
+                        
+                
+                    
+                    
+                    
+                    
+                    
+                </div> -->
+
+
+  <!--       <div>
+              
+            <div onclick="myhref('https://www.ginimm.com/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง')" class=" uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
+            
+              <div class="uk-card-media-left uk-cover-container">
+                <img src="{% static "images/IMG_1872.jpg" %}" alt="" uk-cover>
+                <canvas width="600" height="400"></canvas>
+              </div>
+              <div>
+                <div class="uk-card-body uk-padding-small">
+                    <a href="/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง"><h3 id="title">พินิจโต้รุ่ง</h3></a>
+                  
+                  <p>อาหารตามสั่ง ยำ ผัด แกง ต้มยำ สุกี้ </p>
+                </div>
+              </div>
+                
+            </div>
+          
+          </div> -->
+
+        <!-- </div> -->
     </div>  
-  </div>  -->
+  </div> 
 
 	<div class="uk-section-default " >
 		<div class="uk-section bg-bottom uk-light" >
 
 			<div class="container menu-desktop" id="home"  >
-<h1 class="uk-heading-line uk-text-center uk-margin"><span>เมนูที่ท่านอาจสนใจ</span></h1>
-       <div class="uk-grid-collapse uk-child-width-1-2@s " uk-grid>
- 
-             {% for menu in actions %}
-                    
-                        <!-- {{menu.store.isOpen}} -->
-                        
-                        <div class="uk-card  uk-card-body uk-padding-small uk-padding-remove-bottom uk-margin-bottom">
-                            
-                            <p class="uk-align-left uk-margin-remove">{{menu.name}}</p>
-                            <p class="uk-align-right uk-margin-remove">ราคา {{menu.price}} ฿ 
-                            
 
-                          
-
-                             
-                    
-                    {% csrf_token %}
-                    
-                    <button  name="{{menu.id}}"  class="uk-button  uk-button-small add_to_cart " style="color: white;" >
-                                <span class="glyphicon glyphicon-plus uk-text-large"></span>
-                            </button>
-            
-
-
-                            </p>
-                            <br>
-                            <hr>
-                        </div>
-                        <br>
-                        
-                    {% endfor %}
-                    
-                    
-                    
-                    
-                    
-                    
-                </div>
 				<h1 class="uk-heading-line uk-text-center uk-margin"><span>อาหารตามสั่ง</span></h1>
 				<div class="uk-child-width-1-2@s " uk-grid>
 						<!-- <a href="/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง"> -->

@@ -2462,7 +2462,161 @@ def update_status(request):
                     
                     
     return render(request, 'update_status.html',{'order_list':order_list})
+def check_time_open(store_id):
+    try :   
+        store = Store.objects.get(id=store_id)
+        time = DeliveryTime.objects.get(store=store)
+            # print(calendar.day_name[date.today().weekday()])
+        day = date.today().weekday()
+        print("day",day)
+        time_now = datetime.now().time()
+        print("time_now",time_now)
+        time_status = 0
+        if day == 0 :# monday
 
+            if time.monday :
+                time_open = time.monday_open
+                time_close = time.monday_close
+                if time_open is None and time_close is None:
+                    time_status = 0
+
+                else :
+                    if time_now >= time_open :
+                        if time_close < time_open : # ex. close 01.00
+                            if date.today().weekday() == 1:
+                                if time_now <= time_close:
+                                    time_status = 1
+                                else:
+                                    time_status = 0 
+                            else:
+                                if time_now <= datetime.time.max: # 23.00 < 23.59.999999 
+                                    time_status = 1
+                                else:
+                                    time_status = 0
+                                    
+                                    
+                        else:
+                            if time_now <= time_close :
+                                time_status = 1
+                            else:
+                                time_status = 0
+                    else:
+                        time_status = 0
+
+            else :
+                time_status = 0
+
+            is_delivery = time.monday
+                
+        elif day == 1 :# tuesday
+            if time.tuesday :
+                time_open = time.tuesday_open
+                time_close = time.tuesday_close
+                if time_open is None and time_close is None:
+                    time_status = 0
+                else :
+                    if time_now >= time_open and time_now <= time_close :
+                        time_status = 1
+            else :
+                time_status = 0
+            is_delivery = time.tuesday
+
+        elif day == 2:  # wednesday
+            if time.wednesday :
+                time_open = time.wednesday_open
+                time_close = time.wednesday_close
+                if time_open is None and time_close is None:
+                    time_status = 0
+                else :
+                    if time_now >= time_open :
+                        if time_close < time_open : # ex. close 01.00
+                            if date.today().weekday() == 3:
+                                if time_now <= time_close:
+                                    time_status = 1
+                                else:
+                                    time_status = 0 
+                            else:
+                                if time_now <= datetime.time.max: # 23.00 < 23.59.999999 
+                                    time_status = 1
+                                else:
+                                    time_status = 0 
+                                        
+                        else:
+                            if time_now <= time_close :
+                                time_status = 1
+
+                            else:
+                                time_status = 0
+                    else:
+
+                        time_status = 0
+            else :
+                time_status = 0
+                
+            is_delivery = time.wednesday
+
+
+        elif day == 3 :# thursday
+            if time.thursday :
+                time_open = time.thursday_open
+                time_close = time.thursday_close
+                if time_open is None and time_close is None:
+                    time_status = 0
+                else :
+                    if time_now >= time_open and time_now <= time_close :
+                        time_status = 1
+            else :
+                time_status = 0
+
+            is_delivery = time.thursday
+                
+        elif day == 4:# friday
+            if time.friday :
+                time_open = time.friday_open
+                time_close = time.friday_close
+                if time_open is None and time_close is None:
+                    time_status = 0
+                else :
+                    if time_now >= time_open and time_now <= time_close :
+                        time_status = 1
+            else :
+                time_status = 0
+            is_delivery = time.friday
+                
+        elif day == 5 :# saturday
+            if time.saturday :
+                time_open = time.saturday_open
+                time_close = time.saturday_close
+                if time_open is None and time_close is None:
+                    time_status = 0
+                else :
+                    if time_now >= time_open and time_now <= time_close :
+                        time_status = 1
+            else :
+                time_status = 0
+            is_delivery = time.saturday
+        elif day == 6:# sunday
+                # print(time.sunday)
+            if time.sunday :
+                time_open = time.sunday_open
+                time_close = time.sunday_close
+                    # print(time_close)
+                    # print(time_open)
+                if time_open is None and time_close is None:
+                    time_status = 0
+                    # print(None)
+                else :
+                    if time_now >= time_open and time_now <= time_close :
+                        time_status = 1
+            else :
+                time_status = 0
+            is_delivery = time.sunday
+
+        return is_delivery,time_status
+    except Exception as e:
+        raise
+        # print("eee",e)
+        # return is_delivery,time_status
 # def home_tohrung(request):
 #     print(request.user)
     
@@ -2801,10 +2955,21 @@ def home_tohrung(request):
     else:
         print("no len")
         item_in_cart = None
-
+        
+    recommendIsOpen = []
+    output = []
     for a in actions:
-        print("riri",a.store)
+        temp = {"menu":None,"is_delivery":None,"time_status":0}
 
+        # d = DeliveryTime.objects.get(store__id=a.store.id)
+        temp["menu"] = a
+
+        is_delivery,time_status= check_time_open(a.store.id)
+        print("is_delivery",is_delivery)
+        print("time_status",time_status)
+        # temp["is_delivery"] = is_delivery
+        # temp["time_status"] = time_status
+        output.append(temp)
     return render(request, 'midnight.html',
         {'item_in_cart':item_in_cart,'output':output,
         'is_delivery':is_delivery,
@@ -2813,6 +2978,7 @@ def home_tohrung(request):
         'actions':actions,
         'state':state,
         'next_action':next_action,
+        'output':output
         })
 
 
