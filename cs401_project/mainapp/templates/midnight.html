@@ -158,6 +158,10 @@ font-weight: bolder;
             </div>
         </div>
     </div>
+
+
+
+
 		<div class="uk-section bg-bottom uk-light" >
 			<div class="container menu-desktop" id="home"  >
 				<h1 class="uk-heading-line uk-text-center uk-margin"><span>เครื่องดื่ม</span></h1>
@@ -257,6 +261,10 @@ font-weight: bolder;
     </div>
 		</div> 	
 	  </div>
+
+
+  
+
   <div class="container menu-mobile" id="home">
 <h1 class="uk-heading-line uk-text-center uk-margin"><span>เครื่องดื่ม</h1>
 
@@ -357,10 +365,57 @@ font-weight: bolder;
             </div> 
            
     </div>  
-</div> 
+</div>
+<!-- <div class="uk-section bg-bottom uk-light" >
+      <div class="container menu-desktop" id="home"  >
+        
+
+    </div>  
+  </div>  -->
+
 	<div class="uk-section-default " >
 		<div class="uk-section bg-bottom uk-light" >
+
 			<div class="container menu-desktop" id="home"  >
+<h1 class="uk-heading-line uk-text-center uk-margin"><span>เมนูที่ท่านอาจสนใจ</span></h1>
+       <div class="uk-grid-collapse uk-child-width-1-2@s " uk-grid>
+ 
+             {% for menu in actions %}
+                    
+                        <!-- {{menu.store.isOpen}} -->
+                        
+                        <div class="uk-card  uk-card-body uk-padding-small uk-padding-remove-bottom uk-margin-bottom">
+                            
+                            <p class="uk-align-left uk-margin-remove">{{menu.name}}</p>
+                            <p class="uk-align-right uk-margin-remove">ราคา {{menu.price}} ฿ 
+                            
+
+                          
+
+                             
+                    
+                    {% csrf_token %}
+                    
+                    <button  name="{{menu.id}}"  class="uk-button  uk-button-small add_to_cart " style="color: white;" >
+                                <span class="glyphicon glyphicon-plus uk-text-large"></span>
+                            </button>
+            
+
+
+                            </p>
+                            <br>
+                            <hr>
+                        </div>
+                        <br>
+                        
+                    {% endfor %}
+                    
+                    
+                    
+                    
+                    
+                    
+                </div>
 				<h1 class="uk-heading-line uk-text-center uk-margin"><span>อาหารตามสั่ง</span></h1>
 				<div class="uk-child-width-1-2@s " uk-grid>
 						<!-- <a href="/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง"> -->
@@ -1071,6 +1126,35 @@ font-weight: bolder;
 	</div>
 </div>
 <script type="text/javascript">
+
+  function updateReward() {
+
+        state = "{{state}}";
+        action = "{{num_actions}}";
+        next_state = "{{next_state}}";
+        // alert("state"+state);
+        // alert("action"+action);
+        // alert("next_state"+next_state);
+        $.ajax({
+        type: "GET",
+        url: "{% url 'get_feedback_from_user' %}",
+        data: {'state': state,
+        'next_state': next_state,
+        'action': action,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: "json",
+        success: function(response) {
+        alert("success");
+        // $("#basket").text(response.item_in_cart);
+        // $('#basket_item').html(response.table);
+        // $('#tableRow').hide();
+        // updateReward();
+
+
+        }
+        });
+         
+     }
 	 $(".alertUser").on("click", function() {
 
 
@@ -1094,6 +1178,8 @@ font-weight: bolder;
                 $('#basket_item').html(response.table);
                 // $('#tableRow').display('none');
                 $('#tableRow').hide();
+
+                updateReward();
             }
         });
     });
