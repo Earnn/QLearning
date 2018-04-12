@@ -3400,6 +3400,31 @@ def remove_from_cart(request):
 
 
 def until_dawn_canteen(request,store_name):
+    gender = ""
+    
+    try:
+        info = Informations.objects.get(user=request.user)
+        gender = info.sex
+    except Exception as e:
+        gender="unknown"
+    
+    if gender == "female":
+        # state 0 1 2
+        # print("random 6-8",np.random.randint(0,3))
+        state = 0
+        pass
+    elif gender == "male":
+        # state 3 4 5
+        # print("random 6-8",np.random.randint(3,6))
+        state = 3
+    elif gender == "unknown":
+        state = 6 
+
+    actions,num_actions,next_state= recommendation_actions(request,state)
+    print("state",state)
+    print("actions",actions)
+    print("num_actions",num_actions)
+    print("next_state",next_state)
 
     
     
@@ -3407,6 +3432,7 @@ def until_dawn_canteen(request,store_name):
     menues_list = []
     store = Store.objects.get(name=store_name)
     enter_store = str(store.id)+","+store_name
+
     collect_session(request,"enter_store",enter_store)
     menues = Menu.objects.filter(store=store)
     print("menuuuuu")
