@@ -373,17 +373,18 @@ font-weight: bolder;
         <h1 class="uk-heading-line uk-text-center uk-margin"><span>เมนูที่ท่านอาจสนใจ</span></h1>
         <!-- <div class="uk-card uk-card-hover uk-card-body uk-padding-small  uk-padding-remove-bottom uk-margin-bottom"> -->
 
-          <div class="uk-grid-collapse uk-child-width-1-1@s " uk-grid>
+          <div class="uk-grid-collapse uk-child-width-1-1@s uk-card-default  uk-padding-remove-bottom uk-margin-bottom" uk-grid>
             <!-- <a href="/โรงอาหารโต้รุ่ง/พินิจโต้รุ่ง"> -->
-          <div class="uk-card-default uk-padding-small  uk-padding-remove-bottom uk-margin-bottom">
+         <!--  <div class="uk-card-default uk-padding-small  uk-padding-remove-bottom uk-margin-bottom"> -->
               
-            <div  class="  uk-grid-collapse uk-child-width-1-2@s  uk-grid-collapse" uk-grid>
+            <div  class="   uk-grid-collapse uk-child-width-1-2@s  uk-grid-collapse" uk-grid>
             
-              <div class="uk-width-1-5 uk-cover-container uk-padding-small  ">
+              <div class="uk-width-1-5 uk-cover-container  uk-card-media-left">
            <!--      <img src="{% static "images/IMG_1872.jpg" %}" alt="" uk-cover>
                 <canvas width="600" height="400"></canvas> -->
 
-                 <img src="{% static "images/recFood.jpg" %}" style="width: 220px;height:120px " class=" " alt="">
+                 <img src="{% static "images/recFood.jpg" %}"  class=" " alt="" uk-cover>
+                  <canvas width="220" height="170"></canvas> 
               </div>
              <!--  <div> -->
                 <div class="uk-padding-small  uk-grid-collapse uk-child-width-1-2@s uk-width-expand " uk-grid>
@@ -392,14 +393,14 @@ font-weight: bolder;
                             
                             <p class="uk-align-left uk-margin-remove">{{o.menu.name}}</p>
                             <p class="uk-align-right uk-margin-remove">ราคา {{o.menu.price}} ฿ 
-                         
-  {% if is_delivery and time_status == 1 and user.is_authenticated %}
+                      
+  {% if o.is_delivery and o.time_status == 1 and user.is_authenticated %}
 
                             <button  name="{{o.menu.id}}"  class="uk-button  uk-button-small add_to_cart " style="color: white;" >
                                 <span class="glyphicon glyphicon-plus uk-text-large"></span>
                             </button>
 
-                            {% elif user.is_authenticated and is_delivery and time_status == 0 %}
+                            {% elif user.is_authenticated and o.is_delivery and o.time_status == 0 %}
                               <button  name=""  class="uk-button uk-button-small  uk-button-default" style="color: black;border-color: #d9dbdd" disabled>
                             <span>ร้านปิด</span>
                   
@@ -422,7 +423,7 @@ font-weight: bolder;
                 </div>
               <!-- </div> -->
                 
-            </div>
+            <!-- </div> -->
           
           </div>
   </div>          

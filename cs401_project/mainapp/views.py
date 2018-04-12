@@ -163,6 +163,10 @@ def get_feedback_from_user(request):
 
         state = int(state)
         action = int(action)
+        print("state",state)
+        print("action",action)
+        print("next_state",next_state)
+
         next_state = int(next_state)    
         Q,R = getTable(request)
         R[state,action] +=1
@@ -2959,16 +2963,17 @@ def home_tohrung(request):
     recommendIsOpen = []
     output = []
     for a in actions:
-        temp = {"menu":None,"is_delivery":None,"time_status":0}
+        temp = {"menu":None,"is_delivery":True,"time_status":1}
 
         # d = DeliveryTime.objects.get(store__id=a.store.id)
         temp["menu"] = a
 
         is_delivery,time_status= check_time_open(a.store.id)
-        print("is_delivery",is_delivery)
-        print("time_status",time_status)
+      
         # temp["is_delivery"] = is_delivery
         # temp["time_status"] = time_status
+        print("is_delivery",temp["is_delivery"])
+        print("time_status", temp["time_status"])
         output.append(temp)
     return render(request, 'midnight.html',
         {'item_in_cart':item_in_cart,'output':output,
@@ -2977,7 +2982,7 @@ def home_tohrung(request):
         'num_actions':num_actions,
         'actions':actions,
         'state':state,
-        'next_action':next_action,
+        'next_state':next_state,
         'output':output
         })
 
