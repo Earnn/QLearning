@@ -811,7 +811,10 @@ def recommendation_actions(request,state):
    
 # state 6 7 8 
     # tohroong 's page is state = 0 
-    next_state = 1        
+    if state == 2 or state == 5 or state == 8:
+        next_state = state # isGoal == True      
+    else:
+        next_state = state +1
         # num_actions =0
         # actions = 0 
         # valid_moves = R[state] >= 0
@@ -1065,7 +1068,7 @@ def recommendation_actions(request,state):
         if in_cart_list:
             print("in_cart_list")
             counter = 0
-            category_dict = {}
+            category_dict = {"ของหวาน":0,"ของทานเล่น":0,"เครื่องดื่ม":0}
             for menu in in_cart_list:
                 if "โรตี"  in menu.name or "ขนมปัง" in menu.name:
                     if "ของหวาน" in category_dict:
@@ -3112,10 +3115,22 @@ def add_to_cart(request):
     if request.is_ajax():
         
         menu_id = request.GET.get('menu_id',False)
+        my_dorm = request.GET.get('myDorm',False)
         print(menu_id)
         add_menu_to_cart = Menu.objects.get(id=menu_id)
+
         str_add_to_cart = str(menu_id)+","+add_menu_to_cart.name
         collect_session(request,"เพิ่มเข้าตะกร้า",str_add_to_cart)
+
+        str_menu = "<tr id='name_set'><td class='uk-width-small'><h4> name </h4></td><td class='uk-width-small'> <h4>x amount  </h4></td><td class='uk-width-small'>  <h4> price บาท</h4></td><td class='uk-width-small uk-text-center'  ><a class='remove_from_cart' name='menu_id'><h4 > <i class='fa fa-trash-o'></i></h4></a></td></tr>"
+        temp = str_menu.replace("name",add_menu_to_cart.name)
+            
+        temp2 = temp.replace("name_set","set"+str(add_menu_to_cart.id))
+        temp3 = temp.replace("amount",str(1))
+        str_menu = temp3.replace("price",str(int(add_menu_to_cart.price)*1))
+
+
+
 
         print("test",request.session.get('mycart',[]))
         menu_list = request.session.get('mycart',[])
@@ -3139,6 +3154,10 @@ def add_to_cart(request):
         
         # print("my_item_in_cart",my_item_in_cart)
         my_dict = {i:temp_cart.count(i) for i in temp_cart}
+        isLookchin = False
+        isMooping= False
+        total_amount = 0
+        total = 0
         print("my_dict",my_dict)
         for m_id,amount in my_dict.items():
             
@@ -3150,7 +3169,43 @@ def add_to_cart(request):
             str_table = temp2.replace("20",str(int(menu.price)*int(amount)))
             table.append(str_table)
         
-        # total += int(menu.price)*int(amount)
+            total += int(menu.price)*int(amount)
+            if menu.store.name == "น้องแนนหมูปิ้ง":
+                isMooping = True
+            elif menu.store.name == "สมใจ ลูกชิ้นทอด":
+                isLookchin = True
+            elif menu.store.name != "น้องแนนหมูปิ้ง" or menu.store.name !="สมใจ ลูกชิ้นทอด":
+                total_amount += amount
+
+        if isLookchin:
+            total_amount+=1
+        if isMooping:
+            total_amount +=1    
+        print("ttotal_amount",total_amount)
+
+        price_without_charge = total
+        if my_dorm: # if user choose dorm
+            if total_amount <=3:
+                # delivery_charge = 25.0
+                if my_dorm =="หอ B":
+                    delivery_charge = 20.0
+                elif my_dorm =="หอ C" or my_dorm =="หอ E":
+                    delivery_charge = 10.0
+                elif my_dorm =="หอ F" or my_dorm =="หอ M":
+                    delivery_charge = 7.0    
+
+            elif total_amount >=4:
+                # delivery_charge = 30.0
+                if my_dorm =="หอ B":
+                    delivery_charge = 25.0
+                elif my_dorm =="หอ C" or my_dorm =="หอ E":
+                    delivery_charge = 15.0
+                elif my_dorm =="หอ F" or my_dorm =="หอ M":
+                    delivery_charge = 12.0
+        else:
+            delivery_charge = 0.0
+        total+=delivery_charge       
+
         # temp ={"menu_name":"","menu_price":0}
         
         # print(menu)
@@ -3158,11 +3213,17 @@ def add_to_cart(request):
         # temp["menu_price"] = menu.price
         
         # output_list.append(temp)
-        # print(output_list)
+        print("total",total)
+        return JsonResponse({'total_price':str(total),'total_amount':total_amount,
+            'price_without_charge':float(price_without_charge),
+            'delivery_charge':float(delivery_charge),
+            'table':str_menu,
+            },safe=False)
+
         
         
         # return HttpResponse({'item_in_cart':item_in_cart,'output_list':output_list}, content_type="application/json")
-        return JsonResponse({'item_in_cart':item_in_cart,'table':table}, safe=False)
+        # return JsonResponse({'item_in_cart':item_in_cart,'table':table}, safe=False)
 
 
 def st_remove_from_cart(request):
@@ -3287,6 +3348,8 @@ def st_remove_from_cart(request):
             delivery_charge = 0.0        
 
         total+=delivery_charge
+
+
             # menu = Menu.objects.get(id=m_id)
             # temp['name'] = m_id
             # temp['name'] = menu.name
@@ -3411,14 +3474,15 @@ def until_dawn_canteen(request,store_name):
     if gender == "female":
         # state 0 1 2
         # print("random 6-8",np.random.randint(0,3))
-        state = 0
+        state = 1
         pass
     elif gender == "male":
         # state 3 4 5
         # print("random 6-8",np.random.randint(3,6))
-        state = 3
+        state = 4
     elif gender == "unknown":
-        state = 6 
+        # state 6 7 8
+        state = 7 
 
     actions,num_actions,next_state= recommendation_actions(request,state)
     print("state",state)
@@ -3686,13 +3750,42 @@ def until_dawn_canteen(request,store_name):
 
     is_delivery =True
     time_status = 1
+    print("state",state)
+    print("actions",actions)
+    print("num_actions",num_actions)
+    print("next_state",next_state)
+
+
+
+    recommendedList = []
+    for a in actions:
+        temp = {"menu":None,"is_delivery":True,"time_status":1}
+        temp["menu"] = a 
+        is_delivery,time_status= check_time_open(a.store.id)
+      
+        # temp["is_delivery"] = is_delivery
+        # temp["time_status"] = time_status
+        print("is_delivery",temp["is_delivery"])
+        print("time_status", temp["time_status"])
+
+        recommendedList.append(temp) 
 
     return render(request, 'until_dawn_canteen.html',{'store':store,
                   "menues":reversed(menues) ,"mobile_menues":reversed(menues),'reviewForm':reviewForm,
                   'item_in_cart':item_in_cart,"output":output,
                   'store_loved_color':store_loved_color,
-                  'reviews':reviews,'out':out,'menues_list':menues_list,'time_status':time_status,
-                  'is_delivery':is_delivery})
+                  'reviews':reviews,
+                  'out':out,
+                  'menues_list':menues_list,
+                  'time_status':time_status,
+                  'is_delivery':is_delivery,
+                  'recommendedList':recommendedList,
+                  'actions':actions,
+                  'state':state,
+                  'next_state':next_state,
+                  'num_actions':num_actions,
+
+                  })
 # return render(request, 'night_canteen.html',{'reviewFor,"m':reviewForm,'store_loved_color':store_loved_color,})
 @login_required
 def st_checkout(request):
@@ -3899,12 +3992,58 @@ def ud_checkout(request):
 
 
     total+=delivery_charge
+    gender = ""
+    
+    try:
+        info = Informations.objects.get(user=request.user)
+        gender = info.sex
+    except Exception as e:
+        gender="unknown"
+    
+    if gender == "female":
+        # state 0 1 2
+        # print("random 6-8",np.random.randint(0,3))
+        state = 1
+        pass
+    elif gender == "male":
+        # state 3 4 5
+        # print("random 6-8",np.random.randint(3,6))
+        state = 4
+    elif gender == "unknown":
+        # state 6 7 8
+        state = 7 
+
+    actions,num_actions,next_state= recommendation_actions(request,state)
+    print("state",state)
+    print("actions",actions)
+    print("num_actions",num_actions)
+    print("next_state",next_state)
+
+
+    recommendedList = []
+    for a in actions:
+        temp = {"menu":None,"is_delivery":True,"time_status":1}
+        temp["menu"] = a 
+        is_delivery,time_status= check_time_open(a.store.id)
+      
+        # temp["is_delivery"] = is_delivery
+        # temp["time_status"] = time_status
+        print("is_delivery",temp["is_delivery"])
+        print("time_status", temp["time_status"])
+
+        recommendedList.append(temp) 
+
    
 
     return  render(request,'ud_checkout.html',{'item_in_cart':total_amount,
                'data':json.dumps(output),
                'output':output,'total':total,'delivery_address':delivery_address,
                'delivery_phone':delivery_phone,'delivery_charge':delivery_charge,
+               'num_actions':num_actions,
+               'state':state,
+               'actions':actions,
+               "next_state":next_state,
+               "recommendedList":recommendedList,
                })
 
 

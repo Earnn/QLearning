@@ -148,6 +148,7 @@
                                                 </td>
                                             </tr>
                                         {% endfor %}
+                                       <tbody id="temp"></tbody>
                                         <tr style="font-weight: bold;color: black">
                                             <td class="uk-width-small ">  </td>
                                             <td class="uk-width-small "> <h3 >ค่าจัดส่ง</h3> </td>
@@ -182,7 +183,59 @@
                                     <!-- <div class="uk-margin-remove-top">  <p id="textDesktop"></p></div> -->
                                 </div>
                             </div>
+                              <!-- <div class="uk-section uk-section-muted   uk-padding-small uk-padding-remove-bottom " > -->
+
+      <!-- <div class="container " id="home"  > -->
+        <h2 class="uk-heading-line uk-text-left uk-margin"><span>เมนูที่ท่านอาจสนใจ</span></h2>
+        <!-- <div class="uk-card uk-card-hover uk-card-body uk-padding-small  uk-padding-remove-bottom uk-margin-bottom"> -->
+
+          
+     <div class="uk-grid-collapse uk-child-width-1-2@s " uk-grid>
+
+                 {% for o in recommendedList %}
+                        
+                        {% csrf_token %}
+                        
+                        <div class="uk-card uk-card-hover uk-card-body uk-padding-small uk-padding-remove-bottom">
                             
+                            <p class="uk-align-left uk-margin-remove">{{o.menu.name}}</p>
+                            <p class="uk-align-right uk-margin-remove">ราคา {{o.menu.price}} ฿ 
+                            {% if o.is_delivery and o.time_status == 1 and user.is_authenticated %}
+
+                            <button  name="{{o.menu.id}}"  class="uk-button  uk-button-small add_to_cart " style="color: white;" >
+                                <span class="glyphicon glyphicon-plus uk-text-large"></span>
+                            </button>
+
+                            {% elif user.is_authenticated and o.is_delivery and o.time_status == 0 %}
+                             <button    class="uk-button  uk-button-small uk-button-default " disabled>
+                                <span class="glyphicon glyphicon-plus uk-text-large"></span>
+                            </button>
+
+                            {% elif user.is_anonymous %}
+                            
+                                <button   class="uk-button  uk-button-small uk-button-default alertUser">
+                                <span class="glyphicon glyphicon-plus uk-text-large"></span>
+                            </button>
+                            {% endif %}
+
+
+
+                            </p>
+                            <br>
+                            <hr>
+                        </div>
+                        
+                    {% endfor %}
+                    
+                    
+                    
+                    
+                    
+                    
+                </div>
+<!-- </div>  
+<br> -->
+<!-- </div>  -->
                             <div class="nav-mobile">
                                 <div class="uk-child-width-expand@s uk-text-center" uk-grid>
                                     
@@ -225,14 +278,27 @@
                         </div>
                         
                     </div>
+
                 </div>
+    </div> 
                 <br>
                 {% block javascript %}
                     
                     <script type="text/javascript">
+  if (!!window.performance && window.performance.navigation.type === 2) {
+            // value 2 means "The page was accessed by navigating into the history"
+            console.log('Reloading');
+            window.location.reload(); // reload whole page
+
+        }
+        window.onpageshow = function(event) {
+if (event.persisted) {
+    window.location.reload() 
+}
+};
    $(document).ready(function (){
   $('[data-toggle="tooltip"]').tooltip()
-});
+});                 var discount = 0;
                     var d_charge = 0;
                     var amount_item_in_cart = {{item_in_cart}};
                     var total = {{total}};
@@ -243,6 +309,74 @@
 
                     
                     $(document).ready(function(){
+                        function updateReward() {
+
+        state = "{{state}}";
+        action = "{{num_actions}}";
+        next_state = "{{next_state}}";
+        // alert("state"+state);
+        // alert("action"+action);
+        // alert("next_state"+next_state);
+        $.ajax({
+        type: "GET",
+        url: "{% url 'get_feedback_from_user' %}",
+        data: {'state': state,
+        'next_state': next_state,
+        'action': action,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        dataType: "json",
+        success: function(response) {
+        alert("success");
+        // $("#basket").text(response.item_in_cart);
+        // $('#basket_item').html(response.table);
+        // $('#tableRow').hide();
+        // updateReward();
+
+
+        }
+        });
+         
+     }
+         if (amount_item_in_cart <=6){
+        $(".add_to_cart").on("click", function() {
+        var menu_id = $(this).attr('name');
+        // alert("menu_id"+menu_id);
+        // var love_btn = $(this);
+        // var id = $(this).attr('id');
+        // love_btn.toggleClass("pop");
+        $.ajax({
+            type: "GET",
+            url: "{% url 'add_to_cart' %}",
+            data: { 'menu_id': menu_id,'myDorm':myDorm, 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            dataType: "json",
+            success: function(response) {
+             
+                // $("#basket").text(response.item_in_cart);
+                // $('#basket_item').html(response.table);
+                // $('#tableRow').hide();
+                $("#d_charge").html(parseFloat(response.delivery_charge)+" บาท");
+                    // alert("discount"+ discount);
+                    dc = parseFloat(response.total_price) - discount;
+                    // alert("dc"+ dc);
+                    $("#total_price").text(dc);
+          
+                    alert(dc);
+                    total = parseFloat(response.total_price);
+                  
+                    // $("#"+response.id).css('display','none');
+                    amount_item_in_cart =response.total_amount;
+                    d_charge =response.delivery_charge;
+                    temp_total =  response.price_without_charge;
+                    $('#temp').html(response.table);
+                   
+                updateReward();
+            }
+        });
+    });
+
+    }else{
+        alert("สั่งของได้ไม่เกิน 6 อย่างนะคะ");
+    }
 
                                   $(".remove_from_cart").on("click", function() {
                     var menu_id = $(this).attr('name');
@@ -354,7 +488,7 @@
                            return false;
                     }  
                     
-                    if (amount_item_in_cart <=6){
+                if (amount_item_in_cart <=6){
                     //phone
                     var phone_number =  document.getElementById("myPhoneNumber").value;
                     // var address =  $("#myTextarea").val();
@@ -370,22 +504,7 @@
                     return false;
                     }
                     
-                    // if (address=="" || address  == "None"){
-                    
-                    // alert("กรุณาระบุที่อยู่เพื่อจัดส่งอาหาร");
-                    // return false;
-                    
-                    // }
-                    // if (myDormNumber=="" || myDormNumber  == "None"){
-                    
-                    // alert("กรุณาระบุหมายเลขห้องเพื่อจัดส่งอาหาร");
-                    // return false;
-                    
-                    // }
-                    
-                    
-                    
-                    // var data = JSON.stringify({{data|safe}});
+    
                     var d_phone_number= JSON.stringify(phone_number);
                     // var total_price= JSON.stringify({{total|safe}});
                     var total_price = JSON.stringify(total);

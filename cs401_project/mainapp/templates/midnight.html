@@ -393,7 +393,7 @@ font-weight: bolder;
                             
                             <p class="uk-align-left uk-margin-remove">{{o.menu.name}}</p>
                             <p class="uk-align-right uk-margin-remove">ราคา {{o.menu.price}} ฿ 
-                      
+
   {% if o.is_delivery and o.time_status == 1 and user.is_authenticated %}
 
                             <button  name="{{o.menu.id}}"  class="uk-button  uk-button-small add_to_cart " style="color: white;" >
@@ -426,7 +426,9 @@ font-weight: bolder;
             <!-- </div> -->
           
           </div>
-  </div>          
+  </div> 
+</div>  
+</div>          
 <!--        <div class="uk-grid-collapse uk-child-width-1-1@s " uk-grid>
  
             
