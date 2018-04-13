@@ -94,9 +94,9 @@ class Tohrung2Admin(admin.ModelAdmin):
 admin.site.register(Tohrung2, Tohrung2Admin)
 
 
-class QTableAdmin(admin.ModelAdmin):
-	list_display=[f.name for f in QTable._meta.fields]
-admin.site.register(QTable, QTableAdmin)
+class QTableGlobalAdmin(admin.ModelAdmin):
+	list_display=[f.name for f in QTableGlobal._meta.fields]
+admin.site.register(QTableGlobal, QTableGlobalAdmin)
 
 class QTableLocalAdmin(admin.ModelAdmin):
 	list_display=[f.name for f in QTableLocal._meta.fields]

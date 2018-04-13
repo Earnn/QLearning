@@ -7,7 +7,7 @@ from datetime import datetime
 from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
-class QTable(models.Model):
+class QTableGlobal(models.Model):
 
 
 	name = models.CharField(max_length=10,null=True, blank=True)
