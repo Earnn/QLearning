@@ -1477,7 +1477,55 @@ def tohroong(request):
 
 #     return actions,num_actions,next_state
 
+def getMostOrderInFiveDaysAgo(request):
+    actions = []
+    fiveDaysAgo = datetime.today() - timedelta(days=25)
+    allOrdered = Order.objects.filter(created_at__gte=fiveDaysAgo)
 
+    # print("allOrdered",allOrdered)
+    allo_dict = {}
+    allorder_list = []
+    for i in allOrdered:
+       
+
+        for menu_id,amount in zip(i.menu,i.amount):
+         
+            try:
+                int(menu_id)
+                m = Menu.objects.get(id=menu_id)
+                if m.store.id != 24:
+                    if m.store.id ==25:
+                        if m.id !=504: #not set salad
+                            if m in allo_dict:
+                                v = allo_dict[m] 
+                                new_val = int(v)+1
+                                allo_dict[m] = new_val
+                            else:
+                                # first time add 
+                                allo_dict[m] = int(amount)
+                            # add_list.append(i.value)
+                    else:
+                        # add_list.append(i.value)
+                        if m in allo_dict:
+                            v = allo_dict[m] 
+                            new_val = int(v)+1
+                            allo_dict[m] = new_val
+                        else:
+                            # first time add 
+                            allo_dict[m] = int(amount)
+            
+            except Exception as e:
+                pass
+      
+    print("allo_dict",allo_dict)
+
+    mostOrdered = max(allo_dict.items(), key=operator.itemgetter(1))[0]
+    sorted_dict = sorted(allo_dict, key=allo_dict.get, reverse=True)
+    print("mostOrdered",mostOrdered)
+    print("sorted_dict",sorted_dict[:4])
+    for a in sorted_dict[:4]:
+        actions.append(a)
+    return actions
 def recommendation_actions(request,state):
     gamma = 0.8
 
@@ -1495,8 +1543,14 @@ def recommendation_actions(request,state):
     Q,R = getLocalTable(request)
     # av_act = np.where(current_state_row >= 0)[0]
     # action = int(np.random.choice(av_act,size=1))
+    epsilon = 0.0
+    ran = np.random.rand()
+    if ran > epsilon:
+        actions = np.where(Q[state]== np.max(Q[state]))[0]
+    elif ran <= epsilon:
+        actions = np.where(Q[state]== np.min(Q[state]))[0]
 
-    actions = np.where(Q[state]== np.max(Q[state]))[0]
+    
 
     if actions.shape[0] >1:
         action = int(np.random.choice(actions,size=1))
@@ -1529,223 +1583,14 @@ def recommendation_actions(request,state):
 
 
         if len(all_ordered) == 0 and len(logs) == 0:
-            fiveDaysAgo = datetime.today() - timedelta(days=25)
-            allOrdered = Order.objects.filter(created_at__gte=fiveDaysAgo)
-
-            # print("allOrdered",allOrdered)
-            allo_dict = {}
-            allorder_list = []
-            for i in allOrdered:
-                print("i",i.menu)
-
-                for menu_id,amount in zip(i.menu,i.amount):
-                 
-                    # try:
-                    #     int(menu_id)
-                    #     m = Menu.objects.get(id=menu_id)
-                    #     if m in allo_dict:
-                    #         v = allo_dict[m] 
-                    #         new_val = int(v)+1
-                    #         allo_dict[m] = new_val
-                    #     else:
-                    #         # first time add 
-                    #         allo_dict[m] = int(amount)
-                    
-                    # except Exception as e:
-                        # pass
-                    try:
-                        int(menu_id)
-                        m = Menu.objects.get(id=menu_id)
-                        if m.store.id != 24:
-                            if m.store.id ==25:
-                                if m.id !=504: #not set salad
-                                    if m in allo_dict:
-                                        v = allo_dict[m] 
-                                        new_val = int(v)+1
-                                        allo_dict[m] = new_val
-                                    else:
-                                        # first time add 
-                                        allo_dict[m] = int(amount)
-                                    # add_list.append(i.value)
-                            else:
-                                # add_list.append(i.value)
-                                if m in allo_dict:
-                                    v = allo_dict[m] 
-                                    new_val = int(v)+1
-                                    allo_dict[m] = new_val
-                                else:
-                                    # first time add 
-                                    allo_dict[m] = int(amount)
-                    
-                    except Exception as e:
-                        pass
-                        # print("exc_clear",menu_id)
-                        # tuple_menu = literal_eval(menu_id)
-                        # m = Menu.objects.get(id=tuple_menu[0])
-                      
-                    # if m in allo_dict:
-                    #     v = allo_dict[m] 
-                    #     new_val = int(v)+1
-                    #     allo_dict[m] = new_val
-                    # else:
-                    #     # first time add 
-                    #     allo_dict[m] = int(amount)
-
-            print("allo_dict",allo_dict)
-
-            mostOrdered = max(allo_dict.items(), key=operator.itemgetter(1))[0]
-            sorted_dict = sorted(allo_dict, key=allo_dict.get, reverse=True)
-            print("mostOrdered",mostOrdered)
-            print("sorted_dict",sorted_dict[:4])
-            for a in sorted_dict[:4]:
-                actions.append(a)
+            actions = getMostOrderInFiveDaysAgo(request)
+            
             
 
             
         elif len(all_ordered) == 0 and len(logs) >= 1:
-
-            for i in range(4):
-                count = len(in_cart_list)
-                ran_num = random.randint(0, count-1)
-                menu = in_cart_list[ran_num]
-                menu_list = Menu.objects.filter(store=menu.store).exclude(name__in=in_cart_list)
-                count = len(menu_list)
-                ran_in_store = random.randint(0, count-1)
-                actions.append(menu_list[ran_in_store])
-         
-
-            print("actionsssss",actions)
-
-        elif len(all_ordered) >= 1 and len(logs) >= 1:
-            # have ordered and have session
-            o_dict = {}
-            order_list = []
-            if len(all_ordered) >=1 and len(all_ordered) <=5:
-                last_ordered = Order.objects.filter(user=request.user).order_by('-id')[:len(all_ordered)]
-                # print("last_2_ordered",last_2_ordered)
-            elif len(all_ordered) >=5:
-                last_ordered = Order.objects.filter(user=request.user).order_by('-id')[:3]
-                # print("last_3_ordered",last_3_ordered)
-            for i in last_ordered:
-
-                for menu_id,amount in zip(i.menu,i.amount):
-                 
-                    try:
-                        int(menu_id)
-                        m = Menu.objects.get(id=menu_id)
-                        if m.store.id != 24:
-                            if m.store.id ==25:
-                                if m.id !=504: #not set salad
-                                    if m in o_dict:
-                                        v = o_dict[m] 
-                                        new_val = int(v)+1
-                                        o_dict[m] = new_val
-                                    else:
-                                        # first time add 
-                                        o_dict[m] = int(amount)
-                                    # add_list.append(i.value)
-                            else:
-                                # add_list.append(i.value)
-                                if m in o_dict:
-                                    v = o_dict[m] 
-                                    new_val = int(v)+1
-                                    o_dict[m] = new_val
-                                else:
-                                    # first time add 
-                                    o_dict[m] = int(amount)
-                    
-                    except Exception as e:
-                        pass
-                        # tuple_menu = literal_eval(m)
-                        # m = Menu.objects.get(id=tuple_menu[0])
-                      
-                    
-
-            print("o_dict ee",o_dict)      
-            most_ordered = max(o_dict.items(), key=operator.itemgetter(1))[0]
-            sorted_dict = sorted(o_dict, key=o_dict.get, reverse=True)
-            print("most_ordered",most_ordered)
-            print("sorted_dict",sorted_dict)
-            print("in_cart_list",in_cart_list)
-            print("in_cart_list",len(in_cart_list))
-
-            count = 0
-            for i in sorted_dict:
-                
-                # most_add_to_cart = i
-                if count == 2:
-                    break
-                else:
-                    print("i",i)
-                    if i not in in_cart_list:
-                        actions.append(i)
-                        count +=1
-                    else:
-                        print("incart")
-            print("actions",actions)
-            print("else",count)
-            add_list = []
-            for i in logs:
-                # if
-                sp = i.value.split(",")
-                if len(sp) >1:
-                    menu = Menu.objects.get(id=sp[0])
-          
-                    if menu.store.id != 24:
-                        if menu.store.id ==25:
-                            if menu.id !=504: #not set salad
-                                add_list.append(i.value)
-                        else:
-                            add_list.append(i.value)
-                elif len(sp) == 1:
-                    m = Menu.objects.filter(name=sp[0])
-                    if len(m) == 1:
-                        menu= Menu.objects.get(name=sp[0])
-                        # print("menuuuu",menu)
-                        if menu.store.id != 24:
-                            if menu.store.id ==25:
-                                if menu.id !=504: #not set salad
-                                    add_list.append(i.value)
-                            else:
-                                add_list.append(i.value)
-                            # print("i.val",i.value)
-
-                # print("เพิ่มเข้าตะกร้า",i.value)
-            my_dict = {i:add_list.count(i) for i in add_list}
-            print("my_dictttttttrlrlrlrlrllrrllrrlrll",my_dict)
-            most_add_to_cart = max(my_dict.items(), key=operator.itemgetter(1))[0]
-            sorted_dict = sorted(my_dict, key=my_dict.get, reverse=True)
-            print("most_add_to_cart most_add_to_cart",most_add_to_cart)
-            # print("in_cart_list ",in_cart_list)
-            count = 0
-            more_actions = 4-len(actions)
-          
-            for i in sorted_dict:
-                if count == more_actions:
-                    break
-                else:
-                    sp = i.split(",")
-                    # print("sp",sp)
-                    # print("en(sp)",len(sp))
-                    if len(sp) > 1: # id,บะหมี่
-               
-                        m = Menu.objects.get(id=sp[0])
-                    
-                    elif len(sp) == 1: # บะหมี่
-                        menu = Menu.objects.filter(name=sp[0])
-                        if len(menu) == 1:
-                            m = Menu.objects.get(name=sp[0])
-            
-                    if m not in in_cart_list:
-                        if m not in actions:
-                            count+=1
-                            actions.append(m)
-            print("actions a",actions)
-            num_loop = 4-len(actions)
-            print("xxxx")
-            if num_loop >0:
-                print("xxxx",num_loop)
-                for i in range(num_loop):
+            if in_cart_list:
+                for i in range(4):
                     count = len(in_cart_list)
                     ran_num = random.randint(0, count-1)
                     menu = in_cart_list[ran_num]
@@ -1753,93 +1598,43 @@ def recommendation_actions(request,state):
                     count = len(menu_list)
                     ran_in_store = random.randint(0, count-1)
                     actions.append(menu_list[ran_in_store])
-
-            print("actions b",actions)
-        
-        # return state,action,actions  
-    elif action ==1:
-        # same things 
-        all_ordered = Order.objects.filter(user=request.user)
-        logs = User_session.objects.filter(user=request.user,action="เพิ่มเข้าตะกร้า")
-
-
-        if len(all_ordered) == 0 and len(logs) == 0:
-            fiveDaysAgo = datetime.today() - timedelta(days=25)
-            allOrdered = Order.objects.filter(created_at__gte=fiveDaysAgo)
-
-            # print("allOrdered",allOrdered)
-            allo_dict = {}
-            allorder_list = []
-            for i in allOrdered:
-                print("i",i.menu)
-
-                for menu_id,amount in zip(i.menu,i.amount):
-                 
-                    try:
-                        int(menu_id)
-                        m = Menu.objects.get(id=menu_id)
-                        if m.store.id != 24:
-                            if m.store.id ==25:
-                                if m.id !=504: #not set salad
-                                    if m in allo_dict:
-                                        v = allo_dict[m] 
-                                        new_val = int(v)+1
-                                        allo_dict[m] = new_val
-                                    else:
-                                        # first time add 
-                                        allo_dict[m] = int(amount)
-                                    # add_list.append(i.value)
-                            else:
-                                # add_list.append(i.value)
-                                if m in allo_dict:
-                                    v = allo_dict[m] 
-                                    new_val = int(v)+1
-                                    allo_dict[m] = new_val
-                                else:
-                                    # first time add 
-                                    allo_dict[m] = int(amount)
-                    
-                    except Exception as e:
-                        pass
-            print("allo_dict",allo_dict)
-
-            mostOrdered = max(allo_dict.items(), key=operator.itemgetter(1))[0]
-            sorted_dict = sorted(allo_dict, key=allo_dict.get, reverse=True)
-            print("mostOrdered",mostOrdered)
-            print("sorted_dict",sorted_dict[:4])
-            for a in sorted_dict[:4]:
-                actions.append(a)
-        elif len(all_ordered) == 0 and len(logs) >= 1:
-            for i in range(4):
-                count = len(in_cart_list)
-                ran_num = random.randint(0, count-1)
-                menu = in_cart_list[ran_num]
-                menu_list = Menu.objects.filter(store=menu.store).exclude(name__in=in_cart_list)
-                count = len(menu_list)
-                ran_in_store = random.randint(0, count-1)
-                actions.append(menu_list[ran_in_store])
          
-
+            else:
+                actions = getMostOrderInFiveDaysAgo(request)
             print("actionsssss",actions)
-        elif len(all_ordered) >= 1 :
-            if len(all_ordered) >=1 and len(all_ordered) <=2:
-                last_ordered = Order.objects.filter(user=request.user).order_by('-id')[:len(all_ordered)]
-                # print("last_2_ordered",last_2_ordered)
-            elif len(all_ordered) >=3:
-                last_ordered = Order.objects.filter(user=request.user).order_by('-id')[:3]
-            print("last_ordered",last_ordered)
-            o_dict = {}
-            order_list = []
-            for i in last_ordered:
 
-                for menu_id,amount in zip(i.menu,i.amount):
-                 
-                    try:
-                        int(menu_id)
-                        m = Menu.objects.get(id=menu_id)
-                        if m.store.id != 24:
-                            if m.store.id ==25:
-                                if m.id !=504: #not set salad
+        elif len(all_ordered) >= 1 and len(logs) >= 1:
+            # have ordered and have session
+            if in_cart_list:
+
+                o_dict = {}
+                order_list = []
+                if len(all_ordered) >=1 and len(all_ordered) <=5:
+                    last_ordered = Order.objects.filter(user=request.user).order_by('-id')[:len(all_ordered)]
+                    # print("last_2_ordered",last_2_ordered)
+                elif len(all_ordered) >=5:
+                    last_ordered = Order.objects.filter(user=request.user).order_by('-id')[:3]
+                    # print("last_3_ordered",last_3_ordered)
+                for i in last_ordered:
+
+                    for menu_id,amount in zip(i.menu,i.amount):
+                     
+                        try:
+                            int(menu_id)
+                            m = Menu.objects.get(id=menu_id)
+                            if m.store.id != 24:
+                                if m.store.id ==25:
+                                    if m.id !=504: #not set salad
+                                        if m in o_dict:
+                                            v = o_dict[m] 
+                                            new_val = int(v)+1
+                                            o_dict[m] = new_val
+                                        else:
+                                            # first time add 
+                                            o_dict[m] = int(amount)
+                                        # add_list.append(i.value)
+                                else:
+                                    # add_list.append(i.value)
                                     if m in o_dict:
                                         v = o_dict[m] 
                                         new_val = int(v)+1
@@ -1847,64 +1642,410 @@ def recommendation_actions(request,state):
                                     else:
                                         # first time add 
                                         o_dict[m] = int(amount)
-                                    # add_list.append(i.value)
-                            else:
-                                # add_list.append(i.value)
-                                if m in o_dict:
-                                    v = o_dict[m] 
-                                    new_val = int(v)+1
-                                    o_dict[m] = new_val
-                                else:
-                                    # first time add 
-                                    o_dict[m] = int(amount)
+                        
+                        except Exception as e:
+                            pass
+                            # tuple_menu = literal_eval(m)
+                            # m = Menu.objects.get(id=tuple_menu[0])
+                          
+                        
+
+                print("o_dict ee",o_dict)      
+                most_ordered = max(o_dict.items(), key=operator.itemgetter(1))[0]
+                sorted_dict = sorted(o_dict, key=o_dict.get, reverse=True)
+                print("most_ordered",most_ordered)
+                print("sorted_dict",sorted_dict)
+                print("in_cart_list",in_cart_list)
+                print("in_cart_list",len(in_cart_list))
+
+                count = 0
+                for i in sorted_dict:
                     
-                    except Exception as e:
-                        pass
-
-            print("o_dict o_dict",o_dict)  
-            dict_store_tags ={}
-            for o in o_dict:
-                # dic = {'name':'', 'count' : 0}
-                tag, counter = check_tag(o)
-                print("store_name",tag)
-                print("counter",counter)   
-
-                if counter > 0:
-                    if tag in dict_store_tags:
-                        v = dict_store_tags[tag] 
-                        new_val = int(v)+counter
-                        dict_store_tags[tag] = new_val
+                    # most_add_to_cart = i
+                    if count == 2:
+                        break
                     else:
-                        dict_store_tags[tag] = counter
+                        print("i",i)
+                        if i not in in_cart_list:
+                            actions.append(i)
+                            count +=1
+                        else:
+                            print("incart")
+                print("actions",actions)
+                print("else",count)
+                add_list = []
+                for i in logs:
+                    # if
+                    sp = i.value.split(",")
+                    if len(sp) >1:
+                        menu = Menu.objects.get(id=sp[0])
+              
+                        if menu.store.id != 24:
+                            if menu.store.id ==25:
+                                if menu.id !=504: #not set salad
+                                    add_list.append(i.value)
+                            else:
+                                add_list.append(i.value)
+                    elif len(sp) == 1:
+                        m = Menu.objects.filter(name=sp[0])
+                        if len(m) == 1:
+                            menu= Menu.objects.get(name=sp[0])
+                            # print("menuuuu",menu)
+                            if menu.store.id != 24:
+                                if menu.store.id ==25:
+                                    if menu.id !=504: #not set salad
+                                        add_list.append(i.value)
+                                else:
+                                    add_list.append(i.value)
+                                # print("i.val",i.value)
 
-            print("dict_store_tags",dict_store_tags)
-            # most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
-            sorted_dict_store_tags = sorted(dict_store_tags, key=dict_store_tags.get, reverse=True)
-            print("sorted_dict_store_tags",sorted_dict_store_tags[:2])
-            # print("most_tags",most_tags)
-            if len(sorted_dict_store_tags) >=2:  
-                most_tags = sorted_dict_store_tags[:2]
-                for m in most_tags:
-                    stores = Store.objects.filter(tags__icontains=m)
+                    # print("เพิ่มเข้าตะกร้า",i.value)
+                my_dict = {i:add_list.count(i) for i in add_list}
+                print("my_dictttttttrlrlrlrlrllrrllrrlrll",my_dict)
+                most_add_to_cart = max(my_dict.items(), key=operator.itemgetter(1))[0]
+                sorted_dict = sorted(my_dict, key=my_dict.get, reverse=True)
+                print("most_add_to_cart most_add_to_cart",most_add_to_cart)
+                # print("in_cart_list ",in_cart_list)
+                count = 0
+                more_actions = 4-len(actions)
+              
+                for i in sorted_dict:
+                    if count == more_actions:
+                        break
+                    else:
+                        sp = i.split(",")
+                        # print("sp",sp)
+                        # print("en(sp)",len(sp))
+                        if len(sp) > 1: # id,บะหมี่
+                   
+                            m = Menu.objects.get(id=sp[0])
+                        
+                        elif len(sp) == 1: # บะหมี่
+                            menu = Menu.objects.filter(name=sp[0])
+                            if len(menu) == 1:
+                                m = Menu.objects.get(name=sp[0])
+                
+                        if m not in in_cart_list:
+                            if m not in actions:
+                                count+=1
+                                actions.append(m)
+                print("actions a",actions)
+                num_loop = 4-len(actions)
+                print("xxxx")
+                if num_loop >0:
+                    print("xxxx",num_loop)
+                    for i in range(num_loop):
+                        count = len(in_cart_list)
+                        ran_num = random.randint(0, count-1)
+                        menu = in_cart_list[ran_num]
+                        menu_list = Menu.objects.filter(store=menu.store).exclude(name__in=in_cart_list)
+                        count = len(menu_list)
+                        ran_in_store = random.randint(0, count-1)
+                        actions.append(menu_list[ran_in_store])
+
+                print("actions b",actions)
+            else:
+                print("ELSE")
+                actions = getMostOrderInFiveDaysAgo(request)
+        # return state,action,actions  
+    elif action ==1:
+        # same things 
+
+        all_ordered = Order.objects.filter(user=request.user)
+        logs = User_session.objects.filter(user=request.user,action="เพิ่มเข้าตะกร้า")
+
+
+        if len(all_ordered) == 0 and len(logs) == 0:
+            actions = getMostOrderInFiveDaysAgo(request)
+            print("actionsactions",actions)
+            
+        elif len(all_ordered) == 0 and len(logs) >= 1:
+            if in_cart_list:
+                for i in range(4):
+                    count = len(in_cart_list)
+                    ran_num = random.randint(0, count-1)
+                    menu = in_cart_list[ran_num]
+                    menu_list = Menu.objects.filter(store=menu.store).exclude(name__in=in_cart_list)
+                    count = len(menu_list)
+                    ran_in_store = random.randint(0, count-1)
+                    actions.append(menu_list[ran_in_store])
+         
+            else:
+                add_list = []
+                for i in logs:
+                    # if
+                    sp = i.value.split(",")
+                    if len(sp) >1:
+                        menu = Menu.objects.get(id=sp[0])
+              
+                        if menu.store.id != 24:
+                            if menu.store.id ==25:
+                                if menu.id !=504: #not set salad
+                                    add_list.append(menu)
+                            else:
+                                add_list.append(menu)
+                    elif len(sp) == 1:
+                        m = Menu.objects.filter(name=sp[0])
+                        if len(m) == 1:
+                            menu= Menu.objects.get(name=sp[0])
+                            # print("menuuuu",menu)
+                            if menu.store.id != 24:
+                                if menu.store.id ==25:
+                                    if menu.id !=504: #not set salad
+                                        add_list.append(menu)
+                                else:
+                                    add_list.append(menu)
+                
+         
+                dict_store_tags ={}
+                for i in add_list:
+                    print("i",i)
+                    # dic = {'name':'', 'count' : 0}
+                    tag, counter = check_tag(i)
+                    print("store_name",tag)
+                    print("counter",counter)   
+
+                    if counter > 0:
+                        if tag in dict_store_tags:
+                            v = dict_store_tags[tag] 
+                            new_val = int(v)+counter
+                            dict_store_tags[tag] = new_val
+                        else:
+                            dict_store_tags[tag] = counter
+
+                print("dict_store_tags",dict_store_tags)
+                # most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
+                sorted_dict_store_tags = sorted(dict_store_tags, key=dict_store_tags.get, reverse=True)
+                print("sorted_dict_store_tags",sorted_dict_store_tags[:2])
+                # print("most_tags",most_tags)
+                if len(sorted_dict_store_tags) >=2:  
+                    most_tags = sorted_dict_store_tags[:2]
+                    print("most_tags",most_tags)
+                    for m in most_tags:
+                        stores = Store.objects.filter(tags__icontains=m)
+                        count = len(stores)
+                        print("conuttttt",count)
+                        ran_in_store = random.randint(0, count-1)
+                        random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store])[:2], key=lambda x: random.random())
+               
+                        for i in random_menues:
+                            print("i",i)
+                            actions.append(i)
+
+                elif len(sorted_dict_store_tags)==1:
+                    print("elfiiiii")
+                    most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
+                    stores = Store.objects.filter(tags__icontains=most_tags)
                     count = len(stores)
                     ran_in_store = random.randint(0, count-1)
-                    random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store]).exclude(name__in=in_cart_list)[:2], key=lambda x: random.random())
-           
+                    random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store])[:4], key=lambda x: random.random())
                     for i in random_menues:
                         actions.append(i)
-            elif len(sorted_dict_store_tags)==1:
-                most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
-                stores = Store.objects.filter(tags__icontains=most_tags)
-                print("m",most_tags)
-                print("stores",stores)
-                count = len(stores)
-                print("count",count)
-                ran_in_store = random.randint(0, 0)
-                print("random_meran_in_storenues",ran_in_store)
-                random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store]).exclude(name__in=in_cart_list)[:4], key=lambda x: random.random())
-                print("random_menues",random_menues)
-                for i in random_menues:
-                    actions.append(i)
+
+    
+        elif len(all_ordered) >= 1 :
+            if in_cart_list:
+                dict_store_tags ={}
+                for i in in_cart_list:
+                    print("i",i)
+                    # dic = {'name':'', 'count' : 0}
+                    tag, counter = check_tag(i)
+                    print("store_name",tag)
+                    print("counter",counter)   
+
+                    if counter > 0:
+                        if tag in dict_store_tags:
+                            v = dict_store_tags[tag] 
+                            new_val = int(v)+counter
+                            dict_store_tags[tag] = new_val
+                        else:
+                            dict_store_tags[tag] = counter
+
+                print("dict_store_tags",dict_store_tags)
+                # most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
+                sorted_dict_store_tags = sorted(dict_store_tags, key=dict_store_tags.get, reverse=True)
+                print("sorted_dict_store_tags",sorted_dict_store_tags[:2])
+                # print("most_tags",most_tags)
+                if len(sorted_dict_store_tags) >=2:  
+                    most_tags = sorted_dict_store_tags[:2]
+                    print("most_tags",most_tags)
+                    for m in most_tags:
+                        stores = Store.objects.filter(tags__icontains=m)
+                        count = len(stores)
+                        print("conuttttt",count)
+                        ran_in_store = random.randint(0, count-1)
+                        random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store]).exclude(name__in=in_cart_list)[:2], key=lambda x: random.random())
+               
+                        for i in random_menues:
+                            print("i",i)
+                            actions.append(i)
+
+                elif len(sorted_dict_store_tags)==1:
+                    print("elfiiiii")
+                    most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
+                    stores = Store.objects.filter(tags__icontains=most_tags)
+                    count = len(stores)
+                    ran_in_store = random.randint(0, count-1)
+                    random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store]).exclude(name__in=in_cart_list)[:4], key=lambda x: random.random())
+                    for i in random_menues:
+                        actions.append(i)
+            else:
+                # not item in cart
+                add_list = []
+                for i in logs:
+                    # if
+                    sp = i.value.split(",")
+                    if len(sp) >1:
+                        menu = Menu.objects.get(id=sp[0])
+              
+                        if menu.store.id != 24:
+                            if menu.store.id ==25:
+                                if menu.id !=504: #not set salad
+                                    add_list.append(menu)
+                            else:
+                                add_list.append(menu)
+                    elif len(sp) == 1:
+                        m = Menu.objects.filter(name=sp[0])
+                        if len(m) == 1:
+                            menu= Menu.objects.get(name=sp[0])
+                            # print("menuuuu",menu)
+                            if menu.store.id != 24:
+                                if menu.store.id ==25:
+                                    if menu.id !=504: #not set salad
+                                        add_list.append(menu)
+                                else:
+                                    add_list.append(menu)
+                
+         
+                dict_store_tags ={}
+                for i in add_list:
+                    print("i",i)
+                    # dic = {'name':'', 'count' : 0}
+                    tag, counter = check_tag(i)
+                    print("store_name",tag)
+                    print("counter",counter)   
+
+                    if counter > 0:
+                        if tag in dict_store_tags:
+                            v = dict_store_tags[tag] 
+                            new_val = int(v)+counter
+                            dict_store_tags[tag] = new_val
+                        else:
+                            dict_store_tags[tag] = counter
+
+                print("dict_store_tags",dict_store_tags)
+                # most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
+                sorted_dict_store_tags = sorted(dict_store_tags, key=dict_store_tags.get, reverse=True)
+                print("sorted_dict_store_tags",sorted_dict_store_tags[:2])
+                # print("most_tags",most_tags)
+                if len(sorted_dict_store_tags) >=2:  
+                    most_tags = sorted_dict_store_tags[:2]
+                    print("most_tags",most_tags)
+                    for m in most_tags:
+                        stores = Store.objects.filter(tags__icontains=m)
+                        count = len(stores)
+                        print("conuttttt",count)
+                        ran_in_store = random.randint(0, count-1)
+                        random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store])[:2], key=lambda x: random.random())
+               
+                        for i in random_menues:
+                            print("i",i)
+                            actions.append(i)
+
+                elif len(sorted_dict_store_tags)==1:
+                    print("elfiiiii")
+                    most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
+                    stores = Store.objects.filter(tags__icontains=most_tags)
+                    count = len(stores)
+                    ran_in_store = random.randint(0, count-1)
+                    random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store])[:4], key=lambda x: random.random())
+                    for i in random_menues:
+                        actions.append(i)
+            
+
+            # if len(all_ordered) >=1 and len(all_ordered) <=2:
+            #     last_ordered = Order.objects.filter(user=request.user).order_by('-id')[:len(all_ordered)]
+            # elif len(all_ordered) >=3:
+            #     last_ordered = Order.objects.filter(user=request.user).order_by('-id')[:3]
+            # print("last_ordered",last_ordered)
+            # o_dict = {}
+            # order_list = []
+            # for i in last_ordered:
+
+            #     for menu_id,amount in zip(i.menu,i.amount):
+                 
+            #         try:
+            #             int(menu_id)
+            #             m = Menu.objects.get(id=menu_id)
+            #             if m.store.id != 24:
+            #                 if m.store.id ==25:
+            #                     if m.id !=504: #not set salad
+            #                         if m in o_dict:
+            #                             v = o_dict[m] 
+            #                             new_val = int(v)+1
+            #                             o_dict[m] = new_val
+            #                         else:
+            #                             # first time add 
+            #                             o_dict[m] = int(amount)
+            #                         # add_list.append(i.value)
+            #                 else:
+            #                     # add_list.append(i.value)
+            #                     if m in o_dict:
+            #                         v = o_dict[m] 
+            #                         new_val = int(v)+1
+            #                         o_dict[m] = new_val
+            #                     else:
+            #                         # first time add 
+            #                         o_dict[m] = int(amount)
+                    
+            #         except Exception as e:
+            #             pass
+
+            # print("o_dict o_dict",o_dict)  
+            # dict_store_tags ={}
+            # for o in o_dict:
+            #     # dic = {'name':'', 'count' : 0}
+            #     tag, counter = check_tag(o)
+            #     print("store_name",tag)
+            #     print("counter",counter)   
+
+            #     if counter > 0:
+            #         if tag in dict_store_tags:
+            #             v = dict_store_tags[tag] 
+            #             new_val = int(v)+counter
+            #             dict_store_tags[tag] = new_val
+            #         else:
+            #             dict_store_tags[tag] = counter
+
+            # print("dict_store_tags",dict_store_tags)
+            # # most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
+            # sorted_dict_store_tags = sorted(dict_store_tags, key=dict_store_tags.get, reverse=True)
+            # print("sorted_dict_store_tags",sorted_dict_store_tags[:2])
+            # # print("most_tags",most_tags)
+            # if len(sorted_dict_store_tags) >=2:  
+            #     most_tags = sorted_dict_store_tags[:2]
+            #     for m in most_tags:
+            #         stores = Store.objects.filter(tags__icontains=m)
+            #         count = len(stores)
+            #         ran_in_store = random.randint(0, count-1)
+            #         random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store]).exclude(name__in=in_cart_list)[:2], key=lambda x: random.random())
+           
+            #         for i in random_menues:
+            #             actions.append(i)
+            # elif len(sorted_dict_store_tags)==1:
+            #     most_tags = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
+            #     stores = Store.objects.filter(tags__icontains=most_tags)
+            #     print("m",most_tags)
+            #     print("stores",stores)
+            #     count = len(stores)
+            #     print("count",count)
+            #     ran_in_store = random.randint(0, count-1)
+            #     print("random_meran_in_storenues",ran_in_store)
+            #     print("stores[ran_in_store]",stores[ran_in_store])
+            #     random_menues = sorted(Menu.objects.filter(store=stores[ran_in_store]).exclude(name__in=in_cart_list)[:4], key=lambda x: random.random())
+            #     print("random_menues",random_menues)
+            #     for i in random_menues:
+            #         actions.append(i)
 
 
     elif action ==2:
@@ -2193,14 +2334,13 @@ def recommendation_actions(request,state):
             for k in keys:
                 dish = Menu.objects.filter(name__icontains=k).exclude(name__in=dish_list)
                 for d in dish:
-                    if d not in in_cart_list:
-                        dish_list.append(d)
+                    dish_list.append(d)
             count = len(dish_list)
             for i in range(2):
                 print("i")
                 ran_dish_list = random.randint(0, count-1)
                 temp = dish_list[ran_dish_list]
-                while temp in in_cart_list or temp in actions:
+                while temp in actions:
                     ran_dish_list = random.randint(0, count-1)
                     temp = dish_list[ran_dish_list]
                 actions.append(temp)
@@ -2211,25 +2351,23 @@ def recommendation_actions(request,state):
                     dessert = Menu.objects.filter(name__contains=k)
                     if dessert:
                         for d in dessert:
-                            if d not in in_cart_list:
-                                dessert_list.append(d)
+                            dessert_list.append(d)
                 dessert2 = Menu.objects.filter(store__id=14)
                 for d in dessert2:
-                    if d not in in_cart_list:
-                        dessert_list.append(d)
+                    dessert_list.append(d)
 
                 
-                # add dessert 
-                count = len(dessert_list)
-                temp = -1
-                for i in range(2):
-                    print("i")
+            # add dessert 
+            count = len(dessert_list)
+            temp = -1
+            for i in range(2):
+                print("i")
+                ran_dessert_list = random.randint(0, count-1)
+                while temp == ran_dessert_list:
                     ran_dessert_list = random.randint(0, count-1)
-                    while temp == ran_dessert_list:
-                        ran_dessert_list = random.randint(0, count-1)
 
-                    actions.append(dessert_list[ran_dessert_list])
-                    temp = ran_dessert_list
+                actions.append(dessert_list[ran_dessert_list])
+                temp = ran_dessert_list
 
 
         # next_state = action
@@ -2711,14 +2849,13 @@ def recommendation_actions_whole_system(request,state):
             for k in keys:
                 dish = Menu.objects.filter(name__icontains=k).exclude(name__in=dish_list)
                 for d in dish:
-                    if d not in in_cart_list:
-                        dish_list.append(d)
+                    dish_list.append(d)
             count = len(dish_list)
             for i in range(2):
                 print("i")
                 ran_dish_list = random.randint(0, count-1)
                 temp = dish_list[ran_dish_list]
-                while temp in in_cart_list or temp in actions:
+                while temp in actions:
                     ran_dish_list = random.randint(0, count-1)
                     temp = dish_list[ran_dish_list]
                 actions.append(temp)
@@ -2729,25 +2866,23 @@ def recommendation_actions_whole_system(request,state):
                     dessert = Menu.objects.filter(name__contains=k)
                     if dessert:
                         for d in dessert:
-                            if d not in in_cart_list:
-                                dessert_list.append(d)
+                            dessert_list.append(d)
                 dessert2 = Menu.objects.filter(store__id=14)
                 for d in dessert2:
-                    if d not in in_cart_list:
-                        dessert_list.append(d)
+                    dessert_list.append(d)
 
                 
-                # add dessert 
-                count = len(dessert_list)
-                temp = -1
-                for i in range(2):
-                    print("i")
+            # add dessert 
+            count = len(dessert_list)
+            temp = -1
+            for i in range(2):
+                print("i")
+                ran_dessert_list = random.randint(0, count-1)
+                while temp == ran_dessert_list:
                     ran_dessert_list = random.randint(0, count-1)
-                    while temp == ran_dessert_list:
-                        ran_dessert_list = random.randint(0, count-1)
 
-                    actions.append(dessert_list[ran_dessert_list])
-                    temp = ran_dessert_list
+                actions.append(dessert_list[ran_dessert_list])
+                temp = ran_dessert_list
 
 
         # next_state = action
@@ -2756,13 +2891,7 @@ def recommendation_actions_whole_system(request,state):
     num_actions = action
 
     return actions,num_actions,next_state
-    
-        # print("random 6-8",np.random.randint(6,9))
-    # state,num_actions,actions = createActions(request,state)
-    # return render(request, 'tohroong.html',{'actions':actions,
-    #     'state':state,
-    #     'num_actions':action,'next_state':next_state,'in_cart_list':in_cart_list})
-
+  
 
 def q_learning(request):
     gamma = 0.8
@@ -4161,8 +4290,13 @@ def home_tohrung(request):
         state = 3
     elif gender == "unknown":
         state = 6 
+    epsilon = 0.0
+    ran = np.random.rand()
+    if ran > epsilon:
+        actions,num_actions,next_state= recommendation_actions(request,state)
+    elif ran <= epsilon:
+        actions,num_actions,next_state= recommendation_actions_whole_system(request,state)
 
-    actions,num_actions,next_state= recommendation_actions_whole_system(request,state)
     print("state",state)
     print("actions",actions)
     print("num_actions",num_actions)
