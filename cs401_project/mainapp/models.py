@@ -82,6 +82,7 @@ class QTableLocal(models.Model):
 
 class Store(models.Model):
 	user = models.ForeignKey(User, on_delete=models.SET_NULL,blank=True,null=True)
+	price = models.CharField(max_length=50,blank=True,null=True)
 	name = models.CharField(max_length=300)
 	place = models.CharField(max_length=200)
 	image=models.ImageField(upload_to='stores/')
@@ -110,6 +111,20 @@ class Store(models.Model):
 	@property
 	def total_likes(self):
 		return self.likes.count()
+class Populations(models.Model):
+	user = models.ForeignKey(User, on_delete=models.SET_NULL,blank=True,null=True)
+	store1 = models.CharField(max_length=100,null=True, blank=True )
+	store2 = models.CharField(max_length=100,null=True, blank=True )
+	store3 = models.CharField(max_length=100,null=True, blank=True )
+	store4 = models.CharField(max_length=100,null=True, blank=True )
+	store1_obj = models.ForeignKey(Store,related_name='store1_obj',on_delete=models.SET_NULL,blank=True,null=True)
+	store2_obj = models.ForeignKey(Store,related_name='store2_obj',on_delete=models.SET_NULL,blank=True,null=True)
+	store3_obj = models.ForeignKey(Store,related_name='store3_obj',on_delete=models.SET_NULL,blank=True,null=True)
+	store4_obj = models.ForeignKey(Store,related_name='store4_obj',on_delete=models.SET_NULL,blank=True,null=True)
+	chromosome1 = models.CharField(max_length=10,null=True, blank=True )
+	chromosome2 = models.CharField(max_length=10,null=True, blank=True )
+	chromosome3 = models.CharField(max_length=10,null=True, blank=True )
+	chromosome4 = models.CharField(max_length=10,null=True, blank=True )
 
 class Menu(models.Model):
 	store = models.ForeignKey(Store, on_delete=models.SET_NULL,blank=True,null=True)

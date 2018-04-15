@@ -6,6 +6,8 @@ from django.conf.urls.static import static
 urlpatterns = [
 
     url(r'^$', views.home, name='home'),
+    # Genetic
+    url(r'^click/(?P<name>.*)/(?P<store_id>.*)/(?P<rule>.*)$', views.click, name='click'),
     # Q Learning
     url(r'^ql/$', views.q_learning, name='q_learning'),
     url(r'^tr/$', views.tohroong, name='tohroong'),

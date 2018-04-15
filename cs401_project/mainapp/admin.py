@@ -103,6 +103,10 @@ class QTableLocalAdmin(admin.ModelAdmin):
 admin.site.register(QTableLocal, QTableLocalAdmin)
 
 
+class PopulationsAdmin(admin.ModelAdmin):
+	list_display=[f.name for f in Populations._meta.fields]
+admin.site.register(Populations, PopulationsAdmin)
+
 
 
 

@@ -425,6 +425,7 @@ img.user {
 </script>
 
 <!-- end banner -->
+  
 <div class="container uk-margin-remove-top" id="home" style="margin-top: -50px;">
 
     <!-- <img class="circular-square" src="{% static "images/steak2.jpg" %}" /> -->
@@ -620,14 +621,60 @@ img.user {
             </div>
         </div>
   
-       
+       <!-- 
+          <hr>
           
+          
+                <div class="uk-column-1-4">
+
+                    {% for i in store %}
+                 
+                    <a href="{% url 'click' i.store.name i.store.id i.rule %}">
+                           <img src="{{i.store.img}}"> 
+                        <p>
+
+                          {{i.store.name}}
+                        </p>
+
+                    </a>
+                    {% endfor %}
+                </div>
+            </hr> -->
      
     
     </div>
 
-    
+<!-- <div class="container menu-desktop " id="home"> -->
+ <h1 class="uk-heading-bullet">ร้านค้าที่แนะนำ</h1>   
+    <div class="uk-child-width-1-4@m uk-child-width-1-4@s  uk-grid-collapse uk-grid-match" uk-grid>
+      {% for i in store %}
+       <a href="{% url 'click' i.store.name i.store.id i.rule %}">
+            <div class="  uk-padding-small uk-padding-remove-bottom">
+                <div class="uk-card-media-top" uk-lightbox>
+                    <!-- <a href="#modal-overflow" > -->
+
+                        <div class="imgCrop">
+                            <img src=" {{i.store.img}}" class="inImg" alt="">
+                        </div>
+                    <!-- </a> -->
+                </div>
+                <div class="uk-card-body uk-padding-small uk-text-center">
+                         <p> {{i.store.name}}</p>
+                             
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+
+      
+    <!-- </div> -->
 </div>
+
+     
+</div>
+
+
+
 <div class="uk-background-muted">
  {% csrf_token %}
     <div class="review-desktop">
@@ -853,19 +900,7 @@ img.user {
     
  </div>
 
-        <div class="uk-container">
        
-                <div class="uk-column-1-4">
-                    {% for i in  store %}
-                    <a href="{% url 'click' i.store.name i.rule %}">
-                        <p>
-                            {{i.rule }} :   {{i.store.name }}
-                        </p>
-                    </a>
-                    {% endfor %}
-                </div>
-            </hr>
-        </div>
         <div class="uk-section uk-section-default">
             <!-- <div class="uk-container"> -->
             <h1 class="uk-text-center uk-margin-large-bottom" style="color: #FFBF00">
