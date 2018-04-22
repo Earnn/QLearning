@@ -107,6 +107,10 @@ class PopulationsAdmin(admin.ModelAdmin):
 	list_display=[f.name for f in Populations._meta.fields]
 admin.site.register(Populations, PopulationsAdmin)
 
+class Anonymous_PopulationsAdmin(admin.ModelAdmin):
+	list_display=[f.name for f in Anonymous_Populations._meta.fields]
+admin.site.register(Anonymous_Populations, Anonymous_PopulationsAdmin)
+
 
 
 

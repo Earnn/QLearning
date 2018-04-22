@@ -10,7 +10,6 @@ urlpatterns = [
     url(r'^click/(?P<name>.*)/(?P<store_id>.*)/(?P<rule>.*)$', views.click, name='click'),
     # Q Learning
     url(r'^ql/$', views.q_learning, name='q_learning'),
-    url(r'^tr/$', views.tohroong, name='tohroong'),
     url(r'^get-feedback-from-user/$', views.get_feedback_from_user, name='get_feedback_from_user'),
 
 
