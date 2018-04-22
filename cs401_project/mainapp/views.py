@@ -4354,7 +4354,7 @@ def home_tohrung(request):
         # print("most tags",dict_store_tags)
         most_entered = max(dict_store_tags.items(), key=operator.itemgetter(1))[0]
         # print("most tags",most_entered)
-        state = check_state(tag,gender,"tohrung's page")
+        state = check_state(most_entered,gender,"tohrung's page")
         print("statestate",state)   
     else:
         state = 43 # default tohrung rice
