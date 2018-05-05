@@ -74,6 +74,53 @@ def chart(request):
         print("d",i['total'])
     return render(request, 'chart.html',{"all_ordered":all_ordered,"output":output})
 
+def value_at_risk(request):
+   
+    OneMonthAgo = datetime.today() - timedelta(days=60)
+    print("OneMonthAgo",OneMonthAgo)
+    all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
+
+# >>> from datetime import datetime, timedelta
+# >>> now = datetime.now()
+# >>> print now
+# 2010-05-18 23:16:24.770533
+# >>> this_time_yesterday = now - timedelta(hours=24)
+# >>> print this_time_yesterday
+# 2010-05-17 23:16:24.770533
+# >>> (now - this_time_yesterday).days
+# 1
+    output = []
+    for i in all_ordered:
+
+        temp = {"user":"","amount":0,"time_length":0}
+        last = Order.objects.filter(user__id=i['user']).order_by('-created_at')
+        # print("datetime.now()",datetime.now())
+        cvtz = last[0].created_at.replace(tzinfo=None)
+        # print(datetime.now() - cvtz)
+
+
+        date = datetime.now() - timedelta(days=40)
+        print("date",date)
+        temp["time_length"] = date - cvtz
+        # date11 = datetime.strptime(last[0].created_at, datetimeFormat)
+        # print("date11",date11)
+        # print("las",last[0].created_at)
+        # print("ty",type(last[0].created_at))
+        # time_length = datetime.now() - timedelta(days=7)
+        # print("datetime.now()",datetime.now())
+        # time_length2 = (datetime.now() - last[0].created_at).days
+        # print("time_length",time_length2)
+
+        name =Profile.objects.get(user__id=i['user']).name
+        temp["user"] = name
+        temp["amount"] = i['total']
+        output.append(temp)
+        # print("i",i)
+        # # print("ty",type(i))
+        # print("d",i['total'])
+    return render(request, 'value_at_risk.html',{"all_ordered":all_ordered,"output":output})
+
+
 
 
 def show(request,show_list):
