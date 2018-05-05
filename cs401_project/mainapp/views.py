@@ -38,6 +38,8 @@ from django.db.models import Q
 import functools
 
 
+from django.db.models import Sum
+from django.db.models import Count
 
 # import sys
 # import importlib
@@ -48,6 +50,30 @@ import functools
 
 
 # Create your views here.
+def chart(request):
+    OneMonthAgo = datetime.today() - timedelta(days=60)
+    print("OneMonthAgo",OneMonthAgo)
+    all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
+    # print("ty",type(all_ordered))
+    # sort_dict = sorted(all_ordered, key=all_ordered.get, reverse=True)
+    # all_ordered = Order.objects.filter(created_at__gte=OneMonthAgo).values('user').annotate(total=Count('user'))
+    # all_store_entered = User_session.objects.filter(action="enter_store"
+    
+    # print("all_ordered",all_ordered)
+    output = []
+    for i in all_ordered:
+
+        temp = {"user":"","amount":0}
+
+        name =Profile.objects.get(user__id=i['user']).name
+        temp["user"] = name
+        temp["amount"] = i['total']
+        output.append(temp)
+        # print("i",i)
+        # # print("ty",type(i))
+        print("d",i['total'])
+    return render(request, 'chart.html',{"all_ordered":all_ordered,"output":output})
+
 
 
 def show(request,show_list):

@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^st-code/$', views.st_use_code, name='st_use_code'),
 
     # ordinary
+    url(r'^chart/?$',views.chart, name='chart'),   
     url(r'^report/?$',views.report, name='report'),   
     url(r'^store/(?P<store_name>.*)/(?P<store_id>\d+)$', views.shop_decision, name='shop'),
     url(r'^store/(?P<store_id>\d+)/(?P<store_name>.*)$', views.shop, name='normal_shop'),     
