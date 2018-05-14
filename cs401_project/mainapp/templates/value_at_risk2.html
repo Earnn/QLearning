@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+{% load static %}{% load widget_tweaks %}
+{% block content %}
+
+
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<div id="chartdiv"></div>
+
+<style>
+	#chartdiv {
+	width	: 100%;
+	height	: 500px;
+}								
+</style>
+<div>
+  <br>
+  <br>
+   <!--  {{all_ordered}}
+    {% for o in all_ordered %}
+    {{o.total}}
+
+    {% endfor %} -->
+    <!-- <script>
+    var chartData = generatechartData();
+    function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+  function generatechartData() {
+  var chartData = [];
+  // var firstDate = new Date();
+  // var differ_dates = parseInt({{differ_dates}});
+  // console.log({{all_ordered}});
+  // var js_list = {{all_ordered}}; 
+
+
+
+   // var js_dict = {
+   //      {% for k, v in all_ordered %}
+   //      "{{ k }}": "{{ v }}"{% if not forloop.last %},{% endif %}
+   //      {% endfor %}
+   //  }
+   //  console.log("js",js_dict.user);
+
+    // var data = "{{ output | safe }}";
+    // var response = JSON.stringify(data);
+    var data = [{% for o in output %}
+    { "user" : "{{ o.user }}",
+       "amount" : "{{ o.amount }}",
+       
+    },
+
+    {% endfor %}
+    ]
+
+    // console.log(typeof data);
+    // console.log(data);
+
+    for(var i=0;i<5;i++)
+{
+    // console.log(typeof data[i].amount);
+    // var cvint = parseInt(data[i].amount)
+    // console.log(typeof cvint);
+    if (parseInt(data[i].amount) >= 10){
+           chartData.push( {
+    
+    name: data[i].user,
+    points: parseInt(data[i].amount),
+    "color": "#DB4C3C",
+    "bullet": "{% static 'images/crown.png' %}",
+  },);
+        }
+else if (parseInt(data[i].amount) >= 7){
+           chartData.push( {
+    
+  name: data[i].user,
+  points: parseInt(data[i].amount),
+  "color": "#FEC514",
+"bullet": "{% static 'images/crown_silver.png' %}",  },);
+        }
+
+        else{
+              chartData.push( {
+    
+  name: data[i].user,
+  points: parseInt(data[i].amount),
+  "color": "#DAF0FD",
+  "bullet": "{% static 'images/crown_0.png' %}",
+
+// "bullet": "https://www.amcharts.com/lib/images/faces/C02.png"
+    
+  },);
+        }
+    
+}
+   //  temp[post[i].name]=post[i].value;
+   // json.push(temp);
+   //  console.log("data",data);
+//    for ( var i = 0; i < differ_dates; i++ ) {
+//     {% for k, v in data %}
+
+//   chartData.push( {
+//   points: {{v}},
+//   name: {{k}},
+//   } );
+//   {% if not forloop.last %}{% endif %}
+//   {% endfor %}
+// }''
+console.log("chart",chartData)
+  return chartData;
+  }
+
+
+    var chart = AmCharts.makeChart("chartdiv",
+{
+    "type": "serial",
+    "theme": "light",
+    "dataProvider": chartData,
+    "valueAxes": [{
+        "maximum": 15,
+        "minimum": 0,
+        "axisAlpha": 0,
+        "dashLength": 4,
+        "position": "left"
+    }],
+    "startDuration": 1,
+    "graphs": [{
+        "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
+        "bulletOffset": 10,
+        "bulletSize": 52,
+        "colorField": "color",
+        "cornerRadiusTop": 8,
+        "customBulletField": "bullet",
+        "fillAlphas": 0.8,
+        "lineAlpha": 0,
+        "type": "column",
+        "valueField": "points"
+    }],
+    "marginTop": 0,
+    "marginRight": 0,
+    "marginLeft": 0,
+    "marginBottom": 0,
+    "autoMargins": false,
+    "categoryField": "name",
+    "categoryAxis": {
+        "axisAlpha": 0,
+        "gridAlpha": 0,
+        "inside": true,
+        "tickLength": 0
+    },
+    "export": {
+        "enabled": true
+     }
+});
+</script>  -->  
+  <script>
+  var chartData = generatechartData();
+  function generatechartData() {
+
+   var data = [{% for o in output %}
+    { "user" : "{{ o.user }}",
+       "amount" : "{{ o.amount }}",
+       "value" : "{{ o.time_length }}",
+       
+    },
+
+    {% endfor %}
+    ]
+
+
+  var chartData = [];
+     for(var i=0;i<data.length;i++)
+{
+    // console.log(typeof data[i].amount);
+    // var cvint = parseInt(data[i].amount)
+    // console.log(typeof cvint);
+    // if (parseInt(data[i].value) >= 10){
+           chartData.push( {
+    
+    risk:parseInt(data[i].value),
+    value: parseInt(data[i].amount),
+    // "color": "#DB4C3C",
+    // "bullet": "{% static 'images/crown.png' %}",
+  },);
+ 
+    
+// }
+
+
+
+
+}
+  return chartData;
+  }
+
+  // }
+
+
+
+
+var chart = AmCharts.makeChart("chartdiv", {
+  
+    "type": "serial",
+    "theme": "light",
+    "marginTop":0,
+    "marginRight": 80,
+    "dataProvider": chartData,
+    "graphs": [{
+        "id":"g1",
+        "balloonText": "[[category]]<br><b><span style='font-size:14px;'>[[value]]</span></b>",
+        "bullet": "round",
+        "bulletSize": 8,
+        "lineColor": "#d1655d",
+        "lineThickness": 2,
+        "negativeLineColor": "#637bb6",
+        "type": "smoothedLine",
+        "valueField": "value"
+    }],
+    "chartScrollbar": {
+        "graph":"g1",
+        "gridAlpha":0,
+        "color":"#888888",
+        "scrollbarHeight":55,
+        "backgroundAlpha":0,
+        "selectedBackgroundAlpha":0.1,
+        "selectedBackgroundColor":"#888888",
+        "graphFillAlpha":0,
+        "autoGridCount":true,
+        "selectedGraphFillAlpha":0,
+        "graphLineAlpha":0.2,
+        "graphLineColor":"#c2c2c2",
+        "selectedGraphLineColor":"#888888",
+        "selectedGraphLineAlpha":1
+
+    },
+   "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "risk",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "gridAlpha": 0,
+    "tickPosition": "start",
+    "tickLength": 20
+  },
+    // "dataDateFormat": "YYYY",
+    // "categoryField": "year",
+    // "categoryAxis": {
+    //     "minPeriod": "YYYY",
+    //     "parseDates": true,
+    //     "minorGridAlpha": 0.1,
+    //     "minorGridEnabled": true
+    // },
+    "export": {
+        "enabled": true
+    }
+});
+
+chart.addListener("rendered", zoomChart);
+if(chart.zoomChart){
+  chart.zoomChart();
+}
+
+function zoomChart(){
+    chart.zoomToIndexes(Math.round(chart.dataProvider.length * 0.4), Math.round(chart.dataProvider.length * 0.55));
+}
+</script>
+
+</div>
+	
+
+<br>
+<br>
+<br>
+{% endblock %}

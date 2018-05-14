@@ -41,6 +41,14 @@ import functools
 from django.db.models import Sum
 from django.db.models import Count
 
+# Clustering
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+from sklearn.decomposition import PCA # Principal Component Analysis module
+from sklearn.cluster import KMeans # KMeans clustering 
+from kmodes.kmodes import KModes
+import matplotlib.pyplot as plt # Python defacto plotting library
+import seaborn as sns # More snazzy plotting library
 # import sys
 # import importlib
 
@@ -50,35 +58,260 @@ from django.db.models import Count
 
 
 # Create your views here.
-def chart(request):
-    OneMonthAgo = datetime.today() - timedelta(days=60)
-    print("OneMonthAgo",OneMonthAgo)
-    all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
-    # print("ty",type(all_ordered))
-    # sort_dict = sorted(all_ordered, key=all_ordered.get, reverse=True)
-    # all_ordered = Order.objects.filter(created_at__gte=OneMonthAgo).values('user').annotate(total=Count('user'))
-    # all_store_entered = User_session.objects.filter(action="enter_store"
-    
-    # print("all_ordered",all_ordered)
-    output = []
-    for i in all_ordered:
+# def chart(request):
+#     OneMonthAgo = datetime.today() - timedelta(days=60)
+#     print("OneMonthAgo",OneMonthAgo)
+#     all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
 
-        temp = {"user":"","amount":0}
+#     output = []
+#     for i in all_ordered:
 
-        name =Profile.objects.get(user__id=i['user']).name
-        temp["user"] = name
-        temp["amount"] = i['total']
-        output.append(temp)
-        # print("i",i)
-        # # print("ty",type(i))
-        print("d",i['total'])
-    return render(request, 'chart.html',{"all_ordered":all_ordered,"output":output})
+#         temp = {"user":"","amount":0}
+
+#         name =Profile.objects.get(user__id=i['user']).name
+#         temp["user"] = name
+#         temp["amount"] = i['total']
+#         output.append(temp)
+     
+#         print("d",i['total'])
+#     return render(request, 'chart.html',{"all_ordered":all_ordered,"output":output})
+
 
 def value_at_risk(request):
+
+    df = pd.DataFrame(list(Order.objects.all().values()))
+    
+    d = {'amount_of_order': df['user_id'].value_counts(), }
+    df_value_temp = pd.DataFrame(data=d)
+    df_value_temp
+    df_value = pd.DataFrame(columns = ['userid','amount_of_order','value'])
+
+    print(type(df_value_temp))
+    for index, row in df_value_temp.iterrows():
+    #     print(type(row['amount_of_order']))
+        value = ""
+        if row['amount_of_order'] >= 50 and row['amount_of_order'] <= 79:
+            value = "Gold"
+        elif row['amount_of_order'] >= 11 and row['amount_of_order'] <= 49:
+            value = "Silver"
+        elif row['amount_of_order'] >= 0 and row['amount_of_order'] <= 10:
+            value = "Bronze"
+            
+        df_value.loc[len(df_value)] = [index,row['amount_of_order'],value]
+    
+    print("df_value",df_value)   
+    
+    df['created_at'] = pd.to_datetime(df["created_at"])
+    # df['created_at']=df['created_at'].dt.tz_localize('UTC').dt.tz_convert('Asia/Bangkok')
+    # df['created_at']
+    df_time = pd.to_datetime(df["created_at"])
+
+
+    list_disappear_days = []
+    date_del = datetime.now() - timedelta(days=0)
+
+
+    for index, row in df_value.iterrows():
+    #     print(row['userid'])
+    #     print(df['user_id'])
+    #     print(df_dummies)
+        temp = df[df['user_id'] ==row['userid']]
+        a = temp.sort_values(by=['created_at'])
+    #     print(len(a))
+    #     print(a)
+        dates = a['created_at'][len(a)-1]
+
+        cvtz = dates.replace(tzinfo=None)
+        time_length = date_del - cvtz
+        list_disappear_days.append(time_length.days)
+    print(list_disappear_days)
+    df_value['days_disappear'] = list_disappear_days
+
+    X = df_value[['days_disappear', 'amount_of_order']].values
+    pca = PCA(n_components=2)
+    x_9d = pca.fit_transform(X)
+
+    # Set a 3 KMeans clustering
+    # kmeans = KMeans(n_clusters=2)
+    kmeans = KMeans(n_clusters=3).fit(x_9d)
+    # Compute cluster centers and predict cluster indices
+    X_clustered = kmeans.fit_predict(x_9d)
+
+    # Define our own color map
+    LABEL_COLOR_MAP = {0 : 'r',1 : 'g',2 : 'b',3 : 'y'}
+    label_color = [LABEL_COLOR_MAP[l] for l in X_clustered]
+    labels = kmeans.labels_
+    centroids = kmeans.cluster_centers_
+
+    # Plot the scatter digram
+    # plt.figure(figsize = (7,7))
+    # plt.xlabel('Size')
+    # plt.ylabel('Eat Breakfast')
+    # plt.scatter(x_9d[:,0],x_9d[:,1], c = kmeans.labels_, cmap='rainbow')  
+    output = []
+    for i in range(3):
+
+            # select only data observations with cluster label == i
+        ds = x_9d[np.where(labels==i)]
+        x = ds[:,0]
+        y = ds[:,1]
+
+        temp = {"x":0,"y":0,"label":0}
+        for xy in range(len(ds)):
+            temp = {"x":0,"y":0,"label":0}
+
+            temp["x"] = x[xy]
+            temp["y"] = y[xy]
+            temp["label"] = i
+            output.append(temp)
+
+
+            # plot the data observations
+            # plt.plot(ds[:,0],ds[:,1],'o')
+            # plot the centroids
+    #         lines = plt.plot(centroids[i,0],centroids[i,1],'kx')
+    # #         make the centroid x's bigger
+    #         plt.setp(lines,ms=12.0)
+    #         plt.setp(lines,mew=2.0)
+    # plt.show()
+    print(output)
+    # plt.show()
+
+ 
+        # print("d",i['total'])
+    return render(request, 'value_at_risk.html',{"output":output})
+
+
+
+
+def chart(request):
+
+    df = pd.DataFrame(list(User_session.objects.all().values()))
+    
+    df_session_dummies = pd.get_dummies(df, columns=['action'])
+    # print(df_session_dummies.head())
+    df_search_cate = df_session_dummies[df_session_dummies.action_search_cate == 1 ]
+    # print(df_search_cate.head())
+
+    df_search_cate=df_search_cate.drop([
+        'action_enter',
+        'action_enter_store','action_like','action_search_input','action_กรอกประวัติความหิว','action_สั่งอาหาร','action_เพิ่มเข้าตะกร้า','action_ใช้โค้ด'],1)
+
+    print(df_search_cate.head())
+    df_search_cate = df_search_cate.dropna()
+    df_search_cate_dummies = pd.get_dummies(df_search_cate, columns=['value'])
+    print(df_search_cate_dummies.head())
+
+    new_df = pd.DataFrame(columns = ['user_id','value_all','value_delivery','value_ของหวาน','value_ชาบู','value_ปิ้งย่าง','value_สเต็ก',
+        'value_อาหารญี่ปุ่น','value_อาหารเกาหลี','value_อาหารไทย','value_เครื่องดื่ม',])
+    for k,i in df_search_cate_dummies.iterrows():
+        if any(new_df.user_id == i['user_id']) :
+
+            index=new_df[new_df['user_id']== i['user_id']].index.item()
+            
+            
+            if new_df.iloc[index]['value_all'] == 0  :
+                new_df.set_value(index, 'value_all', i['value_all'])
+            if new_df.iloc[index]['value_delivery'] == 0 :
+                new_df.set_value(index, 'value_delivery',  i['value_delivery'])
+            if new_df.iloc[index]['value_ของหวาน'] == 0 :
+                new_df.set_value(index, 'value_ของหวาน',  i['value_ของหวาน'])
+            if new_df.iloc[index]['value_ชาบู'] == 0  :
+                new_df.set_value(index, 'value_ชาบู', i['value_ชาบู'])
+            if new_df.iloc[index]['value_ปิ้งย่าง'] == 0  :
+                new_df.set_value(index, 'value_ปิ้งย่าง', i['value_ปิ้งย่าง'])
+            if new_df.iloc[index]['value_สเต็ก'] == 0  :
+                new_df.set_value(index, 'value_สเต็ก', i['value_สเต็ก'])
+            if new_df.iloc[index]['value_อาหารญี่ปุ่น'] == 0  :
+                new_df.set_value(index, 'value_อาหารญี่ปุ่น', i['value_อาหารญี่ปุ่น'])
+            if new_df.iloc[index]['value_อาหารเกาหลี'] == 0  :
+                new_df.set_value(index, 'value_อาหารเกาหลี', i['value_อาหารเกาหลี'])
+            if new_df.iloc[index]['value_อาหารไทย'] == 0  :
+                new_df.set_value(index, 'value_อาหารไทย', i['value_อาหารไทย'])
+            if new_df.iloc[index]['value_เครื่องดื่ม'] == 0  :
+                new_df.set_value(index, 'value_เครื่องดื่ม', i['value_เครื่องดื่ม'])
+   
+
+
+        else :
+            new_df.loc[len(new_df)] = [i['user_id'],i['value_all'],i['value_delivery'],i['value_ของหวาน'],
+                                       i['value_ชาบู'],i['value_ปิ้งย่าง'],i['value_สเต็ก'],i['value_อาหารญี่ปุ่น'],
+                                       i['value_อาหารเกาหลี'],i['value_อาหารไทย'],i['value_เครื่องดื่ม']]
+            
+
+
+
+    x = new_df.reset_index().values
+
+    km = KModes(n_clusters=3, init='Huang', n_init=5, verbose=1)
+    clusters = km.fit_predict(x)
+    new_df['clusters'] = clusters
+    print(new_df['clusters'])
+
+
+
+    pca = PCA(2)
+
+    # Turn the dummified df into two columns with PCA
+    plot_columns = pca.fit_transform(new_df.ix[:,1:20])
+    # print(len(new_df['user_id']))
+    # print(len(new_df['user_id']))
+    x = plot_columns[:,1]
+    y = plot_columns[:,0]
+    output = []
+    for i in range(len(plot_columns)):
+        temp = {"x":0,"y":0,"userid":"","label":0}
+
+        temp["x"] = x[i]
+        temp["y"] = y[i]
+        temp["user_id"] = new_df['user_id'][i]
+        temp["label"] = new_df['clusters'][i]
+
+
+        output.append(temp)
+
+    print(output)
+
+
+
+
+
+
+
+
+
+
+    OneMonthAgo = datetime.today() - timedelta(days=60)
+    all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
+
+    # output = []
+    # for i in all_ordered:
+
+    #     temp = {"user":"","amount":0}
+
+    #     name =Profile.objects.get(user__id=i['user']).name
+    #     temp["user"] = name
+    #     temp["amount"] = i['total']
+    #     output.append(temp)
+     
+        # print("d",i['total'])
+    return render(request, 'chart.html',{"all_ordered":all_ordered,
+        "output":output,"x":x,"y":y})
+
+
+
+def value_at_risk2(request):
    
     OneMonthAgo = datetime.today() - timedelta(days=60)
-    print("OneMonthAgo",OneMonthAgo)
+    # print("OneMonthAgo",OneMonthAgo)
     all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
+    # print(all_ordered[:,1])
+    # all_ordered = Order.objects.all().values()
+    # df = pd.DataFrame(list(all_ordered))
+    
+
+
+    # df = pd.DataFrame(list(BlogPost.objects.filter(date__gte=datetime.datetime(2012, 5, 1)).values()))
 
 # >>> from datetime import datetime, timedelta
 # >>> now = datetime.now()
@@ -100,7 +333,7 @@ def value_at_risk(request):
 
 
         date = datetime.now() - timedelta(days=40)
-        print("date",date)
+        # print("date",date)
         temp["time_length"] = date - cvtz
         # date11 = datetime.strptime(last[0].created_at, datetimeFormat)
         # print("date11",date11)
@@ -118,7 +351,7 @@ def value_at_risk(request):
         # print("i",i)
         # # print("ty",type(i))
         # print("d",i['total'])
-    return render(request, 'value_at_risk.html',{"all_ordered":all_ordered,"output":output})
+    return render(request, 'value_at_risk2.html',{"all_ordered":all_ordered,"output":output})
 
 
 
@@ -6334,7 +6567,7 @@ def set_cookie(request,template,dicts):
 def report(request):
 	form = SelectMonthForm()
 	# collect_session(request,"รีวิวร้านค้า",review.id)
-	today =datetime.date.today()
+	today =datetime.today()
 	today_name = today.strftime('%B')
 	month_name= today.strftime('%B')
 	year = today.strftime('%Y')
@@ -6352,10 +6585,10 @@ def report(request):
                 'order':order_count,
                 'review':reviews_count})
 
-	now = datetime.datetime.now()
+	now = datetime.now()
 	first_day_string = "2018-02-01"
-	first_day = datetime.datetime.strptime(first_day_string, "%Y-%m-%d").date()
-	differ = datetime.date.today() - first_day
+	first_day = datetime.strptime(first_day_string, "%Y-%m-%d").date()
+	differ = datetime.today() - first_day
 
 	
 

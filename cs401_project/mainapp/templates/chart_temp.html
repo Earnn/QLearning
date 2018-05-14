@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% load static %}{% load widget_tweaks %}
+{% block content %}
+
+
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<div id="chartdiv"></div>
+
+<style>
+	#chartdiv {
+	width	: 100%;
+	height	: 500px;
+}								
+</style>
+<div>
+   <!--  {{all_ordered}}
+    {% for o in all_ordered %}
+    {{o.total}}
+
+    {% endfor %} -->
+    <script>
+    var chartData = generatechartData();
+    function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+  function generatechartData() {
+  var chartData = [];
+  // var firstDate = new Date();
+  // var differ_dates = parseInt({{differ_dates}});
+  // console.log({{all_ordered}});
+  // var js_list = {{all_ordered}}; 
+
+
+
+   // var js_dict = {
+   //      {% for k, v in all_ordered %}
+   //      "{{ k }}": "{{ v }}"{% if not forloop.last %},{% endif %}
+   //      {% endfor %}
+   //  }
+   //  console.log("js",js_dict.user);
+
+    // var data = "{{ output | safe }}";
+    // var response = JSON.stringify(data);
+    var data = [{% for o in output %}
+    { "user" : "{{ o.user }}",
+       "amount" : "{{ o.amount }}",
+       
+    },
+
+    {% endfor %}
+    ]
+
+    // console.log(typeof data);
+    // console.log(data);
+
+    for(var i=0;i<5;i++)
+{
+    // console.log(typeof data[i].amount);
+    // var cvint = parseInt(data[i].amount)
+    // console.log(typeof cvint);
+    if (parseInt(data[i].amount) >= 10){
+           chartData.push( {
+    
+    name: data[i].user,
+    points: parseInt(data[i].amount),
+    "color": "#DB4C3C",
+    "bullet": "{% static 'images/crown.png' %}",
+  },);
+        }
+else if (parseInt(data[i].amount) >= 7){
+           chartData.push( {
+    
+  name: data[i].user,
+  points: parseInt(data[i].amount),
+  "color": "#FEC514",
+"bullet": "{% static 'images/crown_silver.png' %}",  },);
+        }
+
+        else{
+              chartData.push( {
+    
+  name: data[i].user,
+  points: parseInt(data[i].amount),
+  "color": "#DAF0FD",
+  "bullet": "{% static 'images/crown_0.png' %}",
+
+// "bullet": "https://www.amcharts.com/lib/images/faces/C02.png"
+    
+  },);
+        }
+    
+}
+   //  temp[post[i].name]=post[i].value;
+   // json.push(temp);
+   //  console.log("data",data);
+//    for ( var i = 0; i < differ_dates; i++ ) {
+//     {% for k, v in data %}
+
+//   chartData.push( {
+//   points: {{v}},
+//   name: {{k}},
+//   } );
+//   {% if not forloop.last %}{% endif %}
+//   {% endfor %}
+// }''
+console.log("chart",chartData)
+  return chartData;
+  }
+
+
+    var chart = AmCharts.makeChart("chartdiv",
+{
+    "type": "serial",
+    "theme": "light",
+    "dataProvider": chartData,
+    "valueAxes": [{
+        "maximum": 15,
+        "minimum": 0,
+        "axisAlpha": 0,
+        "dashLength": 4,
+        "position": "left"
+    }],
+    "startDuration": 1,
+    "graphs": [{
+        "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
+        "bulletOffset": 10,
+        "bulletSize": 52,
+        "colorField": "color",
+        "cornerRadiusTop": 8,
+        "customBulletField": "bullet",
+        "fillAlphas": 0.8,
+        "lineAlpha": 0,
+        "type": "column",
+        "valueField": "points"
+    }],
+    "marginTop": 0,
+    "marginRight": 0,
+    "marginLeft": 0,
+    "marginBottom": 0,
+    "autoMargins": false,
+    "categoryField": "name",
+    "categoryAxis": {
+        "axisAlpha": 0,
+        "gridAlpha": 0,
+        "inside": true,
+        "tickLength": 0
+    },
+    "export": {
+        "enabled": true
+     }
+});
+</script>   
+
+</div>
+	
+
+<br>
+<br>
+<br>
+{% endblock %}

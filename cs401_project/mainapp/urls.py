@@ -4,6 +4,11 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
+    # visualization
+    url(r'^value_at_risk/?$',views.value_at_risk, name='chart'),   
+
+    # (?# url(r'^/$', views.q_learning, name='q_learning'),)
+
 
     url(r'^$', views.home, name='home'),
     # Genetic
@@ -36,7 +41,7 @@ urlpatterns = [
     url(r'^st-code/$', views.st_use_code, name='st_use_code'),
 
     # ordinary
-    url(r'^value_at_risk/?$',views.value_at_risk, name='chart'),   
+    url(r'^value_at_risk2/?$',views.value_at_risk2, name='chart2'),   
 
     url(r'^chart/?$',views.chart, name='chart'),   
     url(r'^report/?$',views.report, name='report'),   
