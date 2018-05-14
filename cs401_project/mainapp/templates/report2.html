@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}{% load widget_tweaks %}
+{% block content %}
+  <!-- Styles -->
+  <!-- <style>
+  #chartdiv {
+  width   : 70%;
+  height    : 300px;
+  font-size : 20px;
+  }
+  </style> -->
+  <!-- Styles -->
+  <style>
+  #chartdiv {
+  width: 100%;
+  height: 300px;
+  }
+  .summary-label{
+  font-size: 15px;
+  font-weight: bold;
+  color: #9E9E9E;
+  /*color: #AAB8C2;*/
+  }
+  </style>
+  <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<!-- <div id="chartdiv"></div>  -->
+
+
+  <div class="container" >
+    <br>
+        <h2 class="uk-heading-bullet">รายงานสรุปยอดการสั่งซื้อ </h2>
+ <br>
+   <!-- <div uk-grid>
+          <div class="uk-width-1-2@m ">
+     
+          </div>
+            </div>
+        <br>
+      -->
+
+    <div uk-grid>
+      <div class="uk-width-3-4@m  uk-child-width-1-1@s uk-padding " >
+     
+   <div id="chartdiv"></div>  
+
+    </div>
+      <!-- <div class="uk-child-width-1-3@m  uk-child-width-1-1@s uk-padding " > -->
+      <!-- <div><div id="chartdiv"></div></div> -->
+      <!-- <div></div> -->
+      <!-- </div>  -->
+      <div class="uk-width-1-4@m uk-margin-medium-top">
+        <!-- <select name='myselect' onChange="form.submit();">
+          <option value="all">ดูทั้งหมด</option>
+          <option value="มกราคม">มกราคม</option>
+          <option value="กุมภาพันธ์">กุมภาพันธ์</option>
+          <option value="มีนาคม">มีนาคม</option>
+          <option value="เมษายน">มีนาคม</option>
+          <option value="พฤษภาคม">พฤษภาคม</option>
+          <option value="มิถุนายน">มิถุนายน</option>
+        </select> -->
+       <form id="id_of_form" method="POST" >
+             {% csrf_token %}
+          <div  class="uk-margin-bottom ">
+            {{ form.action |add_class:"uk-select"}}
+          </div>
+        </form>
+      
+        <h3 class="uk-heading-divider summary-label ">{{month}} {{year}}</h3>
+        <div uk-grid>
+          <div class="uk-width-1-2@m ">
+            <p  class="summary-label uk-margin-remove-bottom">VIEWS</p>
+            <h1 class="uk-margin-remove-top uk-margin-bottom">{{total_viewed}}</h1>
+            <!-- <label></label>  -->
+            <hr>
+            <p  class="summary-label uk-margin-remove-bottom">ORDERS</p>
+            <h1 class="uk-margin-remove-top">{{total_ordered}}</h1><hr>
+          </div>
+          <div class="uk-width-1-2@m ">
+            <p  class="summary-label uk-margin-remove-bottom">LOVES</p>
+            <h1 class="uk-margin-remove-top uk-margin-bottom">{{total_liked}}</h1>
+            <!-- <label></label>  -->
+            <hr>
+            <p  class="summary-label uk-margin-remove-bottom">REVIEWS</p>
+            <h1 class="uk-margin-remove-top">{{total_reviewed}}</h1>
+            <hr>
+          </div>
+        </div>
+    <!-- <h3 class="uk-heading-divider summary-label ">{{statistic.month}} {{year}}</h3>
+        <div uk-grid>
+          <div class="container"><label for="">ยังไม่มีการสรุปสถิติในเดือนนี้</label></div>
+        </div> -->
+      <br>
+      </div>
+    </div>
+     <h2 class="uk-heading-bullet">วิเคราะห์พฤติกรรมลูกค้า </h2>
+    <div class="uk-width-1-1@m  uk-child-width-1-1@s uk-padding " >
+
+        <img style="" class="uk-margin-small-bottom" src="{% static "images/test.gif" %}"/>
+        <!-- <div></div> -->
+        <p class="uk-text-center">กำลังวิเคราะห์พฤติกรรมลูกค้า</p>
+      </div>
+     
+  </div>                                        
+  <script>
+    
+
+var chartData = generatechartData();
+  function generatechartData() {
+
+  var chartData = [];
+  var firstDate = new Date();
+  var data = [{% for o in output %}
+    { "amount" : "{{ o.amount_of_ordered }}",
+       "date" : "{{ o.date }}",
+       // "value" : "{{ o.time_length }}",
+       
+    },
+
+    {% endfor %}
+    ]
+
+// alert(data);
+
+  var chartData = [];
+     for(var i=0;i<data.length;i++)
+{
+  var dates = new Date(data[i].date);
+ 
+console.log(parseInt(data[i].amount));
+
+    chartData.push( {
+    date:dates,
+    value: parseInt(data[i].amount),
+
+  },);
+ 
+
+}
+
+
+  return chartData;
+}
+
+
+    var chart = AmCharts.makeChart("chartdiv", {
+    "type": "serial",
+    "theme": "light",
+    "marginRight": 40,
+    "marginLeft": 40,
+    "autoMarginOffset": 20,
+    "mouseWheelZoomEnabled":true,
+    "dataDateFormat": "YYYY-MM-DD",
+    "valueAxes": [{
+        "id": "v1",
+        "axisAlpha": 0,
+        "position": "left",
+        "ignoreAxisWidth":true
+    }],
+    "balloon": {
+        "borderThickness": 1,
+        "shadowAlpha": 0
+    },
+    "graphs": [{
+        "id": "g1",
+        "balloon":{
+          "drop":true,
+          "adjustBorderColor":false,
+          "color":"#ffffff"
+        },
+        "bullet": "round",
+        "bulletBorderAlpha": 1,
+        "bulletColor": "#FFFFFF",
+        "bulletSize": 5,
+        "hideBulletsCount": 50,
+        "lineThickness": 2,
+        "title": "red line",
+        "useLineColorForBulletBorder": true,
+        "valueField": "value",
+        "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
+    }],
+    "chartScrollbar": {
+        "graph": "g1",
+        "oppositeAxis":false,
+        "offset":30,
+        "scrollbarHeight": 80,
+        "backgroundAlpha": 0,
+        "selectedBackgroundAlpha": 0.1,
+        "selectedBackgroundColor": "#888888",
+        "graphFillAlpha": 0,
+        "graphLineAlpha": 0.5,
+        "selectedGraphFillAlpha": 0,
+        "selectedGraphLineAlpha": 1,
+        "autoGridCount":true,
+        "color":"#AAAAAA"
+    },
+    "chartCursor": {
+        "pan": true,
+        "valueLineEnabled": true,
+        "valueLineBalloonEnabled": true,
+        "cursorAlpha":1,
+        "cursorColor":"#258cbb",
+        "limitToGraph":"g1",
+        "valueLineAlpha":0.2,
+        "valueZoomable":true
+    },
+    "valueScrollbar":{
+      "oppositeAxis":false,
+      "offset":50,
+      "scrollbarHeight":10
+    },
+    "categoryField": "date",
+    "categoryAxis": {
+        "parseDates": true,
+        "dashLength": 1,
+        "minorGridEnabled": true
+    },
+    "export": {
+        "enabled": true
+    },
+    "dataProvider": chartData
+    // date,value
+});
+
+chart.addListener("rendered", zoomChart);
+
+zoomChart();
+
+function zoomChart() {
+    chart.zoomToIndexes(chart.dataProvider.length - 1, chart.dataProvider.length - 1);
+}
+  </script>
+{% endblock %}

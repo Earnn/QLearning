@@ -45,14 +45,14 @@
   var newDate = new Date( firstDate );
   newDate.setDate( newDate.getDate() + i );
   // console.log(newDate);
-  var viewPerDay = {{viewer_list_per_day}};
+  var viewPerDay = {{ordered_per_day}};
   // console.log(typeof(viewPerDay[0]));
   // alert({{viewer_list_per_day}});
   // if(i > 80){
   // b = 0.4;
   // }
   // visits += Math.round((Math.random()<b?1:-1)*Math.random()*10);
-  visits ={{viewer}}
+  visits ={{viewer}};
   chartData.push( {
   date: newDate,
   visits: viewPerDay[i]

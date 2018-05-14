@@ -6562,7 +6562,123 @@ def set_cookie(request,template,dicts):
 			print(" new cookie create")
 
 	return response
-     
+
+
+def report2(request):
+    # collect_session(request,"enter","เกี่ยวกับเรา")
+    form = SelectMonthForm()
+    # last = Order.objects.all()[:1]
+    # print(last)
+    # for i in last:
+    #     first_ordered = i
+    # # print("datetime.now()",datetime.now())
+    # print("first_ordered",first_ordered.created_at)
+    # cvtz = first_ordered.created_at.replace(tzinfo=None)
+    # # print(datetime.now() - cvtz)
+
+
+    today = datetime.now() - timedelta(days=0)
+    first_day_string = "2018-02-01"
+    first_day = datetime.strptime(first_day_string, "%Y-%m-%d")
+    first_day = today - first_day
+    # ordered_per_day = []
+
+    output = []
+    for i in range(first_day.days):
+        # print(i)
+        temp = {"amount_of_ordered":0,"date":""}
+
+        yesterday = datetime.today() - timedelta(days=i+1)
+        amount_per_day =  Order.objects.filter(created_at__date=yesterday).count()
+
+        temp["amount_of_ordered"] = amount_per_day
+        temp["date"] = str(yesterday.strftime( "%Y-%m-%d"))
+        output.append(temp)
+        # ordered_per_day.append(amount_per_day)
+    # print("ordered_per_day",ordered_per_day)
+    today =datetime.today()
+   
+    member_viewer = User_session.objects.filter(action="enter").count()
+    anonymous_viewer =Anonymous_session.objects.filter(action="enter").count()
+    total_viewed = member_viewer + anonymous_viewer
+    total_liked = User_session.objects.filter(action="like").count()
+    total_ordered = Order.objects.all().count()
+    total_reviewed = Review.objects.all().count()
+    month_name = "แสดงทั้งหมดในปี"
+
+    # print(output)
+    # print(temp["date"])
+    if request.method == 'POST':
+        # print("post")
+
+        form = SelectMonthForm(request.POST)
+        if form.is_valid():
+            print("formvalid")
+            # statistic = None
+            selected =  form.cleaned_data['action'] 
+            # print ("selected",selected)
+            if selected == '0':
+                month_name = "แสดงทั้งหมดในปี"
+                member_viewer = User_session.objects.filter(action="enter").count()
+                anonymous_viewer =Anonymous_session.objects.filter(action="enter").count()
+                total_viewed = member_viewer + anonymous_viewer
+                total_liked = User_session.objects.filter(action="like").count()
+                total_ordered = Order.objects.all().count()
+                total_reviewed = Review.objects.all().count()
+                
+            else:
+                if selected == '1':
+                    month_no = 1
+                    month_name = "January"
+
+                
+                elif selected == '2':
+                    month_no = 2
+                    month_name = "February"
+                    
+
+                elif selected == '3':
+                    month_no = 3
+                    month_name = "March"
+                    
+                    
+
+                elif selected == '4':
+                    month_no = 4
+                    month_name = "April"
+                    
+                    
+                    
+                elif selected == '5':
+                    month_no = 5
+                    month_name = "May"
+                    
+                    
+
+                    
+                elif selected == '6':
+                    month_no = 6
+                    month_name = "June"
+                    
+                
+
+                m_viewer =  User_session.objects.filter(action="enter",created_at__year=today.year, created_at__month=month_no).count()
+                a_viewer = Anonymous_session.objects.filter(action="enter",created_at__year=today.year, created_at__month=month_no).count()
+                total_viewed = m_viewer+a_viewer
+                total_ordered = Order.objects.filter(created_at__year=today.year, created_at__month=month_no).count()
+                total_liked = User_session.objects.filter(action="like",created_at__year=today.year, created_at__month=month_no).count()
+                total_reviewed = Review.objects.filter(created_at__year=today.year, created_at__month=month_no).count()
+
+
+    return render(request, 'report2.html',{'output':reversed(output),'form':form,
+        "year":today.year,
+        "month": month_name,
+        "total_viewed":total_viewed,
+        'total_liked':total_liked,
+        'total_ordered':total_ordered,
+        'total_reviewed':total_reviewed})
+
+  
 @login_required
 def report(request):
 	form = SelectMonthForm()
