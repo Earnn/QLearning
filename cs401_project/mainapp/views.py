@@ -62,9 +62,11 @@ import seaborn as sns # More snazzy plotting library
 def visual(request):
 
     # plot clustering_order
- order_cate = pd.read_csv('cluster_order_group1.csv',dtype  = 'unicode')
- enter_store = pd.read_csv('cluster_enter_group2_kmode.csv',dtype  = 'unicode')
+ order_cate = pd.read_csv('cluster_order_group1.csv',encoding = 'utf8')
+ enter_store = pd.read_csv('cluster_enter_group2_kmode.csv', encoding = 'utf8')
+ search_cate = pd.read_csv('searchCate_clustering.csv', encoding = 'utf8')
 
+ 
  user_list = []
 
 
@@ -172,6 +174,10 @@ def visual(request):
     index = enter_store[enter_store['user_id'] == u].index.item()
     dic['enter_store'] = enter_store.iloc[index]['explaned']
 
+    if any(enter_store.user_id == u) :
+    
+        index = search_cate[search_cate['user_id'] == u].index.item()
+        dic['search_cate'] = search_cate.iloc[index]['explaned']
 
 
   except:
@@ -215,7 +221,7 @@ def value_at_risk(request):
         # time_length2 = (datetime.now() - last[0].created_at).days
         # print("time_length",time_length2)
 
-        name =Profile.objects.get(user__id=i['user']).name
+        name =Profile.objects.get(user__id=i['user']).id
         temp["user"] = name
         temp["amount"] = i['total']
         output.append(temp)

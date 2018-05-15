@@ -8,6 +8,7 @@
 <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
 <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
 <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
 
 <style>
@@ -23,6 +24,34 @@
   height  : 500px;
 } 			
 </style>
+ <div class="container uk-margin-top">
+   <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความสำคัญของลูกค้า 20 คน</h2>
+    <div id="chartdiv"></div>
+    <h4   class="uk-text-center" style="font-weight: bold;">หมายเลขไอดีของลูกค้า</h4>
+    <br>
+
+  
+    <p class="thai_font"> จากกราฟแสดงให้เห็นถึงยอดการสั่งซื้ออาหารของลูกค้าที่มียอดสั่งซื้อมากที่สุด 20 คน จากทั้งหมดในระบบ ซึ่งเรียงลำดับตั้งแต่มากไปน้อย อันดับแรกได้แก่ลูกค้าหมายเลขไอดี  54 รองลงมาคือ ลูกค้าหมายเลขไอดี  54 และ ลูกค้าหมายเลขไอดี  140 ตามลำดับ</p>
+      <!-- <div id="chartdiv"></div> -->
+
+
+ <br>
+
+      <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความสำคัญของลูกค้าทั้งหมดภายในระบบ</h2>
+
+
+
+        <div id="chartdiv2"></div>
+            <h4   class="uk-text-center" style="font-weight: bold;">หมายเลขไอดีของลูกค้า</h4>
+            <br>
+
+    <p class="thai_font"> จากกราฟแสดงให้เห็นถึงยอดการสั่งซื้ออาหารของลูกค้าทั้งหมดในระบบ ซึ่งเรียงลำดับตั้งแต่มากไปน้อย อันดับแรกได้แก่ลูกค้าหมายเลขไอดี  54 รองลงมาคือ ลูกค้าหมายเลขไอดี  54 และ ลูกค้าหมายเลขไอดี  140 ตามลำดับ</p>
+<br>
+       <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความเสี่ยงต่อการเลิกใช้บริการของลูกค้า</h2>
+        <!-- <div id="chartdiv3"></div> -->
+        <canvas id="popChart" width="400" height="200"></canvas>
+<!-- <div class="thai_font" id="productChart"></div> -->
+  </div>
 
  
 
@@ -60,37 +89,69 @@
     for(var i=0;i<20;i++)
 {
 
-    if (parseInt(data[i].amount) >= 10){
-           chartData.push( {
-    
-    name: data[i].user,
-    points: parseInt(data[i].amount),
-    "color": "#DB4C3C",
-    "bullet": "{% static 'images/crown.png' %}",
-  },);
+    if (parseInt(data[i].amount) >= 50){
+            
+        if (i == 0 ){
+
+            chartData.push( {
+            name: data[i].user,
+            points: parseInt(data[i].amount),
+            "color": "#FEC514",
+            "bullet": "{% static 'images/crown.png' %}",},);
         }
-else if (parseInt(data[i].amount) >= 7){
+        else{
            chartData.push( {
-    
-  name: data[i].user,
-  points: parseInt(data[i].amount),
-  "color": "#FEC514",
-"bullet": "{% static 'images/crown_silver.png' %}",  },);
+            name: data[i].user,
+            points: parseInt(data[i].amount),
+            "color": "#FEC514",},);
         }
 
+
+           
+      }
+else if (parseInt(data[i].amount)  >= 5  && parseInt(data[i].amount) <= 49 ){
+          
+
+        if (i == 0 ){
+
+            chartData.push( {
+            name: data[i].user,
+            points: parseInt(data[i].amount),
+            "color": "#DAF0FD",
+            "bullet": "{% static 'images/crown.png' %}",},);
+        }
         else{
-              chartData.push( {
-    
-  name: data[i].user,
-  points: parseInt(data[i].amount),
-  "color": "#DAF0FD",
-  "bullet": "{% static 'images/crown_0.png' %}",
-    
-  },);
+           chartData.push( {
+            name: data[i].user,
+            points: parseInt(data[i].amount),
+            "color": "#DAF0FD",},);
+        }
+
+
+        }
+
+        else if (parseInt(data[i].amount)  >= 0  && parseInt(data[i].amount) <= 4 ){
+        
+        if (i == 0 ){
+
+            chartData.push( {
+            name: data[i].user,
+            points: parseInt(data[i].amount),
+            "color": "#DB4C3C",
+            "bullet": "{% static 'images/crown.png' %}",},);
+        }
+        else{
+           chartData.push( {
+            name: data[i].user,
+            points: parseInt(data[i].amount),
+            "color": "#DB4C3C",},);
+        }
+
+
+
         }
     
 }
-
 console.log("chart",chartData)
   return chartData;
   }
@@ -163,35 +224,25 @@ console.log("chart",chartData)
     // console.log(typeof data[i].amount);
     // var cvint = parseInt(data[i].amount)
     // console.log(typeof cvint);
-    if (parseInt(data[i].amount) >= 10){
-           chartData2.push( {
-    
-    name: data[i].user,
-    points: parseInt(data[i].amount),
-    "color": "#DB4C3C",
-    "bullet": "{% static 'images/crown.png' %}",
-  },);
+    if (parseInt(data[i].amount) >= 50){
+            chartData2.push( {
+            name: data[i].user,
+            points: parseInt(data[i].amount),
+            "color": "#FEC514",},);
         }
-else if (parseInt(data[i].amount) >= 7){
-           chartData2.push( {
-    
-  name: data[i].user,
-  points: parseInt(data[i].amount),
-  "color": "#FEC514",
-"bullet": "{% static 'images/crown_silver.png' %}",  },);
+    else if(parseInt(data[i].amount)  >= 5  && parseInt(data[i].amount) <= 49 ){
+            chartData2.push( {
+            name: data[i].user,
+            points: parseInt(data[i].amount),
+            "color": "#DAF0FD",  },);
         }
 
-        else{
+       else if(parseInt(data[i].amount)  >= 0  && parseInt(data[i].amount) <= 4 ){
+        
               chartData2.push( {
-    
-  name: data[i].user,
-  points: parseInt(data[i].amount),
-  "color": "#DAF0FD",
-  "bullet": "{% static 'images/crown_0.png' %}",
-
-// "bullet": "https://www.amcharts.com/lib/images/faces/C02.png"
-    
-  },);
+              name: data[i].user,
+              points: parseInt(data[i].amount),
+              "color": "#DB4C3C",},);
         }
     
 }
@@ -348,23 +399,102 @@ var chart = AmCharts.makeChart("chartdiv3", {
 });
 
 
+ function generatechartData4() {
 
-</script>   
- <div class="container uk-margin-top">
-   <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความสำคัญของลูกค้า 20 คน</h2>
-    <div id="chartdiv"></div>
-    <br>
-      <!-- <div id="chartdiv"></div> -->
+ 
+  return chartData;
+  }
 
+   var data = [{% for o in output %}
+    { "user" : "{{ o.user }}",
+       "amount" : "{{ o.amount }}",
+       "time_length" : "{{o.time_length}}",
+       
+    },
 
- <br>
+    {% endfor %}
+    ]
 
-      <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความสำคัญของลูกค้าทั้งหมดภายในระบบ</h2>
-        <div id="chartdiv2"></div>
-       <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความเสี่ยงต่อการเลิกใช้บริการของลูกค้า</h2>
-        <div id="chartdiv3"></div>
-<div class="thai_font" id="productChart"></div>
-  </div>
+    console.log("aa"+data);
+
+  var chartData1 = [];
+  var chartData2 = [];
+  var chartData3 = [];
+     for(var i=0;i<data.length;i++)
+{
+    // console.log(typeof data[i].amount);
+    // var cvint = parseInt(data[i].amount)
+    // console.log(typeof parseInt(data[i].label));
+    // console.log(parseInt(data[i].label))
+    if (parseInt(data[i].amount)  >= 50){
+         console.log("bb"+data[i].amount);
+           chartData1.push( {
+  
+    x:parseFloat(data[i].amount),
+    y: parseFloat(data[i].time_length),
+    r:10
+  
+  },);
+           alert(chartData1);
+ }
+else if(parseInt(data[i].amount)  >= 5  && parseInt(data[i].amount) <= 49 ){           chartData2.push( {
+    
+    x:parseFloat(data[i].amount),
+    y: parseFloat(data[i].time_length),
+    r:10
+  
+  },);
+ }
+
+else if(parseInt(data[i].amount)  >= 0  && parseInt(data[i].amount) <= 4 ){           chartData3.push( {
+    
+    x:parseFloat(data[i].amount),
+    y: parseFloat(data[i].time_length),
+    r:10
+  
+  },);
+ }
+}
+
+  // alert(chartData);
+var chartDataToPlot = [];
+   chartDataToPlot.push( {
+    label:['Group1'],
+    data:chartData1,
+    backgroundColor: "#FEC514",
+  
+  
+  },);
+  chartDataToPlot.push( {
+     label:['Group2'],
+    data:chartData2,
+    backgroundColor: "#F0B1C0",
+  
+  
+  },);
+   chartDataToPlot.push( {
+     label:['Group3'],
+    data:chartData3,
+    backgroundColor: "#8FCDCC",
+  
+  
+  },);
+// alert(chartDataToPlot[0]);
+  var popCanvas = document.getElementById("popChart");
+
+Chart.defaults.global.defaultFontFamily = "Lato";
+Chart.defaults.global.defaultFontSize = 18;
+
+var popData = {
+  datasets: chartDataToPlot
+};
+
+var bubbleChart = new Chart(popCanvas, {
+  type: 'bubble',
+  data: popData
+});
+</script> 
+
 
 	
 
