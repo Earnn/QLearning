@@ -8,15 +8,24 @@
 <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
 <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
 <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
-<div id="chartdiv"></div>
+
 
 <style>
 	#chartdiv {
 	width	: 100%;
 	height	: 500px;
-}								
+}				
+  #chartdiv2 {
+  width : 100%;
+  height  : 500px;
+} 	  #chartdiv3 {
+  width : 100%;
+  height  : 500px;
+} 			
 </style>
-<div>
+
+ 
+
    <!--  {{all_ordered}}
     {% for o in all_ordered %}
     {{o.total}}
@@ -35,22 +44,7 @@
 
   function generatechartData() {
   var chartData = [];
-  // var firstDate = new Date();
-  // var differ_dates = parseInt({{differ_dates}});
-  // console.log({{all_ordered}});
-  // var js_list = {{all_ordered}}; 
 
-
-
-   // var js_dict = {
-   //      {% for k, v in all_ordered %}
-   //      "{{ k }}": "{{ v }}"{% if not forloop.last %},{% endif %}
-   //      {% endfor %}
-   //  }
-   //  console.log("js",js_dict.user);
-
-    // var data = "{{ output | safe }}";
-    // var response = JSON.stringify(data);
     var data = [{% for o in output %}
     { "user" : "{{ o.user }}",
        "amount" : "{{ o.amount }}",
@@ -63,11 +57,9 @@
     // console.log(typeof data);
     // console.log(data);
 
-    for(var i=0;i<5;i++)
+    for(var i=0;i<20;i++)
 {
-    // console.log(typeof data[i].amount);
-    // var cvint = parseInt(data[i].amount)
-    // console.log(typeof cvint);
+
     if (parseInt(data[i].amount) >= 10){
            chartData.push( {
     
@@ -93,26 +85,12 @@ else if (parseInt(data[i].amount) >= 7){
   points: parseInt(data[i].amount),
   "color": "#DAF0FD",
   "bullet": "{% static 'images/crown_0.png' %}",
-
-// "bullet": "https://www.amcharts.com/lib/images/faces/C02.png"
     
   },);
         }
     
 }
-   //  temp[post[i].name]=post[i].value;
-   // json.push(temp);
-   //  console.log("data",data);
-//    for ( var i = 0; i < differ_dates; i++ ) {
-//     {% for k, v in data %}
 
-//   chartData.push( {
-//   points: {{v}},
-//   name: {{k}},
-//   } );
-//   {% if not forloop.last %}{% endif %}
-//   {% endfor %}
-// }''
 console.log("chart",chartData)
   return chartData;
   }
@@ -128,7 +106,8 @@ console.log("chart",chartData)
         "minimum": 0,
         "axisAlpha": 0,
         "dashLength": 4,
-        "position": "left"
+        "position": "bottom",
+        "title": "จำนวนการสั่งซื้อ"
     }],
     "startDuration": 1,
     "graphs": [{
@@ -157,11 +136,236 @@ console.log("chart",chartData)
     },
     "export": {
         "enabled": true
+     },
+  
+
+});
+   // var chartData2 = generatechartData2();
+
+
+  // function generatechartData2() {
+  var chartData2 = [];
+  
+    var data = [{% for o in output2 %}
+    { "user" : "{{ o.user }}",
+       "amount" : "{{ o.amount }}",
+       
+    },
+
+    {% endfor %}
+    ]
+
+    // console.log(typeof data);
+    console.log(data);
+
+    for(var i=0;i<data.length;i++)
+{
+    // console.log(typeof data[i].amount);
+    // var cvint = parseInt(data[i].amount)
+    // console.log(typeof cvint);
+    if (parseInt(data[i].amount) >= 10){
+           chartData2.push( {
+    
+    name: data[i].user,
+    points: parseInt(data[i].amount),
+    "color": "#DB4C3C",
+    "bullet": "{% static 'images/crown.png' %}",
+  },);
+        }
+else if (parseInt(data[i].amount) >= 7){
+           chartData2.push( {
+    
+  name: data[i].user,
+  points: parseInt(data[i].amount),
+  "color": "#FEC514",
+"bullet": "{% static 'images/crown_silver.png' %}",  },);
+        }
+
+        else{
+              chartData2.push( {
+    
+  name: data[i].user,
+  points: parseInt(data[i].amount),
+  "color": "#DAF0FD",
+  "bullet": "{% static 'images/crown_0.png' %}",
+
+// "bullet": "https://www.amcharts.com/lib/images/faces/C02.png"
+    
+  },);
+        }
+    
+}
+
+  // return chartData2;
+  // }
+// alert(chartData2);
+var chart = AmCharts.makeChart("chartdiv2", {
+  "type": "serial",
+  "theme": "light",
+  "marginRight": 70,
+  "dataProvider": chartData2,
+  "startDuration": 1,
+  "graphs": [{
+    "balloonText": "<b>[[category]]: [[value]]</b>",
+    "fillColorsField": "color",
+    "fillAlphas": 0.9,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "valueField": "points",
+
+  }],
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "name",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "labelRotation": 45
+  },
+  "export": {
+    "enabled": true
+  },
+    "valueAxes": [ {
+    "position": "bottom",
+    "axisAlpha": 0,
+    "dashLength": 1,
+    "id": "x",
+    "title": "จำนวนการสั่งซื้อ",
+    "titleFontSize": 20,
+  }, ],
+
+
+
+});
+   
+
+
+
+
+chart.addListener("rendered", zoomChart);
+
+zoomChart();
+
+function zoomChart() {
+    chart.zoomToIndexes(chart.dataProvider.length - 1, chart.dataProvider.length - 1);
+}
+
+
+
+
+
+var chartData3 = generatechartData3();
+  function generatechartData3() {
+
+   var chartData2 = [];
+  
+    var data = [{% for o in output %}
+    { "user" : "{{ o.user }}",
+       "amount" : "{{ o.amount }}",
+       "time_length" : "{{o.time_length}}",
+       
+    },
+
+    {% endfor %}
+    ]
+
+    // console.log(typeof data);
+    console.log("ss"+data);
+
+    for(var i=0;i<data.length;i++)
+{
+    // console.log(typeof data[i].amount);
+    // var cvint = parseInt(data[i].amount)
+    console.log(data[i].time_length);
+
+           chartData2.push( {
+    
+    name: data[i].user,
+    order_amount: parseInt(data[i].amount),
+    day_disappear: parseInt(data[i].time_length),
+  },);
+
+        
+    
+}
+
+  return chartData2;
+}
+
+
+var chart = AmCharts.makeChart("chartdiv3", {
+    "type": "serial",
+    "theme": "light",
+    "legend": {
+        "useGraphSettings": true
+    },
+    "dataProvider": chartData3,
+    "valueAxes": [{
+        "integersOnly": true,
+        "maximum": 100,
+        "minimum": 1,
+        "reversed": true,
+        "axisAlpha": 0,
+        "dashLength": 5,
+        "gridCount": 10,
+        "position": "left",
+        "title": ""
+    }],
+    "startDuration": 0.5,
+    "graphs": [{
+        "balloonText": "จำนวนการสั่งซื้อ [[category]]: [[value]]",
+        "bullet": "round",
+        "hidden": true,
+        "title": "จำนวนการสั่งซื้อ",
+        "valueField": "order_amount",
+    "fillAlphas": 0
+    }, {
+        "balloonText": "จำนวนวันที่เลิกใช้บริการ [[category]]: [[value]]",
+        "bullet": "round",
+        "title": "จำนวนวันที่เลิกใช้บริการ",
+        "valueField": "day_disappear",
+    "fillAlphas": 0
+    }, ],
+    "chartCursor": {
+        "cursorAlpha": 0,
+        "zoomable": false
+    },
+    "categoryField": "name",
+    "categoryAxis": {
+        "gridPosition": "start",
+        "axisAlpha": 0,
+        "fillAlpha": 0.05,
+        "fillColor": "#000000",
+        "gridAlpha": 0,
+        "position": "top"
+    },
+    "export": {
+      "enabled": true,
+        "position": "bottom-right"
      }
 });
-</script>   
 
-</div>
+
+
+</script>   
+ <div class="container uk-margin-top">
+   <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความสำคัญของลูกค้า 20 คน</h2>
+    <div id="chartdiv"></div>
+    <br>
+      <!-- <div id="chartdiv"></div> -->
+
+
+ <br>
+
+      <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความสำคัญของลูกค้าทั้งหมดภายในระบบ</h2>
+        <div id="chartdiv2"></div>
+       <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความเสี่ยงต่อการเลิกใช้บริการของลูกค้า</h2>
+        <div id="chartdiv3"></div>
+<div class="thai_font" id="productChart"></div>
+  </div>
+
 	
 
 <br>

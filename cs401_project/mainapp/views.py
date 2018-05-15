@@ -58,128 +58,268 @@ import seaborn as sns # More snazzy plotting library
 
 
 # Create your views here.
-# def chart(request):
-#     OneMonthAgo = datetime.today() - timedelta(days=60)
-#     print("OneMonthAgo",OneMonthAgo)
-#     all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
 
-#     output = []
-#     for i in all_ordered:
+def visual(request):
 
-#         temp = {"user":"","amount":0}
+    # plot clustering_order
+ order_cate = pd.read_csv('cluster_order_group1.csv',dtype  = 'unicode')
+ enter_store = pd.read_csv('cluster_enter_group2_kmode.csv',dtype  = 'unicode')
 
-#         name =Profile.objects.get(user__id=i['user']).name
-#         temp["user"] = name
-#         temp["amount"] = i['total']
-#         output.append(temp)
-     
-#         print("d",i['total'])
-#     return render(request, 'chart.html',{"all_ordered":all_ordered,"output":output})
+ user_list = []
 
+
+
+ user = Profile.objects.values_list('user_id', flat=True)
+
+ for u in user :
+  try :
+   inf = Informations.objects.get(user_id=u)
+   
+   dic = {'user_id':0,'order_cate': 'ไม่มีข้อมูล','enter_store':'ไม่มีข้อมูล','search_cate':'ไม่มีข้อมูล','age':0,
+   'birthdate': None,'sex': '','salary':'','size':'','meal':'','choose_store':'','social':'','food':''}
+   
+   dic['user_id'] = u
+
+   dic['age'] = inf.age
+   dic['birthdate'] = inf.birthdate
+   dic['sex'] = inf.sex
+   dic['salary'] = inf.salary
+
+   size = ''
+   if inf.size == 'thin' :
+    size = 'ผอม '
+   if inf.size == 'fit' :
+    size = 'หุ่นดี '
+   if inf.size == 'chubby' :
+    size = 'อวบ'
+   if inf.size == 'fat' :
+    size = 'จ้ำม่ำ'
+   dic['size'] = size
+   dic['salary'] = inf.salary
+
+   meal = ''
+   if inf.breakfast :
+    meal += 'มื้อเช้า '
+   if inf.lunch :
+    meal += 'มื้อเที่ยง '
+   if inf.dinner :
+    meal += 'มื้อเย็น '
+   if inf.late :
+    meal += 'มื้อดึก'
+   dic['meal'] = meal
+
+   choose_store = ''
+   if inf.taste :
+    choose_store += 'รสชาติ '
+   if inf.price :
+    choose_store += 'ราคา '
+   if inf.service :
+    choose_store += 'บริการ '
+   if inf.clean :
+    choose_store += 'ความสะอาด '
+   if inf.at :
+    choose_store += 'บรรยากาศ '
+   if inf.location :
+    choose_store += 'สถานที่ '
+   dic['choose_store'] = choose_store
+
+   social = ''
+   if inf.facebook :
+    social += 'facebook '
+   if inf.twitter :
+    social += 'twitter '
+   if inf.instagram :
+    social += 'instagram '
+   if inf.line :
+    social += 'line'
+   dic['social'] = social
+
+   food = ''
+   if inf.japanese :
+    food += 'อาหารญี่ปุ่น '
+   if inf.thai :
+    food += 'อาหารไทย '
+   if inf.diet :
+    food += 'อาหารคลีน '
+   if inf.shabu :
+    food += 'ชาบู '
+   if inf.grill :
+    food += 'ปิ้งย่าง '
+   if inf.steak :
+    food += 'สเต็ก '
+   if inf.fastfood :
+    food += 'อาหารจานด่วน '
+   if inf.japanese :
+    food += 'อาหารญี่ปุ่น '
+   if inf.cake :
+    food += 'ขนม เค้ก '
+   if inf.dessert :
+    food += 'ของหวาน เครป '
+   if inf.coffee :
+    food += 'ชา กาแฟ '
+   if inf.juice :
+    food += 'น้ำผลไม้ นมสด '
+   dic['food'] = food
+ 
+   if any(order_cate.user_id == u) :
+    
+    index = order_cate[order_cate['user_id'] == u].index.item()
+    dic['order_cate'] = order_cate.iloc[index]['explaned']
+
+
+   if any(enter_store.user_id == u) :
+    
+    index = enter_store[enter_store['user_id'] == u].index.item()
+    dic['enter_store'] = enter_store.iloc[index]['explaned']
+
+
+
+  except:
+   pass 
+
+  user_list.append(dic)
+ # except :
+ #   pass
+
+
+
+
+
+ return render(request, 'summarize.html',{"user_list":user_list})
 
 def value_at_risk(request):
 
-    df = pd.DataFrame(list(Order.objects.all().values()))
-    
-    d = {'amount_of_order': df['user_id'].value_counts(), }
-    df_value_temp = pd.DataFrame(data=d)
-    df_value_temp
-    df_value = pd.DataFrame(columns = ['userid','amount_of_order','value'])
+    OneMonthAgo = datetime.today() - timedelta(days=60)
+    # print("OneMonthAgo",OneMonthAgo)
+    all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
 
-    print(type(df_value_temp))
-    for index, row in df_value_temp.iterrows():
-    #     print(type(row['amount_of_order']))
-        value = ""
-        if row['amount_of_order'] >= 50 and row['amount_of_order'] <= 79:
-            value = "Gold"
-        elif row['amount_of_order'] >= 11 and row['amount_of_order'] <= 49:
-            value = "Silver"
-        elif row['amount_of_order'] >= 0 and row['amount_of_order'] <= 10:
-            value = "Bronze"
-            
-        df_value.loc[len(df_value)] = [index,row['amount_of_order'],value]
-    
-    print("df_value",df_value)   
-    
-    df['created_at'] = pd.to_datetime(df["created_at"])
-    # df['created_at']=df['created_at'].dt.tz_localize('UTC').dt.tz_convert('Asia/Bangkok')
-    # df['created_at']
-    df_time = pd.to_datetime(df["created_at"])
-
-
-    list_disappear_days = []
-    date_del = datetime.now() - timedelta(days=0)
-
-
-    for index, row in df_value.iterrows():
-    #     print(row['userid'])
-    #     print(df['user_id'])
-    #     print(df_dummies)
-        temp = df[df['user_id'] ==row['userid']]
-        a = temp.sort_values(by=['created_at'])
-    #     print(len(a))
-    #     print(a)
-        dates = a['created_at'][len(a)-1]
-
-        cvtz = dates.replace(tzinfo=None)
-        time_length = date_del - cvtz
-        list_disappear_days.append(time_length.days)
-    print(list_disappear_days)
-    df_value['days_disappear'] = list_disappear_days
-
-    X = df_value[['days_disappear', 'amount_of_order']].values
-    pca = PCA(n_components=2)
-    x_9d = pca.fit_transform(X)
-
-    # Set a 3 KMeans clustering
-    # kmeans = KMeans(n_clusters=2)
-    kmeans = KMeans(n_clusters=3).fit(x_9d)
-    # Compute cluster centers and predict cluster indices
-    X_clustered = kmeans.fit_predict(x_9d)
-
-    # Define our own color map
-    LABEL_COLOR_MAP = {0 : 'r',1 : 'g',2 : 'b',3 : 'y'}
-    label_color = [LABEL_COLOR_MAP[l] for l in X_clustered]
-    labels = kmeans.labels_
-    centroids = kmeans.cluster_centers_
-
-    # Plot the scatter digram
-    # plt.figure(figsize = (7,7))
-    # plt.xlabel('Size')
-    # plt.ylabel('Eat Breakfast')
-    # plt.scatter(x_9d[:,0],x_9d[:,1], c = kmeans.labels_, cmap='rainbow')  
     output = []
-    for i in range(3):
+    for i in all_ordered:
 
-            # select only data observations with cluster label == i
-        ds = x_9d[np.where(labels==i)]
-        x = ds[:,0]
-        y = ds[:,1]
-
-        temp = {"x":0,"y":0,"label":0}
-        for xy in range(len(ds)):
-            temp = {"x":0,"y":0,"label":0}
-
-            temp["x"] = x[xy]
-            temp["y"] = y[xy]
-            temp["label"] = i
-            output.append(temp)
+        temp = {"user":"","amount":0,"time_length":0}
+        last = Order.objects.filter(user__id=i['user']).order_by('-created_at')
+        # print("datetime.now()",datetime.now())
+        cvtz = last[0].created_at.replace(tzinfo=None)
+        # print(datetime.now() - cvtz)
 
 
-            # plot the data observations
-            # plt.plot(ds[:,0],ds[:,1],'o')
-            # plot the centroids
-    #         lines = plt.plot(centroids[i,0],centroids[i,1],'kx')
-    # #         make the centroid x's bigger
-    #         plt.setp(lines,ms=12.0)
-    #         plt.setp(lines,mew=2.0)
-    # plt.show()
-    print(output)
-    # plt.show()
+        date = datetime.now() - timedelta(days=40)
+        # print("date",date)
+        temp["time_length"] = (date - cvtz).days
+        # date11 = datetime.strptime(last[0].created_at, datetimeFormat)
+        # print("date11",date11)
+        # print("las",last[0].created_at)
+        # print("ty",type(last[0].created_at))
+        # time_length = datetime.now() - timedelta(days=7)
+        # print("datetime.now()",datetime.now())
+        # time_length2 = (datetime.now() - last[0].created_at).days
+        # print("time_length",time_length2)
+
+        name =Profile.objects.get(user__id=i['user']).name
+        temp["user"] = name
+        temp["amount"] = i['total']
+        output.append(temp)
+    # OneMonthAgo = datetime.today() - timedelta(days=60)
+    # print("OneMonthAgo",OneMonthAgo)
+    # all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
+
+    # output = []
+    # for i in all_ordered:
+
+    #     temp = {"user":"","amount":0}
+
+    #     name =Profile.objects.get(user__id=i['user']).name
+    #     temp["user"] = name
+    #     temp["amount"] = i['total']
+    #     output.append(temp)
+     
+    #     print("d",i['total'])
+    return render(request, 'chart_temp.html',{"output":output,"output2":output})
+
+
+# def value_at_risk(request):
+
+#     df = pd.DataFrame(list(Order.objects.all().values()))
+    
+#     d = {'amount_of_order': df['user_id'].value_counts(), }
+#     df_value_temp = pd.DataFrame(data=d)
+#     df_value_temp
+#     df_value = pd.DataFrame(columns = ['userid','amount_of_order','value'])
+
+#     print(type(df_value_temp))
+#     for index, row in df_value_temp.iterrows():
+#         value = ""
+#         if row['amount_of_order'] >= 50 and row['amount_of_order'] <= 79:
+#             value = "Gold"
+#         elif row['amount_of_order'] >= 11 and row['amount_of_order'] <= 49:
+#             value = "Silver"
+#         elif row['amount_of_order'] >= 0 and row['amount_of_order'] <= 10:
+#             value = "Bronze"
+            
+#         df_value.loc[len(df_value)] = [index,row['amount_of_order'],value]
+    
+#     print("df_value",df_value)   
+    
+#     df['created_at'] = pd.to_datetime(df["created_at"])
+
+#     df_time = pd.to_datetime(df["created_at"])
+
+
+#     list_disappear_days = []
+#     date_del = datetime.now() - timedelta(days=0)
+
+
+#     for index, row in df_value.iterrows():
+ 
+#         temp = df[df['user_id'] ==row['userid']]
+#         a = temp.sort_values(by=['created_at'])
+
+#         dates = a['created_at'][len(a)-1]
+
+#         cvtz = dates.replace(tzinfo=None)
+#         time_length = date_del - cvtz
+#         list_disappear_days.append(time_length.days)
+#     print(list_disappear_days)
+#     df_value['days_disappear'] = list_disappear_days
+
+#     X = df_value[['days_disappear', 'amount_of_order']].values
+#     pca = PCA(n_components=2)
+#     x_9d = pca.fit_transform(X)
+
+#     # Set a 3 KMeans clustering
+#     # kmeans = KMeans(n_clusters=2)
+#     kmeans = KMeans(n_clusters=3).fit(x_9d)
+#     # Compute cluster centers and predict cluster indices
+#     X_clustered = kmeans.fit_predict(x_9d)
+
+#     # Define our own color map
+#     LABEL_COLOR_MAP = {0 : 'r',1 : 'g',2 : 'b',3 : 'y'}
+#     label_color = [LABEL_COLOR_MAP[l] for l in X_clustered]
+#     labels = kmeans.labels_
+#     centroids = kmeans.cluster_centers_
+
+#     output = []
+#     for i in range(3):
+
+#             # select only data observations with cluster label == i
+#         ds = x_9d[np.where(labels==i)]
+#         x = ds[:,0]
+#         y = ds[:,1]
+
+#         temp = {"x":0,"y":0,"label":0}
+#         for xy in range(len(ds)):
+#             temp = {"x":0,"y":0,"label":0}
+
+#             temp["x"] = x[xy]
+#             temp["y"] = y[xy]
+#             temp["label"] = i
+
+#     print(output)
+#     # plt.show()
 
  
-        # print("d",i['total'])
-    return render(request, 'value_at_risk.html',{"output":output})
+#         # print("d",i['total'])
+#     return render(request, 'value_at_risk.html',{"output":output})
 
 
 
@@ -305,23 +445,7 @@ def value_at_risk2(request):
     OneMonthAgo = datetime.today() - timedelta(days=60)
     # print("OneMonthAgo",OneMonthAgo)
     all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
-    # print(all_ordered[:,1])
-    # all_ordered = Order.objects.all().values()
-    # df = pd.DataFrame(list(all_ordered))
-    
 
-
-    # df = pd.DataFrame(list(BlogPost.objects.filter(date__gte=datetime.datetime(2012, 5, 1)).values()))
-
-# >>> from datetime import datetime, timedelta
-# >>> now = datetime.now()
-# >>> print now
-# 2010-05-18 23:16:24.770533
-# >>> this_time_yesterday = now - timedelta(hours=24)
-# >>> print this_time_yesterday
-# 2010-05-17 23:16:24.770533
-# >>> (now - this_time_yesterday).days
-# 1
     output = []
     for i in all_ordered:
 

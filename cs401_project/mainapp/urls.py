@@ -6,7 +6,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     # visualization
     url(r'^value_at_risk/?$',views.value_at_risk, name='chart'),
-    url(r'^report2/?$',views.report2, name='report2'),   
+    url(r'^report2/?$',views.report2, name='report2'),  
+    url(r'^summarize/?$',views.visual, name='summarize'),   
    
 
     # (?# url(r'^/$', views.q_learning, name='q_learning'),)

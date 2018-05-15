@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/xy.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/none.js"></script>
+<div id="chartdiv"></div>    -->  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<style>
+ #chartdiv {
+ width : 100%;
+ height : 500px;
+}        
+</style>
+<div>
+
+ <div class="container"><canvas id="popChart" width="400" height="200"></canvas>
+
+
+
+<table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>ประเภทอาหารที่สั่ง</th>
+                <th>ประเภทร้านอาหารที่สนใจ</th>
+                <th>ประวัติการค้นหา</th>
+                <th>จำนวนการเข้าใช้เว็บ</th>
+                <th>จำนวนครั้งที่สั่ง</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+        {% for user in user_list %}
+             <tr>
+                <td><p>{{user.user_id}}</p>
+
+                        <div uk-dropdown>
+                           
+                              <p> <b>เพศ : </b> {{user.sex}}</p>
+                             <p><b>อายุ : </b>{{user.age}}</p>
+                             <p><b>วันเกิด : </b>{{user.birthdate}}</p>
+                                <p><b>รูปร่าง : </b> {{user.size}}</p>
+                               <p><b>เงินเดือน : </b>{{user.salary}}</p>
+                                   <p><b>อาหารที่ชอบ : </b>{{user.food}}</p>
+                                 <p><b>มื้ออาหารที่รับประทาน : </b>{{user.meal}}</p>
+                                  <p><b>เลือกร้านอาหารจาก : </b> {{user.choose_store}}</p>
+                                   <p>โซเชียลมีเดียที่ใช้ :</b> {{user.social}}</p>
+
+
+                                         </div>
+
+
+
+                                                
+
+
+                                                </td>
+
+
+
+
+
+
+
+
+                <td>{{user.order_cate}}</td>
+                <td>{{user.enter_store}}</td>
+                <td>61</td>
+                <td>Mon 25th Apr 11</td>
+                 <td>61</td>
+              </tr>      
+
+        {% endfor%}
+          
+          
+        </tbody>
+        <tfoot>
+           <tr>
+                <th>User ID</th>
+                <th>ประเภทอาหารที่สั่ง</th>
+                <th>ประเภทร้านอาหารที่สนใจ</th>
+                <th>ประวัติการค้นหา</th>
+                <th>จำนวนการเข้าใช้เว็บ</th>
+                <th>จำนวนครั้งที่สั่ง</th>
+            </tr>
+        </tfoot>
+    </table>
+
+
+
+
+</div>
+ <script>
+// var chartData = generatechartData();
+
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+
+
+//   function generatechartData() {
+
+ 
+//   return chartData;
+//   }
+
+//   var data = [{% for o in output %}
+//     { "x" : "{{ o.x }}",
+//        "y" : "{{ o.y }}",
+//        "label" : "{{ o.label }}",
+       
+//     },
+
+//     {% endfor %}
+//     ]
+
+
+//   var chartData1 = [];
+//   var chartData2 = [];
+//   var chartData3 = [];
+//   var chartData4 = [];
+//   var chartData5 = [];
+//   var chartData6 = [];
+//   for(var i=0;i<data.length;i++)
+//   {
+ 
+//         if (parseInt(data[i].label) == 0){
+//             chartData1.push( {
+      
+//             x:parseFloat(data[i].x),
+//             y: parseFloat(data[i].y),
+//             r:10
+    
+//           },);
+//         }
+//          else if (parseInt(data[i].label) == 1){
+//                    chartData2.push( {
+            
+//                     x:parseFloat(data[i].x),
+//                     y: parseFloat(data[i].y),
+//                     r:10
+          
+//           },);
+//          }
+
+//          else if (parseInt(data[i].label) == 2){
+//                    chartData3.push( {
+            
+//                     x:parseFloat(data[i].x),
+//                     y: parseFloat(data[i].y),
+//                     r:10
+          
+//           },);
+//          }
+
+//          else if (parseInt(data[i].label) == 3){
+//                    chartData4.push( {
+            
+//                     x:parseFloat(data[i].x),
+//                     y: parseFloat(data[i].y),
+//                     r:10
+          
+//           },);
+//          }
+
+//           else if (parseInt(data[i].label) == 4){
+//                    chartData5.push( {
+            
+//                     x:parseFloat(data[i].x),
+//                     y: parseFloat(data[i].y),
+//                     r:10
+          
+//           },);
+//          }
+
+//           else if (parseInt(data[i].label) == 5){
+//                    chartData6.push( {
+            
+//                     x:parseFloat(data[i].x),
+//                     y: parseFloat(data[i].y),
+//                     r:10
+          
+//           },);
+//          }
+// }
+
+//   // alert(chartData);
+// var chartDataToPlot = [];
+//    chartDataToPlot.push( {
+//     label:['Group1'],
+//     data:chartData1,
+//     backgroundColor: "#FF9966",
+  
+  
+//   },);
+//   chartDataToPlot.push( {
+//      label:['Group2'],
+//     data:chartData2,
+//     backgroundColor: "#F0B1C0",
+  
+  
+//   },);
+//    chartDataToPlot.push( {
+//      label:['Group3'],
+//     data:chartData3,
+//     backgroundColor: "#8FCDCC",
+  
+  
+//   },);
+
+//   chartDataToPlot.push( {
+//      label:['Group4'],
+//     data:chartData4,
+//     backgroundColor: "#B9E3AE",
+  
+  
+//   },);
+
+//   chartDataToPlot.push( {
+//      label:['Group5'],
+//     data:chartData5,
+//     backgroundColor: "#D0B3E1",
+  
+  
+//   },);
+
+//   chartDataToPlot.push( {
+//      label:['Group6'],
+//     data:chartData6,
+//     backgroundColor: "#A4C8F0",
+  
+  
+//   },);
+
+//   var popCanvas = document.getElementById("popChart");
+
+//   Chart.defaults.global.defaultFontFamily = "Lato";
+//   Chart.defaults.global.defaultFontSize = 18;
+
+//   var popData = {
+//     datasets: chartDataToPlot
+//   };
+
+// var bubbleChart = new Chart(popCanvas, {
+//   type: 'bubble',
+//   data: popData
+// });
+</script>
+</div>
+ 
+
+<br>
+<br>
+<br>
+{% endblock %}
