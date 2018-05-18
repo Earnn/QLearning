@@ -112,6 +112,11 @@ class Anonymous_PopulationsAdmin(admin.ModelAdmin):
 admin.site.register(Anonymous_Populations, Anonymous_PopulationsAdmin)
 
 
+class WebsiteVoteAdmin(admin.ModelAdmin):
+	list_display=[f.name for f in WebsiteVote._meta.fields]
+admin.site.register(WebsiteVote, WebsiteVoteAdmin)
+
+
 
 
 

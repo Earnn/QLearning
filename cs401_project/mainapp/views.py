@@ -66,7 +66,7 @@ def visual(request):
  enter_store = pd.read_csv('cluster_enter_group2_kmode.csv', encoding = 'utf8')
  search_cate = pd.read_csv('searchCate_clustering.csv', encoding = 'utf8')
 
- 
+
  user_list = []
 
 
@@ -6466,9 +6466,24 @@ def ud_payment(request,order_id):
         raise
         # messages.error(request, e)
         # raise Http404()
+def vote(request):
+  if request.is_ajax():
+    comment = request.GET.get('comment',False)
+    vote = request.GET.get('vote',False)
+   
+    vote,create_vote = WebsiteVote.objects.update_or_create(user=request.user,
+                defaults={
+                'comment':comment,
+                'complacence':vote
+                })
+    return JsonResponse({'message':"แสดงความคิดเห็นเรียบร้อยแล้ว ขอบคุณสำหรับความคิดเห็นของท่าน :)",},safe=False)
+    
+
 
 def home(request):
     collect_session(request,"enter","home")
+    website_form = WebsiteVoteForm()
+
     try:
         if request.user.is_authenticated:
             pop = Populations.objects.get(user=request.user)
@@ -6584,12 +6599,31 @@ def home(request):
         desktop.append(item_list)
         mobile.append(item_list)
 
-
-
+    vote = None
+    try:
+      vote = WebsiteVote.objects.get(user=request.user)
+    except Exception as e:
+      pass
     response = set_cookie(request, 'home.html', 
         {'desktop':desktop,'mobile':mobile,
+        'website_form':website_form,
+        'vote':vote,
         'store':show_list,'list_sorted':'list_sorted'})
     
+    if request.method == 'POST':
+      print("post")
+      website_form = WebsiteVoteForm(request.POST, request.FILES)
+      if website_form.is_valid():
+        # pass
+        print("is_valid")
+        vote,create_vote = WebsiteVote.objects.update_or_create(user=request.user,
+                defaults={
+                'comment':website_form.cleaned_data['comment'],
+                'complacence':website_form.cleaned_data['good_or_bad']
+
+
+                })
+        return response
     
     return response
 

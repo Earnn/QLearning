@@ -367,6 +367,60 @@ img.user {
         }
 /*search*/
 </style>
+
+
+
+<!-- <a href="#modal-vote" uk-toggle>Open</a> -->
+
+<!-- This is the modal -->
+  <form id="register-form" action="{% url 'home' %}" role="form" autocomplete="off" enctype='multipart/form-data' class="form" method="post">
+                            {% csrf_token %}
+<div id="modal-vote" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">ความพึงพอใจของคุณที่มีต่อเว็บไซต์กินอิ่ม </h2>
+         <!-- <div id="" class="uk-child-width-1-3@m uk-child-width-1-1@s " uk-grid> -->
+                <!-- <div>    -->
+         <p class=" uk-text-baseline">  
+        <input class="uk-radio" type="radio" name="radio_vote" value="พอใจ"> พอใจ</p>
+        <!-- </div> -->
+                  <!-- <div>    -->
+         <p class="uk-text-baseline">  
+        <input class="uk-radio" type="radio" name="radio_vote" value="ไม่พอใจ"> ไม่พอใจ</p>
+         
+           <!-- </div></div> -->
+           <!-- {{website_form.good_or_bad}} -->
+           <label for="">ความคิดเห็นเพิ่มเติม</label>
+           <textarea id="moreComment" class="uk-textarea" rows="3" column="3"  placeholder="แสดงความคิดเห็นของคุณ" required></textarea>
+       <!-- {{website_form.comment}} -->
+<br>
+        <p class="uk-text-right uk-margin-top">
+            <button class="uk-button uk-button-default uk-modal-close" type="button"  style="font-size: 0.9em">Cancel</button>
+       <!--       -->
+              <!-- <input class="btn btn-primary" type="submit" value="ยืนยัน" /> -->
+           <button class="uk-button uk-button-primary uk-modal-close" style="font-size: 0.9em" id="vote">ยืนยัน</button>
+        </p>
+    </div>
+
+</div>
+
+</form>
+<!-- 
+<form id="register-form" action="{% url 'home' %}" role="form" autocomplete="off" enctype='multipart/form-data' class="form" method="post">
+                            {% csrf_token %}
+
+        <h2 class="uk-modal-title">ความพึงพอใจของคุณที่มีต่อเว็บไซต์กินอิ่ม </h2>
+           {{website_form.good_or_bad}}
+           <label for="">ความคิดเห็นเพิ่มเติม</label>
+       {{website_form.comment}}
+<br>
+        <p class="uk-text-right uk-margin-top">
+         
+            <button class="uk-button uk-button-primary " type="submit">ยืนยัน</button>
+        </p>
+
+</form> -->
+
+
 <!-- banner -->
 
 <hr class="uk-box-shadow-medium ">
@@ -1021,7 +1075,49 @@ img.user {
 
 
 <script type="text/javascript">
-  
+  var isVote = "{{vote}}";
+
+  if (isVote == "None"){
+      alert(isVote);
+
+      UIkit.modal('#modal-vote').show();
+
+
+  }
+  else{
+  UIkit.modal('#modal-vote').hide();
+
+  }
+
+$("#vote").on("click", function() {
+     var moreComment =  $("#moreComment").val();
+var vote = $('input[name=radio_vote]:checked').val();
+        
+        if(!$('input[name=radio_vote]:checked').is(':checked')){
+        alert("ท่านยังไม่ได้เลือกน้ำสลัด");
+        return ;
+        } else {
+
+        }
+  // alert(main_dish + side_dish + sauce);
+ $.ajax({
+            type: "GET",
+            url: "{% url 'vote' %}",
+            data: { 'vote': vote, 
+            'moreComment': moreComment, 
+            // 'sauce_id': sauce, 
+            'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            dataType: "json",
+            success: function(response) {
+                // alert("a"+response.output_list);
+                // $("#basket_item").text($(response.table));
+                
+                UIkit.modal("#modal-vote").hide();
+                alert(response.message);
+            }
+        });
+ });
+
 
     $( document ).ready(function() {
         // alert("กินอิ่ม ปิดปรับปรุงระบบ ตั้งแต่วันที่ 24-26 มีนาคม เตรียมพบกับคูปอง และร้านอาหารใหม่ จะเป็นอะไรไปลุ้นกันวันที่ 27 นะคะ");

@@ -4,7 +4,17 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Profile,Review
 
-
+class WebsiteVoteForm(forms.Form):
+    """docstring for WebsiteVoteForm"""
+    TRUE_FALSE_CHOICES= (
+    (True, 'พอใจ'),
+    (False, 'ไม่พอใจ'),
+    )
+    good_or_bad = forms.ChoiceField(choices = TRUE_FALSE_CHOICES, label="",initial='', 
+        widget=forms.RadioSelect(attrs={}))
+    comment =  forms.CharField(max_length=5000, help_text='',required=False,
+        widget=forms.Textarea(attrs={'cols': 3,'rows': 3,'class': 'uk-textarea','placeholder':'แสดงความคิดเห็นของคุณ', }))
+    
 
 class ReviewForm(forms.Form):
     comment =  forms.CharField(max_length=5000, help_text='',widget=forms.Textarea(attrs={'cols': 5,'rows': 5,'class': 'uk-textarea','placeholder':'เขียนรีวิว', }))

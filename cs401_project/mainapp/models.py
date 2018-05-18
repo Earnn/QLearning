@@ -7,6 +7,17 @@ from datetime import datetime
 from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
+	
+class WebsiteVote(models.Model):
+	user = models.ForeignKey(User, on_delete=models.SET_NULL,blank=True,null=True)
+	
+	complacence = models.EmailField(max_length=10,blank=True,null=True,default="None")
+	comment = models.CharField(max_length=5000,blank=True,null=True,default="None")
+
+	created_at = models.DateTimeField(auto_now_add=True,null=True,)
+	
+
+
 class QTableGlobal(models.Model):
 
 
