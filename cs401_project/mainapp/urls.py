@@ -78,5 +78,6 @@ urlpatterns = [
     url(r'^changeDelivery/$', views.changeDelivery, name='changeDelivery'),
     url(r'^edit-delivery/$', views.edit_delivery, name='edit_delivery'),
 
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
