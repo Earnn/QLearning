@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}{% load widget_tweaks %}
+{% block content %}
+
+
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+
+<style>
+  #chartdiv {
+  width : 100%;
+  height  : 500px;
+}       
+  #chartdiv2 {
+  width : 100%;
+  height  : 500px;
+}     #chartdiv3 {
+  width : 100%;
+  height  : 500px;
+}       
+</style>
+ <div class="container uk-margin-top">
+   <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความสำคัญของลูกค้า 20 คน</h2>
+    <div id="chartdiv"></div>
+    <h4   class="uk-text-center" style="font-weight: bold;">หมายเลขไอดีของลูกค้า</h4>
+    <br>
+
+  
+    <p class="thai_font"> จากกราฟแสดงให้เห็นถึงยอดการสั่งซื้ออาหารของลูกค้าที่มียอดสั่งซื้อมากที่สุด 20 คน จากทั้งหมดในระบบ ซึ่งเรียงลำดับตั้งแต่มากไปน้อย อันดับแรกได้แก่ลูกค้าหมายเลขไอดี  54 รองลงมาคือ ลูกค้าหมายเลขไอดี  54 และ ลูกค้าหมายเลขไอดี  140 ตามลำดับ</p>
+      <!-- <div id="chartdiv"></div> -->
+
+
+ <br>
+
+      <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความสำคัญของลูกค้าทั้งหมดภายในระบบ</h2>
+
+
+
+        <div id="chartdiv2"></div>
+            <h4   class="uk-text-center" style="font-weight: bold;">หมายเลขไอดีของลูกค้า</h4>
+            <br>
+
+    <p class="thai_font"> จากกราฟแสดงให้เห็นถึงยอดการสั่งซื้ออาหารของลูกค้าทั้งหมดในระบบ ซึ่งเรียงลำดับตั้งแต่มากไปน้อย อันดับแรกได้แก่ลูกค้าหมายเลขไอดี  54 รองลงมาคือ ลูกค้าหมายเลขไอดี  54 และ ลูกค้าหมายเลขไอดี  140 ตามลำดับ</p>
+<br>
+       <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความเสี่ยงต่อการเลิกใช้บริการของลูกค้า</h2>
+        <!-- <div id="chartdiv3"></div> -->
+        <canvas id="popChart" width="400" height="200"></canvas>
+<!-- <div class="thai_font" id="productChart"></div> -->
+  </div>
+
+ 
+
+   <!--  {{all_ordered}}
+    {% for o in all_ordered %}
+    {{o.total}}
+
+    {% endfor %} -->
+    <script>
+  var chart = AmCharts.makeChart("chartdiv", {
+  "type": "serial",
+  "startDuration": 2,
+  "dataProvider": [{
+    "country": "USA",
+    "visits": 4025,
+    "color": "#FF0F00"
+  }, {
+    "country": "China",
+    "visits": 1882,
+    "color": "#FF6600"
+  }, {
+    "country": "Japan",
+    "visits": 1809,
+    "color": "#FF9E01"
+  }, {
+    "country": "Germany",
+    "visits": 1322,
+    "color": "#FCD202"
+  }, {
+    "country": "UK",
+    "visits": 1122,
+    "color": "#F8FF01"
+  }, {
+    "country": "France",
+    "visits": 1114,
+    "color": "#B0DE09"
+  }, {
+    "country": "India",
+    "visits": 984,
+    "color": "#04D215"
+  }, {
+    "country": "Spain",
+    "visits": 711,
+    "color": "#0D8ECF"
+  }, {
+    "country": "Netherlands",
+    "visits": 665,
+    "color": "#0D52D1"
+  }, {
+    "country": "Russia",
+    "visits": 580,
+    "color": "#2A0CD0"
+  }, {
+    "country": "South Korea",
+    "visits": 443,
+    "color": "#8A0CCF"
+  }, {
+    "country": "Canada",
+    "visits": 441,
+    "color": "#CD0D74"
+  }, {
+    "country": "Brazil",
+    "visits": 395,
+    "color": "#754DEB"
+  }, {
+    "country": "Italy",
+    "visits": 386,
+    "color": "#DDDDDD"
+  }, {
+    "country": "Australia",
+    "visits": 384,
+    "color": "#999999"
+  }, {
+    "country": "Taiwan",
+    "visits": 338,
+    "color": "#333333"
+  }, {
+    "country": "Poland",
+    "visits": 328,
+    "color": "#000000"
+  }],
+  "valueAxes": [{
+    "position": "left",
+    "title": "Visitors"
+  }],
+  "graphs": [{
+    "balloonText": "[[category]]: <b>[[value]]</b>",
+    "colorField": "color",
+    "fillAlphas": 1,
+    "lineAlpha": 0.1,
+    "type": "column",
+    "valueField": "visits"
+  }],
+  "depth3D": 20,
+  "angle": 30,
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "country",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "labelRotation": 90
+  },
+  "listeners": [{
+    "event": "clickGraphItem",
+    "method": function(event) {
+      alert(event.item.category);
+    }
+  }]
+});
+</script> 
+
+
+  
+
+<br>
+<br>
+<br>
+{% endblock %}
