@@ -58,6 +58,11 @@ import seaborn as sns # More snazzy plotting library
 
 
 # Create your views here.
+# @login_required
+def chart_click(request):
+  # form = InformationsForm()
+  # # print(form)
+  return render(request, 'chart_click.html')
 
 def visual(request):
 

@@ -47,6 +47,7 @@
 
     <p class="thai_font"> จากกราฟแสดงให้เห็นถึงยอดการสั่งซื้ออาหารของลูกค้าทั้งหมดในระบบ ซึ่งเรียงลำดับตั้งแต่มากไปน้อย อันดับแรกได้แก่ลูกค้าหมายเลขไอดี  54 รองลงมาคือ ลูกค้าหมายเลขไอดี  54 และ ลูกค้าหมายเลขไอดี  140 ตามลำดับ</p>
 <br>
+<div id="52"></div>
        <h2 class="uk-heading-bullet uk-margin-bottom">กราฟแสดงความเสี่ยงต่อการเลิกใช้บริการของลูกค้า</h2>
         <!-- <div id="chartdiv3"></div> -->
         <canvas id="popChart" width="400" height="200"></canvas>
@@ -198,6 +199,16 @@ console.log("chart",chartData)
     "export": {
         "enabled": true
      },
+       "listeners": [{
+    "event": "clickGraphItem",
+    "method": function(event) {
+      // alert(event.item.category);
+        // window.location.href="#targetDiv";
+            $('html, body').animate({
+        scrollTop: $("#"+event.item.category).offset().top
+    }, 500);
+    }
+  }]
   
 
 });
