@@ -1,0 +1,113 @@
+{% load static %}{% load widget_tweaks %}
+{% block content %}
+<br>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<style>
+	#chartdiv {
+	width	: 100%;
+	height	: 500px;
+}								
+</style>
+
+ <div class="container"><canvas id="popChart" width="400" height="200"></canvas>
+</div>
+ <script>
+// var chartData = generatechartData();
+  function generatechartData() {
+
+ 
+  return chartData;
+  }
+
+  var data = [{% for o in output %}
+    { "x" : "{{ o.x }}",
+       "y" : "{{ o.y }}",
+       "label" : "{{ o.label }}",
+       
+    },
+
+    {% endfor %}
+    ]
+
+
+  var chartData1 = [];
+  var chartData2 = [];
+  var chartData3 = [];
+     for(var i=0;i<data.length;i++)
+{
+    // console.log(typeof data[i].amount);
+    // var cvint = parseInt(data[i].amount)
+    // console.log(typeof parseInt(data[i].label));
+    // console.log(parseInt(data[i].label))
+    if (parseInt(data[i].label) == 0){
+           chartData1.push( {
+    
+    x:parseFloat(data[i].x),
+    y: parseFloat(data[i].y),
+    r:10
+  
+  },);
+ }
+ else if (parseInt(data[i].label) == 1){
+           chartData2.push( {
+    
+    x:parseFloat(data[i].x),
+    y: parseFloat(data[i].y),
+    r:10
+  
+  },);
+ }
+
+ else if (parseInt(data[i].label) == 2){
+           chartData3.push( {
+    
+    x:parseFloat(data[i].x),
+    y: parseFloat(data[i].y),
+    r:10
+  
+  },);
+ }
+}
+
+  // alert(chartData);
+var chartDataToPlot = [];
+   chartDataToPlot.push( {
+    label:['Group1'],
+    data:chartData1,
+    backgroundColor: "#FF9966",
+  
+  
+  },);
+  chartDataToPlot.push( {
+     label:['Group2'],
+    data:chartData2,
+    backgroundColor: "#F0B1C0",
+  
+  
+  },);
+   chartDataToPlot.push( {
+     label:['Group3'],
+    data:chartData3,
+    backgroundColor: "#8FCDCC",
+  
+  
+  },);
+
+  var popCanvas = document.getElementById("popChart");
+
+Chart.defaults.global.defaultFontFamily = "Lato";
+Chart.defaults.global.defaultFontSize = 18;
+
+var popData = {
+  datasets: chartDataToPlot
+};
+
+var bubbleChart = new Chart(popCanvas, {
+  type: 'bubble',
+  data: popData
+});
+</script>
+{% endblock %}

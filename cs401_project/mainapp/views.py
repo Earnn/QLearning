@@ -64,188 +64,763 @@ def chart_click(request):
   # # print(form)
   return render(request, 'chart_click.html')
 
+def term_conditions(request):
+    # collect_session(request,"enter","ติดต่อเรา")
+    return render(request, 'term_conditions.html')
+
+
+def user_profile(request,userid):
+  # form = InformationsForm()
+  p = Profile.objects.get(user__id=userid)
+  my_datetime = datetime(year=2018, month=3, day=25) 
+
+  amount_of_ordered = Order.objects.filter(user_id=userid).count()
+  
+  output = []
+
+
+  temp = {"user_id":"","amount":0,"time_length":0,"profile":None,'profile_pic':None}
+  last = Order.objects.filter(user__id=userid).order_by('-created_at')
+  # print("datetime.now()",datetime.now())
+  if last:
+    cvtz = last[0].created_at.replace(tzinfo=None)
+    date = datetime.now() - timedelta(days=0)
+    days_disappear = (date - cvtz).days
+  else:
+    days_disappear ="ไม่เคยสั่งซื้อ"
+  # print(datetime.now() - cvtz)
+  if amount_of_ordered >=0 and amount_of_ordered <= 2:
+    status = 0
+  elif amount_of_ordered >=3 and amount_of_ordered <= 49:
+    status = 1
+  elif amount_of_ordered >=50:
+    status = 2
+
+  user_list = []
+
+  total_purchase = []
+
+  order = Order.objects.all()
+  temp = {}
+
+  for o in order:
+    if o.user in temp:
+      temp[o.user] += o.total
+    else:
+      temp[o.user] = o.total
+
+  # total_purchase.append(temp)
+
+  user_id = 105
+  order2 = Order.objects.filter(user__id=user_id)
+
+  # order_count = {'สลัด':0, 'สเต็ก' : 0,'อาหารตามสั่ง':0,'ก๋วยเตี๋ยว':0,'ผัดไทย ราดหน้า': 0 ,'โจ๊ก':0,'โรตี แฮมเบอร์เกอร์':0,
+  # 'ลูกชิ้น ไส้กรอก' : 0 ,'หมูปิ้ง ตับปิ้ง ไก่ปิ้ง ':0,'น้ำปั่น ':0 ,'ข้าวมันไก่ ข้าวหมูแดง ข้าวหน้าเป็ด':0}
+  order_count = {}
+  
+  for o in order2 :
+
+    for m in o.menu :
+      check = m.split(",")
+
+      if "'" in check  :
+        if len(check) > 3 :
+          tag = 'สลัด'
+        else :
+          tag = 'สเต็ก'
+
+      else :
+        me = Menu.objects.get(id=m)
+        store = Store.objects.get(name=me.store)
+        if store.name != "โรงอาหารโต้รุ่ง" and store.name != "ทุกร้าน":
+          if 'อาหารตามสั่ง' in store.tags :
+            tag = "อาหารตามสั่ง"
+          elif 'ข้าวมันไก่' in store.tags or 'ข้าวหมูแดง' in store.tags or 'เป็ด' in store.tags :
+            tag = "ข้าวมันไก่ ข้าวหมูแดง ข้าวหน้าเป็ด"
+          elif 'ก๋วยเตี๋ยว' in store.tags :
+            tag = "ก๋วยเตี๋ยว"
+          elif 'ผัดไทย' in store.tags or 'ราดหน้า' in store.tags :
+            tag = "ผัดไทย ราดหน้า"
+          elif 'อาหารอีสาน' in store.tags  :
+            tag = "อาหารอีสาน"
+          elif 'โจ๊ก' in store.tags or 'ข้าวต้ม' in store.tags :
+            tag = "โจ๊ก ข้าวต้ม"
+          elif 'โรตี' in store.tags :
+            tag = "โรตี"
+       
+          elif 'ลูกชิ้น' in store.tags or 'ไส้กรอก' in store.tags :
+            tag = "ลูกชิ้น ไส้กรอก"
+          elif 'หมูปิ้ง' in store.tags or 'ตับปิ้ง' in store.tags or 'ไก่ปิ้ง' in store.tags  :
+            tag = "หมูปิ้ง ตับปิ้ง ไก่ปิ้ง"
+        
+          elif 'แฮมเบอร์เกอร์' in store.tags or 'เฟรนช์ฟรายส์' in store.tags :
+            tag = "แฮมเบอร์เกอร์ เฟรนช์ฟรายส์"
+          elif 'น้ำ' in store.tags or 'นำ้ปั่น' in store.tags:
+           
+            tag = "นำ้ปั่น นมปั่น"
+          elif 'ผลไม้' in store.tags :
+            tag = "ผลไม้"
+      if tag in order_count :
+        order_count[tag] += 1
+      else :
+        order_count[tag] = 1
+
+  sorted_order = sorted(order_count.items(), key=lambda kv: kv[1], reverse=True)
+  labels_order = []
+  data_order = []
+  for key, value in sorted_order:
+    labels_order.append(key)
+    data_order.append(value)
+
+  es = User_session.objects.filter(action='enter_store',user__id=user_id)
+  enter_store = {}
+
+
+
+  for u in es:
+    value = u.value
+   
+    if value == '10,ผัดไท หอยทอด ราดหน้า' or value == 'ผัดไท หอยทอด ราดหน้า' :
+      if 'ผัดไทย ราดหน้า' in enter_store :
+        enter_store['ผัดไทย ราดหน้า'] += 1
+      else :
+        enter_store['ผัดไทย ราดหน้า'] = 1
+             
+    if value == '11,ศิริรัตน์ โจ้ก ข้าวต้ม' or value == 'ศิริรัตน์ โจ้ก ข้าวต้ม' :
+      if 'โจ๊ก ข้าวต้ม' in enter_store :
+        enter_store['โจ๊ก ข้าวต้ม'] += 1
+      else :
+        enter_store['โจ๊ก ข้าวต้ม'] = 1
+    if value == '12,ตำยำย่าง อาหารอีสาน ลาบยโส' or value == 'ตำยำย่าง อาหารอีสาน ลาบยโส' :
+      if 'อาหารอีสาน' in enter_store :
+        enter_store['อาหารอีสาน'] += 1
+      else :
+        enter_store['อาหารอีสาน'] = 1
+            
+    if value == '13,ข้าวแกงชุดอิ่มอร่อย' or value == 'ข้าวแกงชุดอิ่มอร่อย' :
+      if 'อาหารตามสั่ง' in enter_store :
+        enter_store['อาหารตามสั่ง'] += 1
+      else :
+        enter_store['อาหารตามสั่ง'] = 1
+            
+    if value == '14,เครื่องดื่ม ยำผลไม้ ผลไม้' or value =='เครื่องดื่ม ยำผลไม้ ผลไม้' :
+      if 'นำ้ปั่น นมปั่น' in enter_store :
+        enter_store['นำ้ปั่น นมปั่น'] += 1
+      else :
+        enter_store['นำ้ปั่น นมปั่น'] = 1
+      if 'ผลไม้' in enter_store :
+        enter_store['ผลไม้'] += 1
+      else :
+        enter_store['ผลไม้'] = 1
+    if value == '15,ปังเย็น' or value == 'ปังเย็น' :
+      if 'นำ้ปั่น นมปั่น' in enter_store :
+        enter_store['นำ้ปั่น นมปั่น'] += 1
+      else :
+        enter_store['นำ้ปั่น นมปั่น'] = 1
+
+    if value == '16,น้องแนนหมูปิ้ง' or value == 'น้องแนนหมูปิ้ง':
+      if 'หมูปิ้ง ตับปิ้ง ไก่ปิ้ง' in enter_store :
+        enter_store['หมูปิ้ง ตับปิ้ง ไก่ปิ้ง'] += 1
+      else :
+        enter_store['หมูปิ้ง ตับปิ้ง ไก่ปิ้ง'] = 1
+
+    if value == '17,สมใจ ลูกชิ้นทอด' or value == 'สมใจ ลูกชิ้นทอด' :
+      if 'ลูกชิ้น ไส้กรอก' in enter_store :
+        enter_store['ลูกชิ้น ไส้กรอก'] += 1
+      else :
+        enter_store['ลูกชิ้น ไส้กรอก'] = 1
+      
+    if value == '18,ANWAR BURGER' or value == 'ANWAR BURGER' :
+      if 'โรตี' in enter_store :
+        enter_store['โรตี'] += 1
+      else :
+        enter_store['โรตี'] = 1
+      if 'แฮมเบอร์เกอร์ เฟรนช์ฟรายส์' in enter_store :
+        enter_store['แฮมเบอร์เกอร์ เฟรนช์ฟรายส์'] += 1
+      else :
+        enter_store['แฮมเบอร์เกอร์ เฟรนช์ฟรายส์'] = 1
+            
+    if value == '2,พินิจโต้รุ่ง' or value == 'พินิจโต้รุ่ง' :
+      if 'อาหารตามสั่ง' in enter_store :
+        enter_store['อาหารตามสั่ง'] += 1
+      else :
+        enter_store['อาหารตามสั่ง'] = 1
+            
+    if value == '24,SteakHolder' or value == 'SteakHolder' :
+      if 'สเต็ก' in enter_store :
+        enter_store['สเต็ก'] += 1
+      else :
+        enter_store['สเต็ก'] = 1
+            
+    if value == '3,ร้านอาหารตามสั่งอิ่มอร่อย' or value == 'ร้านอาหารตามสั่งอิ่มอร่อย' :
+      if 'อาหารตามสั่ง' in enter_store :
+        enter_store['อาหารตามสั่ง'] += 1
+      else :
+        enter_store['อาหารตามสั่ง'] = 1
+            
+    if value == '4,อาหารอิสลาม Halal Food' or value == 'อาหารอิสลาม Halal Food' :
+      if 'อาหารตามสั่ง' in enter_store :
+        enter_store['อาหารตามสั่ง'] += 1
+      else :
+        enter_store['อาหารตามสั่ง'] = 1
+            
+    if value == '5,ร้าน 3 ป. ขาหมู อาหารตามสั่ง' or value == 'ร้าน 3 ป. ขาหมู อาหารตามสั่ง' :
+      if 'อาหารตามสั่ง' in enter_store :
+        enter_store['อาหารตามสั่ง'] += 1
+      else :
+        enter_store['อาหารตามสั่ง'] = 1
+            
+    if value == '6,ชาย 4 บะหมี่เกี๊ยว' or value == 'ชาย 4 บะหมี่เกี๊ยว' :
+      if 'ก๋วยเตี๋ยว' in enter_store :
+        enter_store['ก๋วยเตี๋ยว'] += 1
+      else :
+        enter_store['ก๋วยเตี๋ยว' ] = 1
+            
+    if value == '7,แชมป์ฮั้งเพ้ง' or value == 'แชมป์ฮั้งเพ้ง' :
+      if 'ก๋วยเตี๋ยว' in enter_store :
+        enter_store['ก๋วยเตี๋ยว' ] += 1
+      else :
+        enter_store['ก๋วยเตี๋ยว' ] = 1
+  
+
+    if value == '8,ข้าวยำไก่ย่าง ข้าวมันไก่ 2 สี' or value == 'ข้าวยำไก่ย่าง ข้าวมันไก่ 2 สี' :
+      if 'ข้าวมันไก่ ข้าวหมูแดง ข้าวหน้าเป็ด' in enter_store :
+        enter_store['ข้าวมันไก่ ข้าวหมูแดง ข้าวหน้าเป็ด'] += 1
+      else :
+        enter_store['ข้าวมันไก่ ข้าวหมูแดง ข้าวหน้าเป็ด'] = 1
+    if value == '9,ข้าวหน้าเป็ด-ข้าวหมูแดง-ข้าวหมูกรอบ' or value == 'ข้าวหน้าเป็ด-ข้าวหมูแดง-ข้าวหมูกรอบ' :
+      if 'ข้าวมันไก่ ข้าวหมูแดง ข้าวหน้าเป็ด' in enter_store :
+        enter_store['ข้าวมันไก่ ข้าวหมูแดง ข้าวหน้าเป็ด'] += 1
+      else :
+        enter_store['ข้าวมันไก่ ข้าวหมูแดง ข้าวหน้าเป็ด'] = 1
+
+  sorted_order = sorted(enter_store.items(), key=lambda kv: kv[1], reverse=True)
+  labels_enter_store = []
+  data_enter_store = []
+  for key, value in sorted_order:
+    labels_enter_store.append(key)
+    data_enter_store.append(value)
+
+  user = Profile.objects.values_list('user_id', flat=True)
+  pro_dic = {}
+  try:
+    inf= Informations.objects.get(user_id=user_id)
+    pro_dic = {'age':0,'birthdate': None,'sex': '','salary':'','size':'','meal':'','choose_store':'','social':'','food':''}
+
+    pro_dic['age'] = inf.age
+    pro_dic['birthdate'] = inf.birthdate
+    pro_dic['sex'] = inf.sex
+    pro_dic['salary'] = inf.salary
+
+    size = ''
+    if inf.size == 'thin' :
+      size = 'ผอม '
+    if inf.size == 'fit' :
+      size = 'หุ่นดี '
+    if inf.size == 'chubby' :
+      size = 'อวบ'
+    if inf.size == 'fat' :
+      size = 'จ้ำม่ำ'
+    pro_dic['size'] = size
+
+
+    meal = ''
+    if inf.breakfast :
+      meal += 'มื้อเช้า '
+    if inf.lunch :
+      meal += 'มื้อเที่ยง '
+    if inf.dinner :
+      meal += 'มื้อเย็น '
+    if inf.late :
+      meal += 'มื้อดึก'
+    pro_dic['meal'] = meal
+
+    choose_store = ''
+    if inf.taste :
+      choose_store += 'รสชาติ '
+    if inf.price :
+      choose_store += 'ราคา '
+    if inf.service :
+      choose_store += 'บริการ '
+    if inf.clean :
+      choose_store += 'ความสะอาด '
+    if inf.at :
+      choose_store += 'บรรยากาศ '
+    if inf.location :
+      choose_store += 'สถานที่ '
+    pro_dic['choose_store'] = choose_store
+
+    social = ''
+    if inf.facebook :
+      social += 'facebook '
+    if inf.twitter :
+      social += 'twitter '
+    if inf.instagram :
+      social += 'instagram '
+    if inf.line :
+      social += 'line'
+    pro_dic['social'] = social
+
+    food = ''
+    if inf.japanese :
+      food += 'อาหารญี่ปุ่น '
+    if inf.thai :
+      food += 'อาหารไทย '
+    if inf.diet :
+      food += 'อาหารคลีน '
+    if inf.shabu :
+      food += 'ชาบู '
+    if inf.grill :
+      food += 'ปิ้งย่าง '
+    if inf.steak :
+      food += 'สเต็ก '
+    if inf.fastfood :
+      food += 'อาหารจานด่วน '
+    if inf.japanese :
+      food += 'อาหารญี่ปุ่น '
+    if inf.cake :
+      food += 'ขนม เค้ก '
+    if inf.dessert :
+      food += 'ของหวาน เครป '
+    if inf.coffee :
+      food += 'ชา กาแฟ '
+    if inf.juice :
+      food += 'น้ำผลไม้ นมสด '
+    pro_dic['food'] = food
+
+    
+  except :
+    pass
+
+
+
+
+
+  return render(request, 'user_profile.html',
+    {"amount_of_ordered":amount_of_ordered,
+    "days_disappear":days_disappear,
+    "status":status,
+    "profile":p,
+    'pro_dic':pro_dic,'labels_order':labels_order,'data_order':data_order,
+    'labels_enter_store':labels_enter_store,'data_enter_store':data_enter_store
+
+
+
+    })
+
+
+def get_user_profile(request):
+  if request.is_ajax():
+    user_id = request.GET.get('user_id',False)
+    p = Profile.objects.get(user__id=user_id)
+  
+    topic_list = json.dumps({'profile':p})
+
+    return HttpResponse(topic_list,
+            content_type='application/json')
+
+    # return JsonResponse(data,safe=False)
+    # 
+
+
 def visual(request):
-
-    # plot clustering_order
- order_cate = pd.read_csv('cluster_order_group1.csv',encoding = 'utf8')
- enter_store = pd.read_csv('cluster_enter_group2_kmode.csv', encoding = 'utf8')
- search_cate = pd.read_csv('searchCate_clustering.csv', encoding = 'utf8')
-
-
- user_list = []
+  df_info = pd.DataFrame(list(Informations.objects.all().values()))
+  df = pd.read_csv("cluster_enter_group.csv")
+  new_df = df[df['ร้าน 3 ป. ขาหมู อาหารตามสั่ง']!=1]
 
 
 
- user = Profile.objects.values_list('user_id', flat=True)
+  df_meal=df_info.drop(['id','birthdate','created_at',],1)
+  sex = {'male':0,'female':1}
+  size={'thin':0,'fit':1,'chubby':2,'fat':3}
+  salary={'น้อยกว่า 10,000':0,'10,000-19,999':1,'20,000-29,999':2,'30,000-39,999':3,'40,000-49,999':4,'50,000 ขึ้นไป':5}
+  breakfast = {False:0,True:1}
+  lunch = {False:0,True:1}
+  dinner = {False:0,True:1}
+  late = {False:0,True:1}
+  taste = {False:0,True:1}
+  price = {False:0,True:1}
+  service = {False:0,True:1}
+  clean = {False:0,True:1}
+  at = {False:0,True:1}
+  location = {False:0,True:1}
+  facebook ={False:0,True:1}
+  twitter = {False:0,True:1}
+  instagram = {False:0,True:1}
+  line = {False:0,True:1}
+  japanese = {False:0,True:1}
+  thai = {False:0,True:1}
+  diet = {False:0,True:1}
+  shabu = {False:0,True:1}
+  grill = {False:0,True:1}
+  steak = {False:0,True:1}
+  fastfood = {False:0,True:1}
+  cake = {False:0,True:1}
+  dessert = {False:0,True:1}
+  coffee ={False:0,True:1}
+  juice = {False:0,True:1}
+  
+  for k,i in df_meal.iterrows():
+      if i['sex']==i['sex']:
+          df_meal.loc[k,"sexc"]=sex[i['sex']]
+      if i['size']==i['size']:
+          df_meal.loc[k,"sizec"]=size[i['size']]
+      if i['salary']==i['salary']:
+          df_meal.loc[k,"salaryc"]=salary[i['salary']]
+      if i['breakfast']==i['breakfast']:
+          df_meal.loc[k,"breakfastc"]=breakfast[i['breakfast']]
+      if i['lunch']==i['lunch']:
+          df_meal.loc[k,"lunchc"]=lunch[i['lunch']]
+      if i['dinner']==i['dinner']:
+          df_meal.loc[k,"dinnerc"]=breakfast[i['dinner']]
+      if i['late']==i['late']:
+          df_meal.loc[k,"latec"]=late[i['late']]
+      if i['taste']==i['taste']:
+          df_meal.loc[k,"tastec"]=taste[i['taste']]
+      if i['price']==i['price']:
+          df_meal.loc[k,"pricec"]=price[i['price']]
+      if i['service']==i['service']:
+          df_meal.loc[k,"servicec"]=service[i['service']]
+      if i['clean']==i['clean']:
+          df_meal.loc[k,"cleanc"]=clean[i['clean']]
+      if i['at']==i['at']:
+          df_meal.loc[k,"atc"]=at[i['at']]
+      if i['location']==i['location']:
+          df_meal.loc[k,"locationc"]=location[i['location']]
+      if i['facebook']==i['facebook']:
+          df_meal.loc[k,"facebookc"]=facebook[i['facebook']]
+      if i['twitter']==i['twitter']:
+          df_meal.loc[k,"twitterc"]=twitter[i['twitter']]
+      if i['instagram']==i['instagram']:
+          df_meal.loc[k,"instagramc"]=instagram[i['instagram']]
+      if i['line']==i['line']:
+          df_meal.loc[k,"linec"]=line[i['line']]
+      if i['japanese']==i['japanese']:
+          df_meal.loc[k,"japanesec"]=japanese[i['japanese']]
+      if i['thai']==i['thai']:
+          df_meal.loc[k,"thaic"]=thai[i['thai']]
+      if i['diet']==i['diet']:
+          df_meal.loc[k,"dietc"]=diet[i['diet']]
+      if i['shabu']==i['shabu']:
+          df_meal.loc[k,"shabuc"]=shabu[i['shabu']]
+      if i['grill']==i['grill']:
+          df_meal.loc[k,"grillc"]=grill[i['grill']]
+      if i['steak']==i['steak']:
+          df_meal.loc[k,"steakc"]=steak[i['steak']]
+      if i['fastfood']==i['fastfood']:
+          df_meal.loc[k,"fastfoodc"]=fastfood[i['fastfood']]
+      if i['cake']==i['cake']:
+          df_meal.loc[k,"cakec"]=grill[i['cake']]
+      if i['dessert']==i['dessert']:
+          df_meal.loc[k,"dessertc"]=dessert[i['dessert']]
+      if i['coffee']==i['coffee']:
+          df_meal.loc[k,"coffeec"]=coffee[i['coffee']]
+      if i['juice']==i['juice']:
+          df_meal.loc[k,"juicec"]=juice[i['juice']]
+  df_info2 = df_meal.drop(['breakfast','lunch','dinner','late','taste','price','service','clean','at','location',
+                           'facebook','twitter','instagram','line','japanese','thai','diet','shabu','grill','steak',
+                            'dessert','coffee','juice','fastfood','cake','sex','salary','size','age'],1)
+  df_info_user_never_entered = pd.DataFrame()
+  for i in new_df['user_id']:
+    df_info_user_never_entered= df_info_user_never_entered.append(df_info2.loc[df_info2['user_id'] == i])
 
- for u in user :
-  try :
-   inf = Informations.objects.get(user_id=u)
-   
-   dic = {'user_id':0,'order_cate': 'ไม่มีข้อมูล','enter_store':'ไม่มีข้อมูล','search_cate':'ไม่มีข้อมูล','age':0,
-   'birthdate': None,'sex': '','salary':'','size':'','meal':'','choose_store':'','social':'','food':''}
-   
-   dic['user_id'] = u
+  output = []
+  pca = PCA(n_components=2)
+  pca_transformed = pca.fit_transform(df_info_user_never_entered.ix[:,1:29])
+  k = 5
+  kmeans = KMeans(n_clusters=5)
+  X_clustered = kmeans.fit_predict(pca_transformed)
 
-   dic['age'] = inf.age
-   dic['birthdate'] = inf.birthdate
-   dic['sex'] = inf.sex
-   dic['salary'] = inf.salary
+  x = pca_transformed[:,0]
+  y = pca_transformed[:,1]
+  print(X_clustered)
+  for i in range(len(pca_transformed)):
+      print(X_clustered)
+      temp = {"x":0,"y":0,"user_id":"","label":0}
 
-   size = ''
-   if inf.size == 'thin' :
-    size = 'ผอม '
-   if inf.size == 'fit' :
-    size = 'หุ่นดี '
-   if inf.size == 'chubby' :
-    size = 'อวบ'
-   if inf.size == 'fat' :
-    size = 'จ้ำม่ำ'
-   dic['size'] = size
-   dic['salary'] = inf.salary
-
-   meal = ''
-   if inf.breakfast :
-    meal += 'มื้อเช้า '
-   if inf.lunch :
-    meal += 'มื้อเที่ยง '
-   if inf.dinner :
-    meal += 'มื้อเย็น '
-   if inf.late :
-    meal += 'มื้อดึก'
-   dic['meal'] = meal
-
-   choose_store = ''
-   if inf.taste :
-    choose_store += 'รสชาติ '
-   if inf.price :
-    choose_store += 'ราคา '
-   if inf.service :
-    choose_store += 'บริการ '
-   if inf.clean :
-    choose_store += 'ความสะอาด '
-   if inf.at :
-    choose_store += 'บรรยากาศ '
-   if inf.location :
-    choose_store += 'สถานที่ '
-   dic['choose_store'] = choose_store
-
-   social = ''
-   if inf.facebook :
-    social += 'facebook '
-   if inf.twitter :
-    social += 'twitter '
-   if inf.instagram :
-    social += 'instagram '
-   if inf.line :
-    social += 'line'
-   dic['social'] = social
-
-   food = ''
-   if inf.japanese :
-    food += 'อาหารญี่ปุ่น '
-   if inf.thai :
-    food += 'อาหารไทย '
-   if inf.diet :
-    food += 'อาหารคลีน '
-   if inf.shabu :
-    food += 'ชาบู '
-   if inf.grill :
-    food += 'ปิ้งย่าง '
-   if inf.steak :
-    food += 'สเต็ก '
-   if inf.fastfood :
-    food += 'อาหารจานด่วน '
-   if inf.japanese :
-    food += 'อาหารญี่ปุ่น '
-   if inf.cake :
-    food += 'ขนม เค้ก '
-   if inf.dessert :
-    food += 'ของหวาน เครป '
-   if inf.coffee :
-    food += 'ชา กาแฟ '
-   if inf.juice :
-    food += 'น้ำผลไม้ นมสด '
-   dic['food'] = food
- 
-   if any(order_cate.user_id == u) :
+      temp["x"] = x[i]
+      temp["y"] = y[i]
+      temp["user_id"] = df_info_user_never_entered.iloc[i]['user_id']
+      temp["label"] = X_clustered[i]
+      output.append(temp)
+  # print(output)
+  group_explaned = []
+  # for o in output:
+  #   temp= {"gr_number":0,"explaned":"","user_id_list":[]}
+  #   if 
+  for i in range(k):
+    temp= {"gr_number":0,"explaned":"","user_id_list":[]}
+    if i == 0:
+      temp['gr_number'] = 1
+      temp['explaned'] = "เป็นกลุ่มที่มีหุ่นผอมและสมส่วน รับประทานอาหารมื้อเที่ยง เย็น และดึก เหตุผลในการเลือกรับประทานอาหารคือ เรื่องราคา รสชาติอาหาร และความสะอาด คนกลุ่มนี้ไม่ชอบรับประทานชาบู ปิ้งย่าง ชา และกาแฟ แต่ชอบรับประทาน อาหารไทย ขนมหวาน เค้ก และน้ำปั่น"
+    if i == 1:
+      temp['gr_number'] = 2
+      temp['explaned'] = "เป็นกลุ่มที่มีหุ่นอวบๆ เงินเดือนต่ำกว่า 10,000 บาท รับประทานอาหารมื้อเที่ยง และเย็น  เหตุผลในการเลือกรับประทานอาหารคือ เรื่องราคา  และรสชาติอาหาร "
+    if i == 2:
+      temp['gr_number'] = 3
+      temp['explaned'] = "เป็นกลุ่มที่มีหุ่นอวบๆ  รับประทานอาหารมื้อเช้า เที่ยง และเย็น และดึก เหตุผลในการเลือกรับประทานอาหารคือ เรื่องราคา รสชาติอาหาร และความสะอาด ชอบรับประทานอาหารไทย สเต็ก ฟ้าดฟู้ด เค้ก ขนมหวาน และน้ำปั่น"
+    if i == 3:
+      temp['gr_number'] = 4
+      temp['explaned'] = "เป็นกลุ่มที่มีผอมหุ่นดี   รับประทานอาหารมื้อเที่ยง เย็น และดึก เหตุผลในการเลือกรับประทานอาหารคือ เรื่องรสชาติอาหาร และความสะอาด ไม่ชอบรับประทานอาหารคลีน ชาบู  และปิ้งย่าง"
+    if i == 4:
+      temp['gr_number'] = 5
+      temp['explaned'] = "เป็นกลุ่มที่มีหุ่นอวบๆ  รับประทานอาหารมื้อเช้า เที่ยง และเย็น ไม่ชอบรับประทานของหวาน เช่น น้ำปั่น ชา กาแฟ เค้ก อาหารฟ้าดฟู้ด ปิ้งย่าง และชาบู "
     
-    index = order_cate[order_cate['user_id'] == u].index.item()
-    dic['order_cate'] = order_cate.iloc[index]['explaned']
-
-
-   if any(enter_store.user_id == u) :
-    
-    index = enter_store[enter_store['user_id'] == u].index.item()
-    dic['enter_store'] = enter_store.iloc[index]['explaned']
-
-    if any(enter_store.user_id == u) :
-    
-        index = search_cate[search_cate['user_id'] == u].index.item()
-        dic['search_cate'] = search_cate.iloc[index]['explaned']
-
-
-  except:
-   pass 
-
-  user_list.append(dic)
- # except :
- #   pass
+    for o in output:
+      if o['label'] == i:
+        temp['user_id_list'].append(int(o['user_id']))
+    group_explaned.append(temp)
 
 
 
+    print("o",o)
+  # entered
+  output2 = []
+  df_entered = df[df['ร้าน 3 ป. ขาหมู อาหารตามสั่ง']==1]
+  df_info_user_entered = pd.DataFrame()
+
+  for i in df_entered['user_id']:
+      df_info_user_entered= df_info_user_entered.append(df_info2.loc[df_info2['user_id'] == i])
+
+  pca = PCA(n_components=2)
+  pca_transformed2 = pca.fit_transform(df_info_user_entered.ix[:,1:29])
+  kmeans = KMeans(n_clusters=5)
+  X_clustered2 = kmeans.fit_predict(pca_transformed2)
+
+  x2 = pca_transformed2[:,0]
+  y2 = pca_transformed2[:,1]
+  # print(X_clustered)
+  for i in range(len(pca_transformed2)):
+      print(X_clustered)
+      temp = {"x":0,"y":0,"user_id":"","label":0}
+
+      temp["x"] = x2[i]
+      temp["y"] = y2[i]
+      temp["user_id"] = df_info_user_entered.iloc[i]['user_id']
+      temp["label"] = X_clustered2[i]
+      output2.append(temp)
+  # print(output)
+
+  group_explaned2 = []
+  # for o in output:
+  #   temp= {"gr_number":0,"explaned":"","user_id_list":[]}
+  #   if 
+  for i in range(k):
+    temp= {"gr_number":0,"explaned":"","user_id_list":[]}
+    if i == 0:
+      temp['gr_number'] = 1
+      temp['explaned'] = "เป็นกลุ่มที่มีหุ่นอวบๆหรืออ้วน  รับประทานอาหารทุกมื้อรวมไปถึงมื้อดึก เหตุผลในการเลือกรับประทานอาหารคือ เรื่องราคา รสชาติอาหาร ความสะอาด และบริการ ชอบรับประทานอาหารไทย ฟ้าดฟู้ด และน้ำปั่น"
+    if i == 1:
+      temp['gr_number'] = 2
+      temp['explaned'] = "เป็นกลุ่มที่มีหุ่นผอมหรือหุ่นดี  รับประทานอาหารมื้อกลางวัน และเย็น เหตุผลในการเลือกรับประทานอาหารคือ เรื่องราคา รสชาติอาหาร และความสะอาด"
+    if i == 2:
+      temp['gr_number'] = 3
+      temp['explaned'] = "เป็นกลุ่มที่มีหุ่นอวบๆหรืออ้วน  รับประทานอาหารมื้อกลางวัน เย็น และดึก เหตุผลในการเลือกรับประทานอาหารคือ เรื่องราคา รสชาติอาหาร ความสะอาด และบริการ"
+    if i == 3:
+      temp['gr_number'] = 4
+      temp['explaned'] = "เป็นกลุ่มที่มีหุ่นดี  รับประทานอาหารมื้อเช้า กลางวัน และเย็น เหตุผลในการเลือกรับประทานอาหารคือ เรื่องราคา รสชาติอาหาร ความสะอาด และสถานที่ตั้ง ชอบทานอาหารไทย ของหวาน เค้ก สเต็ก และน้ำปั่น ไม่ชอบทานชาบู ปิ้งย่าง ชากาแฟ"
+
+    if i == 4:
+      temp['gr_number'] = 5
+      temp['explaned'] = "เป็นกลุ่มที่มีหุ่นดีหรืออวบ  รับประทานอาหารมื้อกลางวัน และเย็น เหตุผลในการเลือกรับประทานอาหารคือ เรื่องราคา รสชาติอาหาร ความสะอาด และการบริการ"
+
+    for o in output2:
+      if o['label'] == i:
+        temp['user_id_list'].append(int(o['user_id']))
+    group_explaned2.append(temp)
 
 
- return render(request, 'summarize.html',{"user_list":user_list})
+  return render(request, 'summarize.html',{"output":output,
+    "output2":output2,
+    "group_explaned":group_explaned,
+    "group_explaned2":group_explaned2,
+    })
 
 def value_at_risk(request):
+    # start_date = "2018/04/11"
 
-    OneMonthAgo = datetime.today() - timedelta(days=60)
+    # # date_1 = datetime.strptime(start_date, "%y/%m/%d")
+    my_datetime = datetime(year=2018, month=3, day=25) 
+    # print("my_datetime",my_datetime)
+    # OneMonthAgo = my_datetime- timedelta(days=5)
     # print("OneMonthAgo",OneMonthAgo)
     all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
-
+    print(all_ordered)
     output = []
     for i in all_ordered:
 
-        temp = {"user":"","amount":0,"time_length":0}
+        temp = {"user_id":"","amount":0,"time_length":0,"profile":None,'profile_pic':None}
         last = Order.objects.filter(user__id=i['user']).order_by('-created_at')
         # print("datetime.now()",datetime.now())
         cvtz = last[0].created_at.replace(tzinfo=None)
         # print(datetime.now() - cvtz)
 
 
-        date = datetime.now() - timedelta(days=40)
+        date = my_datetime - timedelta(days=0)
         # print("date",date)
         temp["time_length"] = (date - cvtz).days
-        # date11 = datetime.strptime(last[0].created_at, datetimeFormat)
-        # print("date11",date11)
-        # print("las",last[0].created_at)
-        # print("ty",type(last[0].created_at))
-        # time_length = datetime.now() - timedelta(days=7)
-        # print("datetime.now()",datetime.now())
-        # time_length2 = (datetime.now() - last[0].created_at).days
-        # print("time_length",time_length2)
-
-        name =Profile.objects.get(user__id=i['user']).id
-        temp["user"] = name
+        p =Profile.objects.get(user__id=i['user'])
+        temp["user_id"] = i['user']
+        temp["profile"] = p
+        temp["profile_pic"] = p.picture.url
         temp["amount"] = i['total']
         output.append(temp)
-    # OneMonthAgo = datetime.today() - timedelta(days=60)
-    # print("OneMonthAgo",OneMonthAgo)
-    # all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
 
-    # output = []
-    # for i in all_ordered:
+    order_cate = pd.read_csv('cluster_order_group1.csv',encoding = 'utf8')
+    enter_store = pd.read_csv('cluster_enter_group2_kmode.csv', encoding = 'utf8')
+    search_cate = pd.read_csv('searchCate_clustering.csv', encoding = 'utf8')
 
-    #     temp = {"user":"","amount":0}
 
-    #     name =Profile.objects.get(user__id=i['user']).name
-    #     temp["user"] = name
-    #     temp["amount"] = i['total']
-    #     output.append(temp)
+    user_list = []
+
+    all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
+
+    # temp["amount"] = i['total']
+
+   
+    for i in all_ordered:
+    
+     print(i)
+     p = Profile.objects.get(user__id=i['user'])
+     print(p.name)
+
+    user = Profile.objects.values_list('user_id', flat=True)
+
+    for u in user :
+     try :
+      inf = Informations.objects.get(user_id=u)
      
+      dic = {'user_id':0,'order_cate': 'ไม่มีข้อมูล','enter_store':'ไม่มีข้อมูล','search_cate':'ไม่มีข้อมูล','age':0,
+      'birthdate': None,'sex': '','salary':'','size':'','meal':'','choose_store':'','social':'','food':''}
+     
+      dic['user_id'] = u
+
+      dic['age'] = inf.age
+      dic['birthdate'] = inf.birthdate
+      dic['sex'] = inf.sex
+      dic['salary'] = inf.salary
+
+      size = ''
+      if inf.size == 'thin' :
+       size = 'ผอม '
+      if inf.size == 'fit' :
+       size = 'หุ่นดี '
+      if inf.size == 'chubby' :
+       size = 'อวบ'
+      if inf.size == 'fat' :
+       size = 'จ้ำม่ำ'
+      dic['size'] = size
+      dic['salary'] = inf.salary
+
+      meal = ''
+      if inf.breakfast :
+       meal += 'มื้อเช้า '
+      if inf.lunch :
+       meal += 'มื้อเที่ยง '
+      if inf.dinner :
+       meal += 'มื้อเย็น '
+      if inf.late :
+       meal += 'มื้อดึก'
+      dic['meal'] = meal
+
+      choose_store = ''
+      if inf.taste :
+       choose_store += 'รสชาติ '
+      if inf.price :
+       choose_store += 'ราคา '
+      if inf.service :
+       choose_store += 'บริการ '
+      if inf.clean :
+       choose_store += 'ความสะอาด '
+      if inf.at :
+       choose_store += 'บรรยากาศ '
+      if inf.location :
+       choose_store += 'สถานที่ '
+      dic['choose_store'] = choose_store
+
+      social = ''
+      if inf.facebook :
+       social += 'facebook '
+      if inf.twitter :
+       social += 'twitter '
+      if inf.instagram :
+       social += 'instagram '
+      if inf.line :
+       social += 'line'
+      dic['social'] = social
+
+      food = ''
+      if inf.japanese :
+       food += 'อาหารญี่ปุ่น '
+      if inf.thai :
+       food += 'อาหารไทย '
+      if inf.diet :
+       food += 'อาหารคลีน '
+      if inf.shabu :
+       food += 'ชาบู '
+      if inf.grill :
+       food += 'ปิ้งย่าง '
+      if inf.steak :
+       food += 'สเต็ก '
+      if inf.fastfood :
+       food += 'อาหารจานด่วน '
+      if inf.japanese :
+       food += 'อาหารญี่ปุ่น '
+      if inf.cake :
+       food += 'ขนม เค้ก '
+      if inf.dessert :
+       food += 'ของหวาน เครป '
+      if inf.coffee :
+       food += 'ชา กาแฟ '
+      if inf.juice :
+       food += 'น้ำผลไม้ นมสด '
+      dic['food'] = food
+   
+      if any(order_cate.user_id == u) :
+      
+        index = order_cate[order_cate['user_id'] == u].index.item()
+        print(order_cate.iloc[index]['clusters'])
+        if order_cate.iloc[index]['clusters'] == 0 :
+
+          dic['order_cate'] = 'ชอบอาหารอีสาน เน้นความรวดเร็ว ชอบสั่งอาหารตามสั่ง ได้แก่ร้านอาหารพินิจโต้รุ่ง'
+        elif order_cate.iloc[index]['clusters'] == 1 :
+          dic['order_cate'] = 'เน้นความรวดเร็ว ชอบสั่งอาหารตามสั่ง ได้แก่ร้านอาหารตามสั่งอิ่มอร่อย'
+        elif order_cate.iloc[index]['clusters'] == 2 :
+          dic['order_cate'] = 'เน้นความรวดเร็ว อาหารตามสั่ง และมักซื้อของทานเล่นไปด้วย เช่นหมูปิ้ง ลูกชิ้น โรตี'
+        elif order_cate.iloc[index]['clusters'] == 3 :
+          dic['order_cate'] = 'ใช้บริการไม่บ่อย ไม่ชอบอาหารตามสั่ง มักสั่งอาหารที่ราคาสูงเช่น สเต็ก'
+        elif order_cate.iloc[index]['clusters'] == 4 :
+          dic['order_cate'] = 'ชอบทานอาหารกินเล่น เช่น โรตี หมูปิ้ง ลูกชิ้น'
+
+
+      if any(enter_store.user_id == u) :
+      
+        index = enter_store[enter_store['user_id'] == u].index.item()
+        # dic['enter_store'] = enter_store.iloc[index]['explaned']
+        if enter_store.iloc[index]['clusters'] == 0 :
+
+          dic['enter_store'] = 'สนใจและเลือกเข้าชมหลายร้าน'
+        elif enter_store.iloc[index]['clusters'] == 1 :
+          dic['enter_store'] = 'ชอบเสต็ก เลือกเข้าชมร้าน SteakHolder'
+        elif enter_store.iloc[index]['clusters'] == 2 :
+          dic['enter_store'] = 'เลือกเข้าชม ร้าน 3 ป. ขาหมู อาหารตามสั่ง'
+        elif enter_store.iloc[index]['clusters'] == 3 :
+          dic['enter_store'] = 'เลือกชมร้านเฉพาะที่สนใจ'
+
+       
+
+      if any(enter_store.user_id == u) :
+      
+          index = search_cate[search_cate['user_id'] == u].index.item()
+          dic['search_cate'] = search_cate.iloc[index]['explaned']
+
+
+     except:
+      pass 
+
+     user_list.append(dic)
     #     print("d",i['total'])
-    return render(request, 'chart_temp.html',{"output":output,"output2":output})
+    return render(request, 'chart_temp.html',{"output":output,"output2":output,"user_list":user_list})
 
 
 # def value_at_risk(request):
@@ -334,11 +909,20 @@ def value_at_risk(request):
 
 
 
-
-def chart(request):
+def search_cate_clustering(request):
 
     df = pd.DataFrame(list(User_session.objects.all().values()))
-    
+#     import numpy as np # linear algebra
+# import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+# from sklearn.decomposition import PCA # Principal Component Analysis module
+# from sklearn.cluster import KMeans # KMeans clustering 
+# import matplotlib.pyplot as plt # Python defacto plotting library
+# import seaborn as sns # More snazzy plotting library
+# %matplotlib inline 
+
+    df = pd.read_csv("session_csv2.csv") # reads the csv and creates the dataframe called movie
+    # df.head()
+         
     df_session_dummies = pd.get_dummies(df, columns=['action'])
     # print(df_session_dummies.head())
     df_search_cate = df_session_dummies[df_session_dummies.action_search_cate == 1 ]
@@ -392,31 +976,180 @@ def chart(request):
 
 
 
-    x = new_df.reset_index().values
+    # x = new_df.reset_index().values
 
-    km = KModes(n_clusters=3, init='Huang', n_init=5, verbose=1)
-    clusters = km.fit_predict(x)
-    new_df['clusters'] = clusters
-    print(new_df['clusters'])
+    # km = KModes(n_clusters=3, init='Huang', n_init=5, verbose=1)
+    # clusters = km.fit_predict(x)
+    # new_df['clusters'] = clusters
+    # print(new_df['clusters'])
+    # print(new_df.ix[:,1:11])
 
 
-
-    pca = PCA(2)
-
-    # Turn the dummified df into two columns with PCA
-    plot_columns = pca.fit_transform(new_df.ix[:,1:20])
-    # print(len(new_df['user_id']))
-    # print(len(new_df['user_id']))
-    x = plot_columns[:,1]
-    y = plot_columns[:,0]
+    pca = PCA(n_components=2)
+    pca_transformed = pca.fit_transform(new_df.ix[:,1:11])
+    # plot_columns = pca.fit_transform(new_df.ix[:,1:11])
+  
+    # x = plot_columns[:,1]
+    # y = plot_columns[:,0]
     output = []
-    for i in range(len(plot_columns)):
+
+
+    kmeans = KMeans(n_clusters=3)
+    X_clustered = kmeans.fit_predict(pca_transformed)
+    new_df['cluster'] = X_clustered
+ 
+    # plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,0], color='black')  
+    # plt.figure(figsize = (5,5))
+    # plt.scatter(pca_transformed[:,0],pca_transformed[:,1], c = kmeans.labels_, cmap='rainbow')  
+
+    # plt.scatter(pca_transformed[:,0],pca_transformed[:,1], c= label_color, alpha=0.5) 
+    # plt.show()
+    x = pca_transformed[:,0]
+    y = pca_transformed[:,1]
+    for i in range(len(pca_transformed)):
         temp = {"x":0,"y":0,"userid":"","label":0}
 
         temp["x"] = x[i]
         temp["y"] = y[i]
         temp["user_id"] = new_df['user_id'][i]
-        temp["label"] = new_df['clusters'][i]
+        temp["label"] = new_df['cluster'][i]
+
+
+        output.append(temp)
+
+    print(output)
+
+
+
+
+
+
+
+
+
+
+    OneMonthAgo = datetime.today() - timedelta(days=60)
+    all_ordered = Order.objects.all().values('user').annotate(total=Count('user')).order_by('-total')
+
+    # output = []
+    # for i in all_ordered:
+
+    #     temp = {"user":"","amount":0}
+
+    #     name =Profile.objects.get(user__id=i['user']).name
+    #     temp["user"] = name
+    #     temp["amount"] = i['total']
+    #     output.append(temp)
+     
+        # print("d",i['total'])
+    return render(request, 'search_cate_clustering.html',{"all_ordered":all_ordered,
+        "output":output,"x":x,"y":y})
+
+
+def chart(request):
+
+    df = pd.DataFrame(list(User_session.objects.all().values()))
+#     import numpy as np # linear algebra
+# import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+# from sklearn.decomposition import PCA # Principal Component Analysis module
+# from sklearn.cluster import KMeans # KMeans clustering 
+# import matplotlib.pyplot as plt # Python defacto plotting library
+# import seaborn as sns # More snazzy plotting library
+# %matplotlib inline 
+
+    df = pd.read_csv("session_csv2.csv") # reads the csv and creates the dataframe called movie
+    # df.head()
+         
+    df_session_dummies = pd.get_dummies(df, columns=['action'])
+    # print(df_session_dummies.head())
+    df_search_cate = df_session_dummies[df_session_dummies.action_search_cate == 1 ]
+    # print(df_search_cate.head())
+
+    df_search_cate=df_search_cate.drop([
+        'action_enter',
+        'action_enter_store','action_like','action_search_input','action_กรอกประวัติความหิว','action_สั่งอาหาร','action_เพิ่มเข้าตะกร้า','action_ใช้โค้ด'],1)
+
+    print(df_search_cate.head())
+    df_search_cate = df_search_cate.dropna()
+    df_search_cate_dummies = pd.get_dummies(df_search_cate, columns=['value'])
+    print(df_search_cate_dummies.head())
+
+    new_df = pd.DataFrame(columns = ['user_id','value_all','value_delivery','value_ของหวาน','value_ชาบู','value_ปิ้งย่าง','value_สเต็ก',
+        'value_อาหารญี่ปุ่น','value_อาหารเกาหลี','value_อาหารไทย','value_เครื่องดื่ม',])
+    for k,i in df_search_cate_dummies.iterrows():
+        if any(new_df.user_id == i['user_id']) :
+
+            index=new_df[new_df['user_id']== i['user_id']].index.item()
+            
+            
+            if new_df.iloc[index]['value_all'] == 0  :
+                new_df.set_value(index, 'value_all', i['value_all'])
+            if new_df.iloc[index]['value_delivery'] == 0 :
+                new_df.set_value(index, 'value_delivery',  i['value_delivery'])
+            if new_df.iloc[index]['value_ของหวาน'] == 0 :
+                new_df.set_value(index, 'value_ของหวาน',  i['value_ของหวาน'])
+            if new_df.iloc[index]['value_ชาบู'] == 0  :
+                new_df.set_value(index, 'value_ชาบู', i['value_ชาบู'])
+            if new_df.iloc[index]['value_ปิ้งย่าง'] == 0  :
+                new_df.set_value(index, 'value_ปิ้งย่าง', i['value_ปิ้งย่าง'])
+            if new_df.iloc[index]['value_สเต็ก'] == 0  :
+                new_df.set_value(index, 'value_สเต็ก', i['value_สเต็ก'])
+            if new_df.iloc[index]['value_อาหารญี่ปุ่น'] == 0  :
+                new_df.set_value(index, 'value_อาหารญี่ปุ่น', i['value_อาหารญี่ปุ่น'])
+            if new_df.iloc[index]['value_อาหารเกาหลี'] == 0  :
+                new_df.set_value(index, 'value_อาหารเกาหลี', i['value_อาหารเกาหลี'])
+            if new_df.iloc[index]['value_อาหารไทย'] == 0  :
+                new_df.set_value(index, 'value_อาหารไทย', i['value_อาหารไทย'])
+            if new_df.iloc[index]['value_เครื่องดื่ม'] == 0  :
+                new_df.set_value(index, 'value_เครื่องดื่ม', i['value_เครื่องดื่ม'])
+   
+
+
+        else :
+            new_df.loc[len(new_df)] = [i['user_id'],i['value_all'],i['value_delivery'],i['value_ของหวาน'],
+                                       i['value_ชาบู'],i['value_ปิ้งย่าง'],i['value_สเต็ก'],i['value_อาหารญี่ปุ่น'],
+                                       i['value_อาหารเกาหลี'],i['value_อาหารไทย'],i['value_เครื่องดื่ม']]
+            
+
+
+
+    # x = new_df.reset_index().values
+
+    # km = KModes(n_clusters=3, init='Huang', n_init=5, verbose=1)
+    # clusters = km.fit_predict(x)
+    # new_df['clusters'] = clusters
+    # print(new_df['clusters'])
+    # print(new_df.ix[:,1:11])
+
+
+    pca = PCA(n_components=2)
+    pca_transformed = pca.fit_transform(new_df.ix[:,1:11])
+    # plot_columns = pca.fit_transform(new_df.ix[:,1:11])
+  
+    # x = plot_columns[:,1]
+    # y = plot_columns[:,0]
+    output = []
+
+
+    kmeans = KMeans(n_clusters=3)
+    X_clustered = kmeans.fit_predict(pca_transformed)
+    new_df['cluster'] = X_clustered
+ 
+    # plt.scatter(kmeans.cluster_centers_[:,0],kmeans.cluster_centers_[:,0], color='black')  
+    # plt.figure(figsize = (5,5))
+    # plt.scatter(pca_transformed[:,0],pca_transformed[:,1], c = kmeans.labels_, cmap='rainbow')  
+
+    # plt.scatter(pca_transformed[:,0],pca_transformed[:,1], c= label_color, alpha=0.5) 
+    # plt.show()
+    x = pca_transformed[:,0]
+    y = pca_transformed[:,1]
+    for i in range(len(pca_transformed)):
+        temp = {"x":0,"y":0,"userid":"","label":0}
+
+        temp["x"] = x[i]
+        temp["y"] = y[i]
+        temp["user_id"] = new_df['user_id'][i]
+        temp["label"] = new_df['cluster'][i]
 
 
         output.append(temp)
@@ -6471,6 +7204,9 @@ def ud_payment(request,order_id):
         raise
         # messages.error(request, e)
         # raise Http404()
+
+
+
 def vote(request):
   if request.is_ajax():
     comment = request.GET.get('comment',False)

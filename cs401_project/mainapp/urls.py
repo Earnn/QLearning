@@ -8,10 +8,15 @@ urlpatterns = [
     url(r'^value_at_risk/?$',views.value_at_risk, name='chart'),
     url(r'^report2/?$',views.report2, name='report2'),  
     url(r'^summarize/?$',views.visual, name='summarize'), 
+    url(r'^term-conditions/?$',views.term_conditions, name='term_conditions'), 
+
     url(r'^chart-click/?$',views.chart_click, name='chart_click'),  
  
     
-    url(r'^vote/?$',views.vote, name='vote'),   
+    url(r'^vote/?$',views.vote, name='vote'), 
+    url(r'^user-profile/(?P<userid>\d+)/?$',views.user_profile, name='user_profile'), 
+    url(r'^get-user-profile/?$',views.get_user_profile, name='get_user_profile'),   
+    url(r'^search-cate-clustering/?$',views.search_cate_clustering, name='search_cate_clustering'),   
 
 
     # (?# url(r'^/$', views.q_learning, name='q_learning'),)
